@@ -1,0 +1,26 @@
+{
+  "name": "@judgeme/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "judgeme is a private photo sharing platform",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pchmn/judgeme-v2.git"
+  },
+  "author": "pchmn",
+  "license": "MIT",
+  "homepage": "https://github.com/pchmn/judgeme-v2",
+  "scripts": {
+    "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
+    "lint": "eslint --cache --fix ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@commitlint/prompt-cli": "^17.0.3",
+    "firebase-tools": "^11.19.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^11.2.3",
+    "prettier": "^2.7.1"
+  }
+}
