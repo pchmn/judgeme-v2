@@ -27,7 +27,7 @@ runs:
         node-version: ${{ inputs.node-version }}
         cache: pnpm
 
-    - if: ${{ inputs.keep-npmrc == false }}
+    - if: ${{ inputs.keep-npmrc == 'false' }}
       name: 🏗 Remove .npmrc
       shell: bash
       run: rm .npmrc
