@@ -55,6 +55,7 @@ jobs:
           firebase use judgemev2
           cd apps/functions
           pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
+          pnpm install
           pnpm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
