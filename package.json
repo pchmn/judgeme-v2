@@ -28,5 +28,16 @@
     "husky": "^8.0.1",
     "lint-staged": "^11.2.3",
     "prettier": "^2.7.1"
-  }
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@babel/*",
+        "expo-modules-*"
+      ]
+    },
+    "patchedDependencies": {
+      "react-native@0.70.5": "./apps/mobile/patches/react-native@0.70.5.patch"
+    }
+  },
 }
