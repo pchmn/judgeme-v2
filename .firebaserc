@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "judgemev2",
+    "development": "judgemev2-dev"
+  }
+}

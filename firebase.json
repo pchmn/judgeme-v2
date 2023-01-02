@@ -1,0 +1,26 @@
+{
+  "functions": {
+    "source": "apps/functions"
+  },
+  "emulators": {
+    "functions": {
+      "host": "0.0.0.0",
+      "port": 5001
+    },
+    "auth": {
+      "host": "0.0.0.0",
+      "port": 9099
+    },
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 8081
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

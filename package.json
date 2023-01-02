@@ -11,6 +11,11 @@
   "license": "MIT",
   "homepage": "https://github.com/pchmn/judgeme-v2",
   "scripts": {
+    "build:functions": "pnpm --filter @judgeme/functions run build",
+    "build:watch:functions": "pnpm --filter @judgeme/functions run build:watch",
+    "emulators:start": "pnpm build:watch:functions | firebase emulators:start --only auth,firestore,functions",
+    "emulators:stop": "lsof -t -i:5001 -i:8081 -i:9099 | xargs kill -9",
+    "deploy:rules": "firebase deploy --only firestore:rules",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
     "lint": "eslint --cache --fix ."
   },
