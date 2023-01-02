@@ -1,9 +1,9 @@
 {
-  "name": "mobile",
+  "name": "@judgeme/mobile",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "scripts": {
-    "start": "expo start",
+    "dev": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -17,10 +17,12 @@
     "react-native-web": "~0.18.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.19.3",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
-    "typescript": "^4.6.3"
+    "babel-preset-expo": "~9.2.1",
+    "eslint-config-judgeme-react": "workspace:*",
+    "typescript": "^4.9.4"
   },
   "private": true
 }

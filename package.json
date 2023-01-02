@@ -11,6 +11,7 @@
   "license": "MIT",
   "homepage": "https://github.com/pchmn/judgeme-v2",
   "scripts": {
+    "dev:mobile": "pnpm --filter @judgeme/mobile run dev",
     "build:functions": "pnpm --filter @judgeme/functions run build",
     "build:watch:functions": "pnpm --filter @judgeme/functions run build:watch",
     "emulators:start": "pnpm build:watch:functions | firebase emulators:start --only auth,firestore,functions",
