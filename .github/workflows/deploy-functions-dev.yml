@@ -21,7 +21,6 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
         with:
-          keep-npmrc: false
           install: true
 
       - name: 🔨 Build
@@ -53,9 +52,9 @@ jobs:
 
       - name: 🚀 Deploy to judgeme-dev
         run: |
-          firebase use judgemev2-dev
           cd apps/functions
           pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
+          firebase use judgemev2-dev
           pnpm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
