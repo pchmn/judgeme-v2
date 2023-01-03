@@ -36,7 +36,7 @@ runs:
       run: |
         echo ${{ inputs.serviceAccountKey }} > $HOME/serviceAccountKey.json
         export GOOGLE_APPLICATION_CREDENTIALS=$HOME/serviceAccountKey.json
-        export TEST_ENV=${{ inputs.projectId }}
+        echo "TEST_ENV=$(echo ${{ inputs.projectId }})" >> $GITHUB_ENV
 
     - if: ${{ inputs.projectId != '' }}
       name: Use firebase project
