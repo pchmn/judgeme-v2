@@ -15,19 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 6.22.2
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: "pnpm"
-
-      - name: Install Firebase CLI
+      - name: 🏗 Setup Firebase CLI
         run: pnpm add -g firebase-tools
 
-      - name: Deploy to judgeme
+      - name: 🚀 Deploy to judgeme
         run: |
           firebase use judgemev2
           pnpm deploy:rules

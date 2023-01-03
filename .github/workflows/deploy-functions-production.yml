@@ -15,25 +15,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
         with:
-          version: 6.22.2
+          keep-npmrc: false
+          install: true
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: "pnpm"
-
-      # Install
-      - name: INSTALL
-        run: pnpm install
-
-      # Build
-      - name: BUILD
+      - name: 🔨 Build
         run: pnpm build:functions
 
-      # Upload dist artifacts
-      - uses: actions/upload-artifact@v3
+      - name: 📦 Upload dist
+        uses: actions/upload-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist/
@@ -45,30 +37,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
         with:
-          version: 6.22.2
+          keep-npmrc: false
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: "pnpm"
+      - name: 🏗 Setup Firebase CLI
+        run: pnpm add -g firebase-tools
 
-      # Donwload dist artifacts
-      - uses: actions/download-artifact@v3
+      - name: 📦 Download dist
+        uses: actions/download-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist
 
-      # Install
-      - name: Install Firebase CLI
-        run: pnpm add -g firebase-tools
-
-      - name: Deploy to judgeme
+      - name: 🚀 Deploy to judgeme
         run: |
-          firebase use judgemev2
           cd apps/functions
           pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
-          pnpm deploy
+          firebase use judgemev2
+          pnpm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

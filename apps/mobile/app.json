@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "judgeme",
-    "slug": "judgeme",
+    "owner": "pchmn",
+    "name": "JudgeMeV2",
+    "slug": "judgeme-v2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,9 +19,12 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.pchmn.judgemev2",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.pchmn.judgemev2",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +32,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d53b305-1ca3-45d2-92e0-7c7364a69a61"
+      }
     }
   }
 }
