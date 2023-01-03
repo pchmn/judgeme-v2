@@ -44,6 +44,9 @@ jobs:
         with:
           keep-npmrc: false
 
+      - name: 🏗 Setup Firebase CLI
+        run: pnpm add -g firebase-tools
+
       - name: 📦 Download dist
         uses: actions/download-artifact@v3
         with:
