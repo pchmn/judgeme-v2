@@ -18,20 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
         with:
           keep-npmrc: false
+          install: true
 
-      # Install
-      - name: Install
-        run: pnpm install
-
-      # Build
-      - name: Build
+      - name: 🔨 Build
         run: pnpm build:functions
 
-      # Upload dist artifacts
-      - uses: actions/upload-artifact@v3
+      - name: 📦 Upload dist
+        uses: actions/upload-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist/
@@ -43,21 +40,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
         with:
           keep-npmrc: false
+          install: true
 
-      # Donwload dist artifacts
-      - uses: actions/download-artifact@v3
+      - name: 🏗 Setup Firebase CLI
+        run: pnpm add -g firebase-tools
+
+      - name: 📦 Download dist
+        uses: actions/download-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist
 
-      # Install
-      - name: Install Firebase CLI
-        run: pnpm add -g firebase-tools
-
-      - name: Deploy to judgeme-dev
+      - name: 🚀 Deploy to judgeme-dev
         run: |
           firebase use judgemev2-dev
           cd apps/functions

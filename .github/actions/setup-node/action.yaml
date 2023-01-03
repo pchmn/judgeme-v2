@@ -13,21 +13,29 @@ inputs:
     description: Keep the .npmrc file in the workspace
     default: true
 
+  install:
+    description: Run pnpm install
+    default: false
+
 runs:
   using: composite
   steps:
-    - name: 🏗 Setup pnpm
+    - name: Setup pnpm
       uses: pnpm/action-setup@v2
       with:
         version: ${{ inputs.pnpm-version }}
 
-    - name: 🏗 Setup Node
+    - name: Setup Node
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
         cache: pnpm
 
     - if: ${{ inputs.keep-npmrc == 'false' }}
-      name: 🏗 Remove .npmrc
+      name: Remove .npmrc
       shell: bash
       run: rm .npmrc
+
+    - if: ${{ inputs.install == 'true' }}
+      name: Install dependencies
+      run: pnpm install

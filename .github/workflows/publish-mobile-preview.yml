@@ -18,21 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/actions/setup-node
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
 
-      - uses: expo/expo-github-action@v7
+      - name: 🏗 Setup expo
+        uses: expo/expo-github-action@v7
         with:
           eas-version: latest
           expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Install
-        run: pnpm install
-
-      - name: Publish preview
+      - name: 🚀 Publish preview
         run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
 
-      - name: Comment preview
+      - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
         with:
           channel: pr-${{ github.event.number }}
