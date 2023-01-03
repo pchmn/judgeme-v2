@@ -34,12 +34,10 @@ runs:
       name: Add service account key
       shell: bash
       run: |
-        echo ${{ inputs.serviceAccountKey }} > $HOME/serviceAccountKey.json
-        export GOOGLE_APPLICATION_CREDENTIALS=$HOME/serviceAccountKey.json
-        echo "TEST_ENV=$(echo ${{ inputs.projectId }})" >> $GITHUB_ENV
+        echo ${{ inputs.serviceAccountKey }} >> $HOME/serviceAccountKey.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo $HOME/serviceAccountKey.json)" >> $GITHUB_ENV
 
     - if: ${{ inputs.projectId != '' }}
       name: Use firebase project
       shell: bash
-      run: |
-        echo $TEST_ENV
+      run: firebase use ${{ inputs.projectId }}
