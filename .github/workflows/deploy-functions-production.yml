@@ -41,7 +41,6 @@ jobs:
         uses: ./.github/actions/setup-node
         with:
           keep-npmrc: false
-          install: true
 
       - name: 🏗 Setup Firebase CLI
         run: pnpm add -g firebase-tools
@@ -54,9 +53,9 @@ jobs:
 
       - name: 🚀 Deploy to judgeme
         run: |
-          firebase use judgemev2
           cd apps/functions
           pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
+          firebase use judgemev2
           pnpm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

@@ -41,6 +41,8 @@ jobs:
 
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
+        with:
+          keep-npmrc: false
 
       - name: 🏗 Setup Firebase CLI
         run: pnpm add -g firebase-tools
