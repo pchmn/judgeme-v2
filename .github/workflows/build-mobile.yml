@@ -43,4 +43,6 @@ jobs:
 
       - name: 🔨 EAS build
         working-directory: apps/mobile
-        run: eas build --non-interactive --wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}
+        run: |
+          cd apps/mobile
+          eas build --non-interactive --wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}
