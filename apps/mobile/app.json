@@ -1,7 +1,7 @@
 {
   "expo": {
     "owner": "pchmn",
-    "name": "judgeme",
+    "name": "JudgeMe",
     "slug": "judgeme",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,7 +35,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "373c9f13-758e-44fa-8797-5c38860558a3"
+        "projectId": "b571611f-b9d4-48b7-8ae8-0ac8f29403d9"
       }
     }
   }
