@@ -45,7 +45,10 @@ jobs:
           keep-npmrc: false
 
       - name: 🏗 Setup Firebase CLI
-        run: pnpm add -g firebase-tools
+        uses: ./.github/actions/setup-firebase-tools
+        with:
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
+          projectId: judgemev2-dev
 
       - name: 📦 Download dist
         uses: actions/download-artifact@v3
@@ -54,10 +57,9 @@ jobs:
           path: apps/functions/dist
 
       - name: 🚀 Deploy to judgeme-dev
+        working-directory: apps/functions
         run: |
-          cd apps/functions
           pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
-          firebase use judgemev2-dev
           pnpm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
