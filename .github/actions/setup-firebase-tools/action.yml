@@ -40,4 +40,4 @@ runs:
     - if: ${{ inputs.projectId != '' }}
       name: Use firebase project
       shell: bash
-      run: firebase use ${{ inputs.projectId }}
+      run: firebase use ${{ inputs.projectId }} --debug
