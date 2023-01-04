@@ -50,6 +50,12 @@ jobs:
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
           projectId: judgemev2-dev
 
+      - name: 📦 Upload serviceAccountFile
+        uses: actions/upload-artifact@v3
+        with:
+          name: service-account
+          path: /tmp/serviceAccountKey.json
+
       - name: 📦 Download dist
         uses: actions/download-artifact@v3
         with:

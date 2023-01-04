@@ -37,7 +37,7 @@ runs:
         node ${{ github.action_path }}/createServiceAccountKeyFile.js ${{ inputs.serviceAccountKey }}
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo /tmp/serviceAccountKey.json)" >> $GITHUB_ENV
 
-    - if: ${{ inputs.projectId != '' }}
-      name: Use firebase project
-      shell: bash
-      run: firebase use ${{ inputs.projectId }} --debug
+    # - if: ${{ inputs.projectId != '' }}
+    #   name: Use firebase project
+    #   shell: bash
+    #   run: firebase use ${{ inputs.projectId }} --debug
