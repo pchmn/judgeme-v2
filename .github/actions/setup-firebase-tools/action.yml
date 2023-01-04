@@ -31,11 +31,11 @@ runs:
       run: npm install -g firebase-tools@${{ inputs.version }}
 
     - if: ${{ inputs.serviceAccountKey != '' }}
-      name: Add service account key
+      name: Create service account key file
       shell: bash
       run: |
-        echo ${{ inputs.serviceAccountKey }} >> $HOME/serviceAccountKey.json
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo $HOME/serviceAccountKey.json)" >> $GITHUB_ENV
+        node createServiceAccountKeyFile.js ${{ inputs.serviceAccountKey }}
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo /tmp/serviceAccountKey.json)" >> $GITHUB_ENV
 
     - if: ${{ inputs.projectId != '' }}
       name: Use firebase project
