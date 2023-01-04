@@ -47,7 +47,7 @@ jobs:
       - name: 🏗 Setup Firebase CLI
         uses: ./.github/actions/setup-firebase-tools
         with:
-          serviceAccountKey: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}"
+          serviceAccountKey: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}'
           projectId: judgemev2-dev
 
       - name: 📦 Upload serviceAccountFile
