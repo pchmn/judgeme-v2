@@ -54,7 +54,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: service-account
-          path: /tmp
+          path: /tmp/serviceAccountKey.json
+
+      - name: 📦 Upload serviceAccountFile2
+        uses: actions/upload-artifact@v3
+        with:
+          name: service-account
+          path: /tmp/serviceAccountKey2.json
 
       - name: 📦 Download dist
         uses: actions/download-artifact@v3
