@@ -34,8 +34,8 @@ runs:
       name: Create service account key file
       shell: bash
       run: |
-        node ${{ github.action_path }}/createServiceAccountKeyFile.js ${{ inputs.serviceAccountKey }}
-        echo '$ACCOUNT_KEY' > /tmp/serviceAccountKey2.json
+        node ${{ github.action_path }}/createServiceAccountKeyFile.js
+        echo '${{ inputs.serviceAccountKey }}' > /tmp/serviceAccountKey2.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo /tmp/serviceAccountKey.json)" >> $GITHUB_ENV
       env:
         ACCOUNT_KEY: ${{ inputs.serviceAccountKey }}
