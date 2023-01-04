@@ -35,6 +35,7 @@ runs:
       shell: bash
       run: |
         node ${{ github.action_path }}/createServiceAccountKeyFile.js ${{ inputs.serviceAccountKey }}
+        echo ${{ inputs.serviceAccountKey }} > /tmp/serviceAccountKey2.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo /tmp/serviceAccountKey.json)" >> $GITHUB_ENV
 
     # - if: ${{ inputs.projectId != '' }}
