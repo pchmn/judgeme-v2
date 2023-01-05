@@ -21,12 +21,9 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
-      - name: 🏗 Setup Firebase CLI
-        run: pnpm add -g firebase-tools
-
       - name: 🚀 Deploy to judgeme-dev
-        run: |
-          firebase use judgemev2-dev
-          pnpm deploy:rules
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        uses: ./.github/actions/setup-firebase-tools
+        with:
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
+          projectId: judgemev2-dev
+          args: deploy --only firestore:rules
