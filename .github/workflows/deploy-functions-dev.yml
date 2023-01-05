@@ -26,8 +26,7 @@ jobs:
       - name: 🔨 Build
         run: pnpm build:functions
 
-      - name: 📦 Upload dist
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist/
@@ -39,16 +38,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/download-artifact@v3
+        with:
+          name: functions-dist
+          path: apps/functions/dist
+
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
         with:
           keep-npmrc: false
-
-      - name: 📦 Download dist
-        uses: actions/download-artifact@v3
-        with:
-          name: functions-dist
-          path: apps/functions/dist
 
       - name: 📦 Remove local dependencies
         working-directory: apps/functions
@@ -60,3 +58,7 @@ jobs:
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
           projectId: judgemev2-dev
           args: deploy --only functions
+
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: functions-dist
