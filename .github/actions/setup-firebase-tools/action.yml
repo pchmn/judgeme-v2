@@ -1,4 +1,5 @@
 name: Setup Firebase CLI
+description: Install Firebase CLI
 
 inputs:
   packager:
@@ -11,6 +12,8 @@ inputs:
     description: Service account key to use
   projectId:
     description: Project id to use
+  args:
+    description: Additional arguments to pass to the CLI
 
 runs:
   using: composite
@@ -34,13 +37,15 @@ runs:
       name: Create service account key file
       shell: bash
       run: |
-        node ${{ github.action_path }}/createServiceAccountKeyFile.js
-        echo '${{ inputs.serviceAccountKey }}' > /tmp/serviceAccountKey2.json
-        echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo /tmp/serviceAccountKey.json)" >> $GITHUB_ENV
-      env:
-        ACCOUNT_KEY: ${{ inputs.serviceAccountKey }}
+        echo '${{ inputs.serviceAccountKey }}' > ${{ runner.temp }}/serviceAccountKey.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo ${{ runner.temp }}/serviceAccountKey.json)" >> $GITHUB_ENV
 
-    # - if: ${{ inputs.projectId != '' }}
-    #   name: Use firebase project
-    #   shell: bash
-    #   run: firebase use ${{ inputs.projectId }} --debug
+    - if: ${{ inputs.projectId != '' }}
+      name: Use firebase project
+      shell: bash
+      run: firebase use ${{ inputs.projectId }} --debug
+
+    - if: ${{ inputs.args != '' }}
+      name: Launch firebase command with args
+      shell: bash
+      run: firebase ${{ inputs.args }}
