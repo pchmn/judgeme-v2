@@ -43,7 +43,7 @@ runs:
     - if: ${{ inputs.projectId != '' }}
       name: Use firebase project
       shell: bash
-      run: firebase use ${{ inputs.projectId }} --debug
+      run: firebase use ${{ inputs.projectId }}
 
     - if: ${{ inputs.args != '' }}
       name: Launch firebase command with args
