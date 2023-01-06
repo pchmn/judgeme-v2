@@ -55,6 +55,7 @@ jobs:
       - name: 🚀 Deploy to judgeme-dev
         uses: pchmn/firebase-cli-github-action@main
         with:
+          packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
           projectId: judgemev2-dev
           args: deploy --only functions
