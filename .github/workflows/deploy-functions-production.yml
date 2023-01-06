@@ -24,8 +24,7 @@ jobs:
       - name: 🔨 Build
         run: pnpm build:functions
 
-      - name: 📦 Upload dist
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: functions-dist
           path: apps/functions/dist/
@@ -37,25 +36,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/download-artifact@v3
+        with:
+          name: functions-dist
+          path: apps/functions/dist
+
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
         with:
           keep-npmrc: false
 
-      - name: 🏗 Setup Firebase CLI
-        run: pnpm add -g firebase-tools
-
-      - name: 📦 Download dist
-        uses: actions/download-artifact@v3
-        with:
-          name: functions-dist
-          path: apps/functions/dist
+      - name: 📦 Remove local dependencies
+        working-directory: apps/functions
+        run: pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
 
       - name: 🚀 Deploy to judgeme
-        run: |
-          cd apps/functions
-          pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
-          firebase use judgemev2
-          pnpm run deploy
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        uses: pchmn/firebase-cli-github-action@main
+        with:
+          packager: pnpm
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_PROD }}
+          projectId: judgemev2
+          args: deploy --only functions
+
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: functions-dist

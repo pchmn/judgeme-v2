@@ -31,9 +31,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🚀 Publish preview
-        run: |
-          cd apps/mobile
-          expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
+        working-directory: apps/mobile
+        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
 
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
