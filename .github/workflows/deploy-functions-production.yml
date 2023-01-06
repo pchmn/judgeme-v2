@@ -51,7 +51,7 @@ jobs:
         run: pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
 
       - name: 🚀 Deploy to judgeme
-        uses: pchmn/firebase-cli-github-action@main
+        uses: pchmn/firebase-cli-github-action@develop
         with:
           packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_PROD }}
