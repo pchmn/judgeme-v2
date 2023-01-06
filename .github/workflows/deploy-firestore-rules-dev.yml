@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: 🚀 Deploy to judgeme-dev
-        uses: ./.github/actions/setup-firebase-tools
+        uses: pchmn/firebase-cli-github-action@main
         with:
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_DEV }}
           projectId: judgemev2-dev
