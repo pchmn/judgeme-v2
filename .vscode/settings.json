@@ -10,7 +10,7 @@
     "i18next"
   ],
   "i18n-ally.localesPaths": [
-    "apps/web/src/core/i18n"
+    "apps/mobile/src/core/i18n"
   ],
   "i18n-ally.keystyle": "nested"
 }

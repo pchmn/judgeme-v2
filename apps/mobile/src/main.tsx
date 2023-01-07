@@ -1,3 +1,5 @@
+import '@/core/i18n';
+
 import { UiProvider } from '@judgeme/react';
 
 import App from './App';
