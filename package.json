@@ -35,9 +35,6 @@
         "@babel/*",
         "expo-modules-*"
       ]
-    },
-    "patchedDependencies": {
-      "react-native@0.70.5": "./apps/mobile/patches/react-native@0.70.5.patch"
     }
   }
 }
