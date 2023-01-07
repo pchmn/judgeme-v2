@@ -30,6 +30,10 @@ jobs:
           expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: 🔨 Build
+        working-directory: apps/mobile
+        run: pnpm run build
+
       - name: 🚀 Publish preview
         working-directory: apps/mobile
         run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
@@ -37,4 +41,5 @@ jobs:
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
         with:
+          project: apps/mobile
           channel: pr-${{ github.event.number }}
