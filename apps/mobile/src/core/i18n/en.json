@@ -1,0 +1,13 @@
+{
+  "common": {
+    "start": "Start",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "create": "Create"
+  },
+  "welcomeScreen": {
+    "title": "Stay anonymous",
+    "description": "Communicate anonymously with unknown users around you."
+  }
+}

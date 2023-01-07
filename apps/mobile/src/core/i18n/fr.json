@@ -1,0 +1,13 @@
+{
+  "common": {
+    "start": "Démarrer",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "create": "Créer"
+  },
+  "welcomeScreen": {
+    "title": "Reste anonyme",
+    "description": "Communique anonymement avec des iconnus autour de toi."
+  }
+}
