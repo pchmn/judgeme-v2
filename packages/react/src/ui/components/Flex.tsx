@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 interface FlexProps {
   direction?: 'row' | 'column';
@@ -13,19 +13,26 @@ interface FlexProps {
   flex?: number;
 }
 
-export function Flex({ children, ...otherProps }: PropsWithChildren<FlexProps>) {
-  return <View style={styles(otherProps).container}>{children}</View>;
+export function Flex({
+  children,
+  direction = 'column',
+  align,
+  justify,
+  wrap,
+  ...otherProps
+}: PropsWithChildren<FlexProps>) {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: direction,
+        alignItems: align,
+        justifyContent: justify,
+        flexWrap: wrap,
+        ...otherProps,
+      }}
+    >
+      {children}
+    </View>
+  );
 }
-
-const styles = ({ direction = 'column', align, justify, wrap, gap, ...otherProps }: FlexProps) =>
-  StyleSheet.create({
-    container: {
-      display: 'flex',
-      flexDirection: direction,
-      alignItems: align,
-      justifyContent: justify,
-      flexWrap: wrap,
-      gap,
-      ...otherProps,
-    },
-  });
