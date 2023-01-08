@@ -53,6 +53,7 @@ importers:
       babel-preset-expo: ~9.2.1
       eslint-config-judgeme-react: workspace:*
       expo: ~47.0.9
+      expo-image: 1.0.0-alpha.5
       expo-linking: ~3.3.0
       expo-localization: ~14.0.0
       expo-navigation-bar: ~2.0.1
@@ -75,6 +76,7 @@ importers:
       '@react-navigation/native': 6.1.1_ed6hdicvoe3mtgaxburxkml6qq
       '@react-navigation/native-stack': 6.9.7_5vsbgjpwqdsfei35nhrx3tqxau
       expo: 47.0.10_@babel+core@7.20.7
+      expo-image: 1.0.0-alpha.5_expo@47.0.10
       expo-linking: 3.3.0_expo@47.0.10
       expo-localization: 14.0.0_expo@47.0.10
       expo-navigation-bar: 2.0.1_expo@47.0.10
@@ -149,6 +151,7 @@ importers:
     specifiers:
       '@importantimport/material-color-utilities': ^0.2.0
       '@judgeme/tsconfig': workspace:*
+      '@react-native-async-storage/async-storage': ~1.17.3
       '@react-navigation/native': ^6.1.1
       '@types/react': ~18.0.14
       '@types/react-native': ~0.70.6
@@ -170,6 +173,7 @@ importers:
       color: 4.2.3
     devDependencies:
       '@judgeme/tsconfig': link:../tsconfig
+      '@react-native-async-storage/async-storage': 1.17.11_react-native@0.70.6
       '@react-navigation/native': 6.1.1_ed6hdicvoe3mtgaxburxkml6qq
       '@types/react': 18.0.26
       '@types/react-native': 0.70.8
@@ -3702,7 +3706,6 @@ packages:
     dependencies:
       merge-options: 3.0.4
       react-native: 0.70.6_react@18.1.0
-    dev: false
 
   /@react-native-community/cli-clean/9.2.1:
     resolution: {integrity: sha512-dyNWFrqRe31UEvNO+OFWmQ4hmqA07bR9Ief/6NnGwx67IO9q83D5PEAf/o96ML6jhSbDwCmpPKhPwwBbsyM3mQ==}
@@ -6740,6 +6743,14 @@ packages:
       expo: 47.0.10_@babel+core@7.20.7
       fontfaceobserver: 2.3.0
 
+  /expo-image/1.0.0-alpha.5_expo@47.0.10:
+    resolution: {integrity: sha512-Bw8sKkNhHbd63TuR98XiKmoZ6tg/MRecXDdlpWdAyS9R/LyfDxxwI4zrMcLSRsiWaQUZ5M0dvGXKy90v/BLvCA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 47.0.10_@babel+core@7.20.7
+    dev: false
+
   /expo-json-utils/0.4.0:
     resolution: {integrity: sha512-lK6gjea72XTYafpKNNJaMrBK5dYAX8LFLXrp/M1MKJU4Zy7EHd2rKrLwop3GZts8VdwLHeVcMko79SAbhe3i5Q==}
     dev: false
@@ -8539,7 +8550,6 @@ packages:
   /is-plain-obj/2.1.0:
     resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
     engines: {node: '>=8'}
-    dev: false
 
   /is-plain-object/2.0.4:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
@@ -9549,7 +9559,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       is-plain-obj: 2.1.0
-    dev: false
 
   /merge-stream/2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
