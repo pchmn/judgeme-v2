@@ -1,24 +1,22 @@
-import { Flex, Gap } from '@judgeme/react';
-import { useTranslation } from 'react-i18next';
-import { Button, useTheme } from 'react-native-paper';
+import { useUiProviderContext } from '@judgeme/react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from 'react-native-paper';
+
+import { Appbar } from '@/core/layouts';
+import { WelcomeScreen } from '@/modules/Welcome';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const { navigationTheme } = useUiProviderContext();
   const theme = useTheme();
-  const { t } = useTranslation();
 
   return (
-    <Flex backgroundColor={theme.colors.background} align="center" justify="center" flex={1}>
-      <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-        {t('common.start')}
-      </Button>
-      <Gap size={16} />
-      <Button icon="camera" mode="outlined" onPress={() => console.log('Pressed')}>
-        {t('common.start')}
-      </Button>
-      <Gap size={16} />
-      <Button icon="camera" mode="elevated" onPress={() => console.log('Pressed')}>
-        Elevated
-      </Button>
-    </Flex>
+    <NavigationContainer theme={navigationTheme}>
+      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ header: (props) => <Appbar {...props} /> }}>
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
