@@ -3,6 +3,7 @@
     "owner": "pchmn",
     "name": "JudgeMeV2",
     "slug": "judgeme-v2",
+    "scheme": "judgemev2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

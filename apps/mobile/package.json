@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@judgeme/react": "workspace:*",
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.7",
     "expo": "~47.0.9",
+    "expo-linking": "~3.3.0",
     "expo-localization": "~14.0.0",
     "expo-navigation-bar": "~2.0.1",
     "expo-status-bar": "~1.4.2",
