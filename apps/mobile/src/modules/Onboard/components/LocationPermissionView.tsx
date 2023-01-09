@@ -1,5 +1,7 @@
 import { Flex, useToggle } from '@judgeme/react';
 import { openSettings } from 'expo-linking';
+import { LocationPermissionResponse } from 'expo-location';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
@@ -14,20 +16,31 @@ export function LocationPermissionView({ onNext }: { onNext: () => void }) {
 
   const [visible, toggleDialog] = useToggle();
 
-  console.log('status', locationPermissionStatus);
-
   const handleOpenSettings = () => {
     openSettings();
     toggleDialog();
   };
+
+  const checkLocationPermissionStatus = useCallback(
+    (status: LocationPermissionResponse) => {
+      if (status && status.granted) {
+        onNext();
+      }
+    },
+    [onNext]
+  );
 
   const handleRequestPermission = async () => {
     if (locationPermissionStatus.status === 'denied' && !locationPermissionStatus.canAskAgain) {
       toggleDialog();
       return;
     }
-    await requestLocationPermission();
+    checkLocationPermissionStatus(await requestLocationPermission());
   };
+
+  useEffect(() => {
+    checkLocationPermissionStatus(locationPermissionStatus);
+  }, [checkLocationPermissionStatus, locationPermissionStatus]);
 
   if (locationPermissionStatus === null) {
     return (
