@@ -6,7 +6,7 @@
     "confirm": "Confirmer",
     "create": "Créer",
     "next": "Suivant",
-    "grantPermission": "Autoriser la localisation",
+    "grantPermission": "Autoriser la permission",
     "openSettings": "Ouvrir les paramètres"
   },
   "welcomeScreen": {
@@ -17,7 +17,12 @@
     "locationPermissionView": {
       "title": "Permission de localisation",
       "description": "Nous avons besoin de votre localisation pour trouver des personnes autour de vous",
-      "openSettingsDescription": "Vous pouvez changer cette permission dans les paramètres de l'application."
+      "dialog": {
+        "title": "Autoriser la localisation",
+        "description": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+      },
+      "grantLocation": "Autoriser la localisation",
+      "openSettingsDescription": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
     }
   }
 }

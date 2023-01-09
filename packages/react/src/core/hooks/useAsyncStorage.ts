@@ -1,16 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
 
-export function useAsyncStorage<T>(
-  key: string,
-  defaultValue?: T
-): {
-  value: T | null | undefined;
-  isLoading: boolean;
-  error: Error | null;
-  set: (value: T) => void;
-  remove: () => void;
-} {
+export function useAsyncStorage<T>(key: string, defaultValue?: T) {
   const [value, setValue] = useState<T>(defaultValue);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,7 +13,7 @@ export function useAsyncStorage<T>(
         if (value) {
           setValue(JSON.parse(value));
         } else {
-          setValue(null);
+          setValue(defaultValue);
         }
       } catch (e) {
         setError(e);
@@ -31,7 +22,7 @@ export function useAsyncStorage<T>(
       }
     };
     load();
-  }, [key]);
+  }, [defaultValue, key]);
 
   const set = useCallback(
     (value: T) => {
@@ -44,9 +35,9 @@ export function useAsyncStorage<T>(
 
   const remove = useCallback(() => {
     AsyncStorage.removeItem(key)
-      .then(() => setValue(null))
+      .then(() => setValue(defaultValue))
       .catch(setError);
-  }, [key]);
+  }, [defaultValue, key]);
 
   return { value, isLoading, error, set, remove };
 }

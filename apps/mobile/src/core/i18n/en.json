@@ -17,6 +17,11 @@
     "locationPermissionView": {
       "title": "Location permission",
       "description": "We need your location to find people around you",
+      "dialog": {
+        "title": "Location permission",
+        "description": "Woodat needs your location to work. You can change this permission in the app settings."
+      },
+      "grantLocation": "Grant location permission",
       "openSettingsDescription": "You can change this permission in the app settings."
     }
   }
