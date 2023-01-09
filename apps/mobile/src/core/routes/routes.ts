@@ -6,6 +6,7 @@ export const linking: LinkingOptions<ReactNavigation.RootParamList> = {
   config: {
     screens: {
       Welcome: 'welcome',
+      Home: 'home',
     },
   },
 };

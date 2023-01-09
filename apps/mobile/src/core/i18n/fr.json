@@ -4,10 +4,20 @@
     "close": "Fermer",
     "cancel": "Annuler",
     "confirm": "Confirmer",
-    "create": "Créer"
+    "create": "Créer",
+    "next": "Suivant",
+    "grantPermission": "Autoriser la localisation",
+    "openSettings": "Ouvrir les paramètres"
   },
   "welcomeScreen": {
-    "title": "Reste anonyme",
-    "description": "Communique anonymement avec des iconnus autour de toi."
+    "explalantionView": {
+      "title": "Qui est-ce ?",
+      "description": "Communique anonymement avec des iconnus autour de toi"
+    },
+    "locationPermissionView": {
+      "title": "Permission de localisation",
+      "description": "Nous avons besoin de votre localisation pour trouver des personnes autour de vous",
+      "openSettingsDescription": "Vous pouvez changer cette permission dans les paramètres de l'application."
+    }
   }
 }
