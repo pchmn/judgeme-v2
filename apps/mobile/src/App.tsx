@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { linking } from '@/core/routes';
 import { HomeScreen } from '@/modules/Home';
-import { WelcomeScreen } from '@/modules/Welcome';
+import { OnboardScreen } from '@/modules/Onboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +20,8 @@ export default function App() {
 
   return (
     <NavigationContainer theme={navigationTheme} linking={linking}>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ header: (props) => <></> }}>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Navigator initialRouteName="Onboard" screenOptions={{ header: (props) => <></> }}>
+        <Stack.Screen name="Onboard" component={OnboardScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function WelcomeScreen() {
+export function OnboardScreen() {
   const { t } = useTranslation();
 
   const pagerViewRef = useRef<PagerView>(null);

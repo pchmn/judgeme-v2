@@ -5,7 +5,7 @@ export const linking: LinkingOptions<ReactNavigation.RootParamList> = {
   prefixes: [Linking.createURL('/')],
   config: {
     screens: {
-      Welcome: 'welcome',
+      Onboard: 'onboard',
       Home: 'home',
     },
   },
