@@ -38,7 +38,7 @@ jobs:
         working-directory: apps/mobile
         run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
 
-      - name: 🚀 Create build preview
+      - name: 🚀 Launch eas build preview
         working-directory: apps/mobile
         run: eas build --non-interactive --no-wait --profile preview --platform all
 
