@@ -3,8 +3,19 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
-    "development": {
-      "channel": "development",
+    "preview": {
+      "channel": "preview",
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "staging": {
+      "channel": "staging",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
