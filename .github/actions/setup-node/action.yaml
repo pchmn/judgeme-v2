@@ -13,6 +13,10 @@ inputs:
     description: Keep the .npmrc file in the workspace
     default: 'true'
 
+  auto-install-peers:
+    description: Automatically install peer dependencies
+    default: 'false'
+
   install:
     description: Run pnpm install
     default: 'false'
@@ -35,6 +39,11 @@ runs:
       name: Remove .npmrc
       shell: bash
       run: rm .npmrc
+
+    - if: ${{ inputs.auto-install-peers == 'true' }}
+      name: Update .npmrc to auto-install peer dependencies
+      shell: bash
+      run: pnpm config set auto-install-peers true --location project
 
     - if: ${{ inputs.install == 'true' }}
       name: Install dependencies
