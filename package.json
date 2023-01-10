@@ -26,14 +26,15 @@
     "@commitlint/prompt-cli": "^17.0.3",
     "firebase-tools": "^11.19.0",
     "husky": "^8.0.1",
-    "lint-staged": "^11.2.3",
-    "prettier": "^2.7.1"
+    "lint-staged": "^11.2.3"
   },
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
         "@babel/*",
-        "expo-modules-*"
+        "expo-modules-*",
+        "react-native-vector-icons*",
+        "@firebase/app-types*"
       ]
     }
   }
