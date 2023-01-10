@@ -22,7 +22,6 @@ jobs:
         uses: ./.github/actions/setup-node
         with:
           install: true
-          auto-install-peers: true
 
       - name: 🏗 Setup expo
         uses: expo/expo-github-action@v7
@@ -41,7 +40,7 @@ jobs:
 
       - name: 🚀 Create build preview
         working-directory: apps/mobile
-        run: eas build --non-interactive --profile preview --platform all
+        run: eas build --non-interactive --no-wait --profile preview --platform all
 
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
