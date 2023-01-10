@@ -1,24 +1,35 @@
-import { Flex, Gap } from '@judgeme/react';
-import { useTranslation } from 'react-i18next';
-import { Button, useTheme } from 'react-native-paper';
+import { Flex, useUiProviderContext } from '@judgeme/react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ActivityIndicator } from 'react-native-paper';
+
+import { linking } from '@/core/routes';
+import { HomeScreen } from '@/modules/Home';
+import { OnboardScreen, useOnboard } from '@/modules/Onboard';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const theme = useTheme();
-  const { t } = useTranslation();
+  const { navigationTheme } = useUiProviderContext();
+  const { isFirstLaunch, locationPermissionStatus, isLoading } = useOnboard();
+
+  if (isLoading) {
+    return (
+      <Flex flex={1} align="center" justify="center">
+        <ActivityIndicator size="large" />
+      </Flex>
+    );
+  }
 
   return (
-    <Flex backgroundColor={theme.colors.background} align="center" justify="center" flex={1}>
-      <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-        {t('common.start')}
-      </Button>
-      <Gap size={16} />
-      <Button icon="camera" mode="outlined" onPress={() => console.log('Pressed')}>
-        {t('common.start')}
-      </Button>
-      <Gap size={16} />
-      <Button icon="camera" mode="elevated" onPress={() => console.log('Pressed')}>
-        Elevated
-      </Button>
-    </Flex>
+    <NavigationContainer theme={navigationTheme} linking={linking}>
+      <Stack.Navigator
+        initialRouteName={isFirstLaunch || !locationPermissionStatus.granted ? 'Onboard' : 'Home'}
+        screenOptions={{ header: (props) => <></> }}
+      >
+        <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

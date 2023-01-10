@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
 interface FlexProps {
   direction?: 'row' | 'column';
@@ -9,8 +9,10 @@ interface FlexProps {
   gap?: number;
   height?: number | string;
   width?: number | string;
+  padding?: number;
   backgroundColor?: string;
   flex?: number;
+  style?: ViewStyle;
 }
 
 export function Flex({
@@ -19,6 +21,7 @@ export function Flex({
   align,
   justify,
   wrap,
+  style,
   ...otherProps
 }: PropsWithChildren<FlexProps>) {
   return (
@@ -29,6 +32,7 @@ export function Flex({
         alignItems: align,
         justifyContent: justify,
         flexWrap: wrap,
+        ...style,
         ...otherProps,
       }}
     >

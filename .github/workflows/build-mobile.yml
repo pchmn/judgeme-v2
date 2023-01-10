@@ -18,9 +18,9 @@ on:
         description: EAS build profile
         type: choice
         required: true
-        default: development
+        default: staging
         options:
-          - development
+          - staging
           - production
 
 jobs:
@@ -38,7 +38,6 @@ jobs:
         uses: expo/expo-github-action@v7
         with:
           eas-version: latest
-          expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🔨 EAS build

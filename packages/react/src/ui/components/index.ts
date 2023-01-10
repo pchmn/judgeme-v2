@@ -1,2 +1,2 @@
 export * from './Flex';
-export * from './Gap';
+export * from './Space';

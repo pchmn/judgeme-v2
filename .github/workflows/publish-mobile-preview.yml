@@ -26,17 +26,21 @@ jobs:
       - name: 🏗 Setup expo
         uses: expo/expo-github-action@v7
         with:
-          eas-version: latest
           expo-version: latest
+          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🔨 Build
         working-directory: apps/mobile
         run: pnpm run build
 
-      - name: 🚀 Publish preview
+      - name: 🚀 Publish expo go preview
         working-directory: apps/mobile
         run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
+
+      - name: 🚀 Launch eas build preview
+        working-directory: apps/mobile
+        run: eas build --non-interactive --no-wait --profile preview --platform all
 
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7

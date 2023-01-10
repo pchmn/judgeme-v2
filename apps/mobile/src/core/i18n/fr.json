@@ -4,10 +4,25 @@
     "close": "Fermer",
     "cancel": "Annuler",
     "confirm": "Confirmer",
-    "create": "Créer"
+    "create": "Créer",
+    "next": "Suivant",
+    "grantPermission": "Autoriser la permission",
+    "openSettings": "Ouvrir les paramètres"
   },
   "welcomeScreen": {
-    "title": "Reste anonyme",
-    "description": "Communique anonymement avec des iconnus autour de toi."
+    "explalantionView": {
+      "title": "Qui est-ce ?",
+      "description": "Communique anonymement avec des iconnus autour de toi"
+    },
+    "locationPermissionView": {
+      "title": "Permission de localisation",
+      "description": "Nous avons besoin de votre localisation pour trouver des personnes autour de vous",
+      "dialog": {
+        "title": "Autoriser la localisation",
+        "description": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+      },
+      "grantLocation": "Autoriser la localisation",
+      "openSettingsDescription": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+    }
   }
 }
