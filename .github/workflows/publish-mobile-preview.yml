@@ -40,7 +40,7 @@ jobs:
 
       - name: 🚀 Create build preview
         working-directory: apps/mobile
-        run: eas build --profile preview --platform all
+        run: eas build --non-interactive --profile preview --platform all
 
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
