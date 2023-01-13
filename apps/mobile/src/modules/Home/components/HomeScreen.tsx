@@ -50,7 +50,6 @@ export function HomeScreen() {
       );
     };
 
-    console.log('watching position');
     watchPosition();
 
     return () => {
@@ -59,7 +58,7 @@ export function HomeScreen() {
   });
 
   return (
-    <Flex flex={1} align="center" justify="center">
+    <Flex flex={1}>
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
@@ -68,7 +67,6 @@ export function HomeScreen() {
         onRegionChangeComplete={getMapBoundaries}
         onMapLoaded={() => {
           if (!isMapReady.current) {
-            console.log('map ready');
             isMapReady.current = true;
             animateToCurrentPosition();
           }
