@@ -30,7 +30,7 @@ const config: ExpoConfig = {
           ? process.env.GOOGLE_MAPS_API_KEY_IOS_PROD
           : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
-    googleServicesFile: './GoogleService-Info.plist',
+    googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
   },
   android: {
     package: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
@@ -46,7 +46,7 @@ const config: ExpoConfig = {
             : process.env.GOOGLE_MAPS_API_KEY_ANDROID_DEV,
       },
     },
-    googleServicesFile: './google-services.json',
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON_DEV,
   },
   plugins: ['@react-native-firebase/app'],
   web: {
