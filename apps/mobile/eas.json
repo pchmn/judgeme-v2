@@ -11,6 +11,9 @@
       },
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "APP_ENV": "preview"
       }
     },
     "staging": {
@@ -18,6 +21,9 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "APP_ENV": "staging"
       }
     },
     "production": {
@@ -25,6 +31,9 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "APP_ENV": "production"
       }
     }
   }
