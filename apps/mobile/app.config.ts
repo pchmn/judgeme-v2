@@ -5,7 +5,7 @@ import { ExpoConfig } from '@expo/config';
 const config: ExpoConfig = {
   owner: 'pchmn',
   name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
-  slug: 'kavout-v2',
+  slug: 'kavout',
   scheme: 'kavout',
   version: '1.0.0',
   orientation: 'portrait',
@@ -51,7 +51,7 @@ const config: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId: '3d53b305-1ca3-45d2-92e0-7c7364a69a61',
+      projectId: '81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
     },
   },
 };
