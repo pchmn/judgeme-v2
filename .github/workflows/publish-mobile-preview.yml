@@ -30,10 +30,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 🔨 Build
-        working-directory: apps/mobile
-        run: pnpm run build
-
       - name: 🚀 Publish expo go preview
         working-directory: apps/mobile
         run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
