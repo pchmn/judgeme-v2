@@ -30,16 +30,15 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 🗂️ Get native code changed files
-        id: native-code-changed-files
-        uses: tj-actions/changed-files@v35
-        with:
-          files: |
-            apps/mobile/android/**
-            apps/mobile/ios/**
+      # - name: 🗂️ Get native code changed files
+      #   id: native-code-changed-files
+      #   uses: tj-actions/changed-files@v35
+      #   with:
+      #     files: |
+      #       apps/mobile/android/**
+      #       apps/mobile/ios/**
 
       - name: 🚀 Create eas development build
-        if: steps.native-code-changed-files.outputs.any_changed == 'true'
         working-directory: apps/mobile
         run: eas build --non-interactive --wait --profile development --platform android
 
