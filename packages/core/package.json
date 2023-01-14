@@ -1,5 +1,5 @@
 {
-  "name": "@judgeme/core",
+  "name": "@kavout/core",
   "version": "0.0.0",
   "private": true,
   "author": "pchmn",
@@ -10,7 +10,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@judgeme/tsconfig": "workspace:*",
+    "@kavout/tsconfig": "workspace:*",
     "eslint": "^8.21.0",
     "eslint-config-judgeme-ts": "workspace:*",
     "typescript": "^4.9.4",

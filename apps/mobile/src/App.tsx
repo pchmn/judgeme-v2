@@ -1,4 +1,4 @@
-import { Flex, useUiProviderContext } from '@judgeme/react';
+import { Flex, useUiProviderContext } from '@kavout/react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator } from 'react-native-paper';

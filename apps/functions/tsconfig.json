@@ -1,5 +1,5 @@
 {
-  "extends": "@judgeme/tsconfig/base.json",
+  "extends": "@kavout/tsconfig/base.json",
   "compilerOptions": {
     "declaration": false,
     "declarationMap": false,
@@ -7,7 +7,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@judgeme/core": ["../../packages/core/src/index"]
+      "@kavout/core": ["../../packages/core/src/index"]
     }
   },
 }

@@ -4,9 +4,9 @@ import { ExpoConfig } from '@expo/config';
 
 const config: ExpoConfig = {
   owner: 'pchmn',
-  name: process.env.APP_ENV === 'production' ? 'JudgeMeV2' : 'JudgeMeV2Dev',
+  name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
   slug: 'judgeme-v2',
-  scheme: 'judgemev2',
+  scheme: 'kavout',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -21,7 +21,7 @@ const config: ExpoConfig = {
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    bundleIdentifier: process.env.APP_ENV === 'production' ? 'com.pchmn.judgemev2' : 'com.pchmn.judgemev2dev',
+    bundleIdentifier: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
@@ -32,7 +32,7 @@ const config: ExpoConfig = {
     },
   },
   android: {
-    package: process.env.APP_ENV === 'production' ? 'com.pchmn.judgemev2' : 'com.pchmn.judgemev2dev',
+    package: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',

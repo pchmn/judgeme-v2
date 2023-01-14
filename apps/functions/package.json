@@ -1,5 +1,5 @@
 {
-  "name": "@judgeme/functions",
+  "name": "@kavout/functions",
   "version": "0.0.0",
   "private": true,
   "author": "pchmn",
@@ -22,7 +22,7 @@
     "firebase-functions": "^4.1.0"
   },
   "devDependencies": {
-    "@judgeme/tsconfig": "workspace:*",
+    "@kavout/tsconfig": "workspace:*",
     "eslint-config-judgeme-ts": "workspace:*",
     "firebase-functions-test": "^0.2.0",
     "tsc-alias": "^1.8.1",

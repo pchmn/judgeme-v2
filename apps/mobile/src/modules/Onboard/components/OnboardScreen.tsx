@@ -1,4 +1,4 @@
-import { Flex } from '@judgeme/react';
+import { Flex } from '@kavout/react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useRef } from 'react';
 import { StyleSheet } from 'react-native';

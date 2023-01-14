@@ -1,4 +1,4 @@
 {
-  "extends": "@judgeme/tsconfig/base.json",
+  "extends": "@kavout/tsconfig/base.json",
   "include": ["src"]
 }

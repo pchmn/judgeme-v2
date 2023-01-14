@@ -1,6 +1,6 @@
 import '@/core/i18n';
 
-import { UiProvider } from '@judgeme/react';
+import { UiProvider } from '@kavout/react';
 
 import App from './App';
 

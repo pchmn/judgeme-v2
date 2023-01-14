@@ -1,4 +1,4 @@
-import { FunctionName } from '@judgeme/core';
+import { FunctionName } from '@kavout/core';
 import { region } from 'firebase-functions/v1';
 
 const functions: Record<FunctionName, unknown> = {
