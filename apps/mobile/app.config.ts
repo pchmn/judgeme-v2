@@ -5,7 +5,7 @@ import { ExpoConfig } from '@expo/config';
 const config: ExpoConfig = {
   owner: 'pchmn',
   name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
-  slug: 'judgeme-v2',
+  slug: 'kavout-v2',
   scheme: 'kavout',
   version: '1.0.0',
   orientation: 'portrait',

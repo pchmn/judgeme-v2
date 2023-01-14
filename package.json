@@ -2,14 +2,14 @@
   "name": "@kavout/monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "judgeme is a private photo sharing platform",
+  "description": "kavout is a private photo sharing platform",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pchmn/judgeme-v2.git"
+    "url": "git+https://github.com/pchmn/kavout-v2.git"
   },
   "author": "pchmn",
   "license": "MIT",
-  "homepage": "https://github.com/pchmn/judgeme-v2",
+  "homepage": "https://github.com/pchmn/kavout-v2",
   "scripts": {
     "dev:mobile": "pnpm --filter @kavout/mobile run dev",
     "build:functions": "pnpm --filter @kavout/functions run build",

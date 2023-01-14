@@ -42,7 +42,7 @@
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
     "babel-preset-expo": "~9.2.1",
-    "eslint-config-judgeme-react": "workspace:*",
+    "eslint-config-kavout-react": "workspace:*",
     "typescript": "^4.9.4"
   },
   "private": true

@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    'judgeme-ts',
+    'kavout-ts',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',

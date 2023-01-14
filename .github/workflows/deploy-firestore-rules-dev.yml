@@ -21,7 +21,7 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
-      - name: 🚀 Deploy to judgeme-dev
+      - name: 🚀 Deploy to kavout-dev
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm

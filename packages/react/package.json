@@ -22,7 +22,7 @@
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
     "eslint": "^8.21.0",
-    "eslint-config-judgeme-react": "workspace:*",
+    "eslint-config-kavout-react": "workspace:*",
     "expo": "~47.0.9",
     "expo-navigation-bar": "~2.0.1",
     "expo-status-bar": "~1.4.2",

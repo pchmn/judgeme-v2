@@ -48,9 +48,9 @@ jobs:
 
       - name: 📦 Remove local dependencies
         working-directory: apps/functions
-        run: pnpm remove -D @kavout/tsconfig eslint-config-judgeme-ts
+        run: pnpm remove -D @kavout/tsconfig eslint-config-kavout-ts
 
-      - name: 🚀 Deploy to judgeme
+      - name: 🚀 Deploy to kavout
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
