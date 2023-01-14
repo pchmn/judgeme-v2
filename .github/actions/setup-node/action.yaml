@@ -42,22 +42,10 @@ runs:
       shell: bash
       run: pnpm install
 
-      # Restore react-native metro cache for speed-up publish time
-      # See: https://github.com/facebook/metro/blob/7dca99af2e2af17921aa4a1e16b1972adc0d11e4/packages/metro-config/src/defaults/index.js#L121-L125
-    - name: Find Metro cache
-      id: metro-cache-dir-path
-      uses: actions/github-script@v6
-      with:
-        result-encoding: string
-        script: |
-          const os = require('os');
-          const path = require('path');
-          return path.join(os.tmpdir(), 'metro-cache');
-
     - name: Restore Metro cache
       uses: actions/cache@v3
       with:
-        path: ${{ steps.metro-cache-dir-path.outputs.result }}
+        path: apps/mobile/node_modules/.cache/metro
         key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
         restore-keys: |
           ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}

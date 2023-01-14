@@ -19,7 +19,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-// Use turborepo to restore the cache when possible
+// Save metro cache in project directory
 config.cacheStores = [new FileStore({ root: path.join(projectRoot, 'node_modules', '.cache', 'metro') })];
 
 module.exports = config;
