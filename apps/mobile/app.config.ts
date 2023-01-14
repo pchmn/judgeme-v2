@@ -25,7 +25,10 @@ const config: ExpoConfig = {
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
-      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
+      googleMapsApiKey:
+        process.env.APP_ENV === 'production'
+          ? process.env.GOOGLE_MAPS_API_KEY_IOS_PROD
+          : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
     googleServicesFile: './GoogleService-Info.plist',
   },
@@ -37,7 +40,10 @@ const config: ExpoConfig = {
     },
     config: {
       googleMaps: {
-        apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID,
+        apiKey:
+          process.env.APP_ENV === 'production'
+            ? process.env.GOOGLE_MAPS_API_KEY_ANDROID_PROD
+            : process.env.GOOGLE_MAPS_API_KEY_ANDROID_DEV,
       },
     },
     googleServicesFile: './google-services.json',
