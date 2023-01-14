@@ -1,5 +1,5 @@
 {
-  "name": "@judgeme/react",
+  "name": "@kavout/react",
   "version": "1.0.0",
   "main": "src/index.ts",
   "peerDependencies": {
@@ -16,13 +16,13 @@
     "react-native-web": "~0.18.9"
   },
   "devDependencies": {
-    "@judgeme/tsconfig": "workspace:*",
+    "@kavout/tsconfig": "workspace:*",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/native": "^6.1.1",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.70.6",
     "eslint": "^8.21.0",
-    "eslint-config-judgeme-react": "workspace:*",
+    "eslint-config-kavout-react": "workspace:*",
     "expo": "~47.0.9",
     "expo-navigation-bar": "~2.0.1",
     "expo-status-bar": "~1.4.2",

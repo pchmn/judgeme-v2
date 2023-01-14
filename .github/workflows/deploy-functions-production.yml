@@ -48,14 +48,14 @@ jobs:
 
       - name: 📦 Remove local dependencies
         working-directory: apps/functions
-        run: pnpm remove -D @judgeme/tsconfig eslint-config-judgeme-ts
+        run: pnpm remove -D @kavout/tsconfig eslint-config-kavout-ts
 
-      - name: 🚀 Deploy to judgeme
+      - name: 🚀 Deploy to kavout
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_PROD }}
-          projectId: judgemev2
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_PROD }}
+          projectId: kavout-da989
           args: deploy --only functions
 
       - uses: geekyeggo/delete-artifact@v2

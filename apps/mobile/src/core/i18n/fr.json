@@ -19,10 +19,10 @@
       "description": "Nous avons besoin de votre localisation pour trouver des personnes autour de vous",
       "dialog": {
         "title": "Autoriser la localisation",
-        "description": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+        "description": "Kavout a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
       },
       "grantLocation": "Autoriser la localisation",
-      "openSettingsDescription": "Woodat a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+      "openSettingsDescription": "Kavout a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
     }
   }
 }

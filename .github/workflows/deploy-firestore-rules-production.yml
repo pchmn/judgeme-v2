@@ -18,10 +18,10 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
-      - name: 🚀 Deploy to judgeme
+      - name: 🚀 Deploy to kavout
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_PROD }}
-          projectId: judgemev2
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_PROD }}
+          projectId: kavout-da989
           args: deploy --only firestore:rules

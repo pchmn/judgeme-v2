@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['judgeme-react'],
+  extends: ['kavout-react'],
   overrides: [
     {
       files: ['*.js'],

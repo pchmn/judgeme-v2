@@ -1,4 +1,4 @@
-import { Flex, useToggle } from '@judgeme/react';
+import { Flex, useToggle } from '@kavout/react';
 import { openSettings } from 'expo-linking';
 import { LocationPermissionResponse } from 'expo-location';
 import { useCallback, useEffect } from 'react';

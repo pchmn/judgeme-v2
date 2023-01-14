@@ -1,4 +1,4 @@
-import { FunctionParams, FunctionValidation } from '@judgeme/core';
+import { FunctionParams, FunctionValidation } from '@kavout/core';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { CallableContext, HttpsError } from 'firebase-functions/v1/https';

@@ -1,19 +1,19 @@
 {
-  "name": "@judgeme/monorepo",
+  "name": "@kavout/monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "judgeme is a private photo sharing platform",
+  "description": "kavout is a private photo sharing platform",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pchmn/judgeme-v2.git"
+    "url": "git+https://github.com/pchmn/kavout-v2.git"
   },
   "author": "pchmn",
   "license": "MIT",
-  "homepage": "https://github.com/pchmn/judgeme-v2",
+  "homepage": "https://github.com/pchmn/kavout-v2",
   "scripts": {
-    "dev:mobile": "pnpm --filter @judgeme/mobile run dev",
-    "build:functions": "pnpm --filter @judgeme/functions run build",
-    "build:watch:functions": "pnpm --filter @judgeme/functions run build:watch",
+    "dev:mobile": "pnpm --filter @kavout/mobile run dev",
+    "build:functions": "pnpm --filter @kavout/functions run build",
+    "build:watch:functions": "pnpm --filter @kavout/functions run build:watch",
     "emulators:start": "pnpm build:watch:functions | firebase emulators:start --only auth,firestore,functions",
     "emulators:stop": "lsof -t -i:5001 -i:8081 -i:9099 | xargs kill -9",
     "deploy:rules": "firebase deploy --only firestore:rules",
