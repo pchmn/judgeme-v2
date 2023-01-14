@@ -25,11 +25,9 @@ const config: ExpoConfig = {
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
-      googleMapsApiKey:
-        process.env.APP_ENV === 'production'
-          ? process.env.GOOGLE_MAPS_API_KEY_IOS_PROD
-          : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
     },
+    googleServicesFile: './GoogleService-Info.plist',
   },
   android: {
     package: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
@@ -39,13 +37,12 @@ const config: ExpoConfig = {
     },
     config: {
       googleMaps: {
-        apiKey:
-          process.env.APP_ENV === 'production'
-            ? process.env.GOOGLE_MAPS_API_KEY_ANDROID_PROD
-            : process.env.GOOGLE_MAPS_API_KEY_ANDROID_DEV,
+        apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID,
       },
     },
+    googleServicesFile: './google-services.json',
   },
+  plugins: ['@react-native-firebase/app'],
   web: {
     favicon: './assets/favicon.png',
   },
