@@ -54,8 +54,8 @@ jobs:
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JUDGEMEV2_PROD }}
-          projectId: judgemev2
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_PROD }}
+          projectId: kavout-da989
           args: deploy --only functions
 
       - uses: geekyeggo/delete-artifact@v2
