@@ -38,9 +38,9 @@ jobs:
       #       apps/mobile/android/**
       #       apps/mobile/ios/**
 
-      - name: 🚀 Create eas development build
-        working-directory: apps/mobile
-        run: eas build --non-interactive --wait --profile development --platform android
+      # - name: 🚀 Create eas development build
+      #   working-directory: apps/mobile
+      #   run: eas build --non-interactive --wait --profile development --platform android
 
       # - name: 🚀 Publish expo go preview
       #   working-directory: apps/mobile

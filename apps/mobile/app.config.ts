@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
-import { ExpoConfig } from '@expo/config';
+import { ConfigContext, ExpoConfig } from '@expo/config';
 
-const config: ExpoConfig = {
+export default ({ config }: ConfigContext): ExpoConfig => ({
+  ...config,
   owner: 'pchmn',
   name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
   slug: 'kavout',
@@ -57,6 +58,4 @@ const config: ExpoConfig = {
       projectId: '81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
     },
   },
-};
-
-export default config;
+});
