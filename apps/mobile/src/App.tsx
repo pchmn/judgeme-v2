@@ -1,8 +1,9 @@
 import 'expo-dev-client';
 
-import { Flex, useUiProviderContext } from '@kavout/react';
+import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 
 import { linking } from '@/core/routes';
@@ -14,6 +15,11 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
   const { isFirstLaunch, locationPermissionStatus, isLoading } = useOnboard();
+  const { mutate: signInAnonymously } = useSignInAnonymously();
+
+  useEffect(() => {
+    signInAnonymously();
+  }, [signInAnonymously]);
 
   if (isLoading) {
     return (
@@ -27,7 +33,7 @@ export default function App() {
     <NavigationContainer theme={navigationTheme} linking={linking}>
       <Stack.Navigator
         initialRouteName={isFirstLaunch || !locationPermissionStatus.granted ? 'Onboard' : 'Home'}
-        screenOptions={{ header: (props) => <></> }}
+        screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />

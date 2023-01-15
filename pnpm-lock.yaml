@@ -45,14 +45,17 @@ importers:
       '@kavout/react': workspace:*
       '@react-native-async-storage/async-storage': ~1.17.3
       '@react-native-firebase/app': ^16.5.0
+      '@react-native-firebase/auth': ^16.5.0
+      '@react-native-firebase/firestore': ^16.5.0
       '@react-navigation/native': ^6.1.1
       '@react-navigation/native-stack': ^6.9.7
+      '@tanstack/react-query': ^4.22.0
       '@types/react': ~18.0.14
       '@types/react-native': ~0.70.6
       babel-preset-expo: ~9.2.1
       dotenv: ^16.0.3
       eslint-config-kavout-react: workspace:*
-      expo: ~47.0.9
+      expo: ~47.0.12
       expo-dev-client: ~2.0.1
       expo-linking: ~3.3.0
       expo-localization: ~14.0.0
@@ -78,8 +81,11 @@ importers:
       '@kavout/react': link:../../packages/react
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.70.6
       '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
+      '@react-native-firebase/auth': 16.5.0_xgfjkptgjyrs53s4qa7wbcipsq
+      '@react-native-firebase/firestore': 16.5.0_xgfjkptgjyrs53s4qa7wbcipsq
       '@react-navigation/native': 6.1.1_ed6hdicvoe3mtgaxburxkml6qq
       '@react-navigation/native-stack': 6.9.7_5vsbgjpwqdsfei35nhrx3tqxau
+      '@tanstack/react-query': 4.22.0_jxg3gmv67zhzsqimxn3ut4st3q
       dotenv: 16.0.3
       expo: 47.0.12_@babel+core@7.20.7
       expo-dev-client: 2.0.1_expo@47.0.12
@@ -4050,6 +4056,26 @@ packages:
       - supports-color
     dev: false
 
+  /@react-native-firebase/auth/16.5.0_xgfjkptgjyrs53s4qa7wbcipsq:
+    resolution: {integrity: sha512-LV3x5I7vMGHhqPqKo+lgLlxQMlFYKF2hYX/F51NmXsL+QXesfUvIWMm8YyUNwspc928QD7PU2mY37V5lrvYuSg==}
+    peerDependencies:
+      '@react-native-firebase/app': 16.5.0
+    dependencies:
+      '@expo/config-plugins': 5.0.4
+      '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
+      plist: 3.0.6
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@react-native-firebase/firestore/16.5.0_xgfjkptgjyrs53s4qa7wbcipsq:
+    resolution: {integrity: sha512-LBoe2pCKCFVFFKofOEu4YERT3CBIGgASK+COjt60p10yIXfxHVv89tW6d1W39iganPajSYYTLqIj4X//CYO+jA==}
+    peerDependencies:
+      '@react-native-firebase/app': 16.5.0
+    dependencies:
+      '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
+    dev: false
+
   /@react-native/assets/1.0.0:
     resolution: {integrity: sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ==}
 
@@ -4153,6 +4179,29 @@ packages:
     dependencies:
       defer-to-connect: 1.1.3
     dev: true
+
+  /@tanstack/query-core/4.22.0:
+    resolution: {integrity: sha512-OeLyBKBQoT265f5G9biReijeP8mBxNFwY7ZUu1dKL+YzqpG5q5z7J/N1eT8aWyKuhyDTiUHuKm5l+oIVzbtrjw==}
+    dev: false
+
+  /@tanstack/react-query/4.22.0_jxg3gmv67zhzsqimxn3ut4st3q:
+    resolution: {integrity: sha512-P9o+HjG42uB/xHR6dMsJaPhtZydSe4v0xdG5G/cEj1oHZAXelMlm67/rYJNQGKgBamKElKogj+HYGF+NY2yHYg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.22.0
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
+      react-native: 0.70.6_react@18.1.0
+      use-sync-external-store: 1.2.0_react@18.1.0
+    dev: false
 
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -7134,6 +7183,7 @@ packages:
       expo: 47.0.12_@babel+core@7.20.7
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /expo-splash-screen/0.17.5_expo@47.0.12:
     resolution: {integrity: sha512-ejSO78hwHXz8T9u8kh8t4r6CR4h70iBvA65gX8GK+dYxZl6/IANPbIb2VnUpND9vqfW+JnkDw+ZFst+gDnkpcQ==}

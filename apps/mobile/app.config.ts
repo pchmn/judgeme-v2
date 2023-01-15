@@ -4,7 +4,7 @@ import { ExpoConfig } from '@expo/config';
 
 const config: ExpoConfig = {
   owner: 'pchmn',
-  name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
+  name: process.env.APP_ENV === 'production' ? 'Kavout' : process.env.APP_ENV === 'local' ? 'KavoutLocal' : 'KavoutDev',
   slug: 'kavout',
   scheme: 'kavout',
   version: '1.0.0',
@@ -24,7 +24,12 @@ const config: ExpoConfig = {
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    bundleIdentifier: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
+    bundleIdentifier:
+      process.env.APP_ENV === 'production'
+        ? 'com.pchmn.kavout'
+        : process.env.APP_ENV === 'local'
+        ? 'com.pchmn.kavout.local'
+        : 'com.pchmn.kavout.dev',
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
@@ -36,7 +41,12 @@ const config: ExpoConfig = {
     googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
   },
   android: {
-    package: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
+    package:
+      process.env.APP_ENV === 'production'
+        ? 'com.pchmn.kavout'
+        : process.env.APP_ENV === 'local'
+        ? 'com.pchmn.kavout.local'
+        : 'com.pchmn.kavout.dev',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
@@ -51,7 +61,7 @@ const config: ExpoConfig = {
     },
     googleServicesFile: process.env.GOOGLE_SERVICES_JSON_DEV,
   },
-  plugins: ['@react-native-firebase/app'],
+  plugins: ['@react-native-firebase/app', '@react-native-firebase/auth'],
   web: {
     favicon: './assets/favicon.png',
   },
