@@ -22,6 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     url: 'https://u.expo.dev/81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
   },
   assetBundlePatterns: ['**/*'],
+  runtimeVersion: '2.718',
   ios: {
     bundleIdentifier: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
     buildNumber: '1.0.0',
