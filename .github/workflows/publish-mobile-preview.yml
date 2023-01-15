@@ -26,32 +26,9 @@ jobs:
       - name: 🏗 Setup expo
         uses: expo/expo-github-action@v7
         with:
-          expo-version: latest
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      # - name: 🗂️ Get native code changed files
-      #   id: native-code-changed-files
-      #   uses: tj-actions/changed-files@v35
-      #   with:
-      #     files: |
-      #       apps/mobile/android/**
-      #       apps/mobile/ios/**
-
-      # - name: 🚀 Create eas development build
-      #   working-directory: apps/mobile
-      #   run: eas build --non-interactive --wait --profile development --platform android
-
-      # - name: 🚀 Publish expo go preview
-      #   working-directory: apps/mobile
-      #   run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
-
       - name: 🚀 Publish eas update
         working-directory: apps/mobile
-        run: eas update --branch ${{ github.head_ref }} --message "PR ${{ github.event.number }} - ${{ github.event.pull_request.title }}"
-
-      # - name: 💬 Comment preview
-      #   uses: expo/expo-github-action/preview-comment@v7
-      #   with:
-      #     project: apps/mobile
-      #     channel: pr-${{ github.event.number }}
+        run: eas update --branch ${{ github.head_ref }} --message "${{ github.event.pull_request.title }} (#${{ github.event.pull_request.number }}) - ${{ github.event.head_commit.message }}"

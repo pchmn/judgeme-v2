@@ -18,9 +18,10 @@ on:
         description: EAS build profile
         type: choice
         required: true
-        default: staging
+        default: development
         options:
-          - staging
+          - development
+          - preview
           - production
 
 jobs:
@@ -42,4 +43,4 @@ jobs:
 
       - name: 🔨 EAS build
         working-directory: apps/mobile
-        run: eas build --non-interactive --wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}
+        run: eas build --non-interactive --no-wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}
