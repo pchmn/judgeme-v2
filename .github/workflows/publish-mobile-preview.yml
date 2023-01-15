@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
@@ -29,6 +31,10 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: 💬 Get eas update message
+        id: update-message
+        run: echo "value=${{ github.event.pull_request.title }} (#${{ github.event.pull_request.number }}) - $(git show -s --format=%s)" >> $GITHUB_OUTPUT
+
       - name: 🚀 Publish eas update
         working-directory: apps/mobile
-        run: eas update --branch ${{ github.head_ref }} --message "${{ github.event.pull_request.title }} (#${{ github.event.pull_request.number }}) - ${{ github.event.head_commit.message }}"
+        run: eas update --branch ${{ github.head_ref }} --message "${{ steps.update-message.outputs.value }}"
