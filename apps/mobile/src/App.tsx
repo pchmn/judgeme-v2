@@ -4,6 +4,7 @@ import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
+import { ToastAndroid } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
 import { linking } from '@/core/routes';
@@ -18,7 +19,12 @@ export default function App() {
   const { mutate: signInAnonymously } = useSignInAnonymously();
 
   useEffect(() => {
-    signInAnonymously();
+    signInAnonymously(undefined, {
+      onSuccess: (user) => {
+        ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
+        console.log('Signed in as', user);
+      },
+    });
   }, [signInAnonymously]);
 
   if (isLoading) {
