@@ -4,7 +4,7 @@ import { ExpoConfig } from '@expo/config';
 
 const config: ExpoConfig = {
   owner: 'pchmn',
-  name: process.env.APP_ENV === 'production' ? 'Kavout' : 'KavoutDev',
+  name: process.env.APP_ENV === 'production' ? 'Kavout' : process.env.APP_ENV === 'local' ? 'KavoutLocal' : 'KavoutDev',
   slug: 'kavout',
   scheme: 'kavout',
   version: '1.0.0',
@@ -17,11 +17,19 @@ const config: ExpoConfig = {
     backgroundColor: '#ffffff',
   },
   updates: {
-    fallbackToCacheTimeout: 0,
+    url: 'https://u.expo.dev/81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    bundleIdentifier: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
+    bundleIdentifier:
+      process.env.APP_ENV === 'production'
+        ? 'com.pchmn.kavout'
+        : process.env.APP_ENV === 'local'
+        ? 'com.pchmn.kavout.local'
+        : 'com.pchmn.kavout.dev',
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
@@ -30,9 +38,15 @@ const config: ExpoConfig = {
           ? process.env.GOOGLE_MAPS_API_KEY_IOS_PROD
           : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
+    googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
   },
   android: {
-    package: process.env.APP_ENV === 'production' ? 'com.pchmn.kavout' : 'com.pchmn.kavout.dev',
+    package:
+      process.env.APP_ENV === 'production'
+        ? 'com.pchmn.kavout'
+        : process.env.APP_ENV === 'local'
+        ? 'com.pchmn.kavout.local'
+        : 'com.pchmn.kavout.dev',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
@@ -45,7 +59,9 @@ const config: ExpoConfig = {
             : process.env.GOOGLE_MAPS_API_KEY_ANDROID_DEV,
       },
     },
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON_DEV,
   },
+  plugins: ['@react-native-firebase/app', '@react-native-firebase/auth'],
   web: {
     favicon: './assets/favicon.png',
   },

@@ -3,6 +3,14 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
+    "development": {
+      "channel": "development",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "development"
+      }
+    },
     "preview": {
       "channel": "preview",
       "distribution": "internal",
@@ -14,16 +22,6 @@
       },
       "env": {
         "APP_ENV": "preview"
-      }
-    },
-    "staging": {
-      "channel": "staging",
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
-      "env": {
-        "APP_ENV": "staging"
       }
     },
     "production": {
