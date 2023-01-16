@@ -15,19 +15,18 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
-  const { isFirstLaunch, locationPermissionStatus, isLoading } = useOnboard();
-  const { mutate: signInAnonymously } = useSignInAnonymously();
+  const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
+  const { mutate: signInAnonymously, isLoading: signInLoading } = useSignInAnonymously();
 
   useEffect(() => {
     signInAnonymously(undefined, {
       onSuccess: (user) => {
         ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
-        console.log('Signed in as', user);
       },
     });
   }, [signInAnonymously]);
 
-  if (isLoading) {
+  if (onboardLoading && signInLoading) {
     return (
       <Flex flex={1} align="center" justify="center">
         <ActivityIndicator size="large" />
@@ -38,7 +37,7 @@ export default function App() {
   return (
     <NavigationContainer theme={navigationTheme} linking={linking}>
       <Stack.Navigator
-        initialRouteName={isFirstLaunch || !locationPermissionStatus.granted ? 'Onboard' : 'Home'}
+        initialRouteName={isFirstLaunch || !locationPermissionStatus?.granted ? 'Onboard' : 'Home'}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
