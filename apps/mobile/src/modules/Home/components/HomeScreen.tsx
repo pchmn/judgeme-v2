@@ -15,12 +15,12 @@ export function HomeScreen() {
   const [currentPosition, setCurrentPosition] = useState<LocationObjectCoords>();
   const locationSubscription = useRef<LocationSubscription>();
 
-  const animateToCurrentPosition = async (location: LocationObjectCoords = currentPosition) => {
+  const animateToCurrentPosition = async (location: LocationObjectCoords | undefined = currentPosition) => {
     if (location && isMapReady.current) {
-      mapRef.current.animateToRegion(
+      mapRef.current?.animateToRegion(
         {
-          latitude: location ? location.latitude : currentPosition.latitude,
-          longitude: location ? location.longitude : currentPosition.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         },

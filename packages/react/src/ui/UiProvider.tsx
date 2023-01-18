@@ -67,7 +67,7 @@ export function UiProvider({ children, sourceColor = '#FFD9DA' }: PropsWithChild
   }, [theme]);
 
   return (
-    <UiProviderContext.Provider value={{ colorScheme, theme, navigationTheme }}>
+    <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme, navigationTheme }}>
       <PaperProvider theme={theme}>
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
         {children}

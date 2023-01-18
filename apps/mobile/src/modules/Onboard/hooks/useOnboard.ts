@@ -27,7 +27,7 @@ export function useOnboard() {
     handleSetLocationPermissionStatus(status);
   }, [status]);
 
-  const handleSetLocationPermissionStatus = (newStatus: LocationPermissionResponse) => {
+  const handleSetLocationPermissionStatus = (newStatus: LocationPermissionResponse | null) => {
     setLocationPermissionStatus((prev) => (JSON.stringify(prev) !== JSON.stringify(newStatus) ? newStatus : prev));
   };
 
