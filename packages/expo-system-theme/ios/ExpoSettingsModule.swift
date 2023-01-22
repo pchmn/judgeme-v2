@@ -5,7 +5,7 @@ public class ExpoSettingsModule: Module {
     Name("ExpoSettings")
 
     Function("getTheme") { () -> String? in
-      null
+      nil
     }
   }
 }

@@ -13,7 +13,7 @@ export default function Main() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UiProvider sourceColor={theme.baseColor}>
+      <UiProvider sourceColor={theme?.baseColor}>
         <App />
       </UiProvider>
     </QueryClientProvider>

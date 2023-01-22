@@ -9,6 +9,6 @@ type SystemTheme = {
   neutral_2: string[];
 };
 
-export function getSystemTheme(): SystemTheme {
+export function getSystemTheme(): SystemTheme | null {
   return ExpoSettingsModule.getTheme();
 }
