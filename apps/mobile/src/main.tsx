@@ -2,14 +2,14 @@ import '@/core/i18n';
 
 import { UiProvider } from '@kavout/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import * as Settings from 'expo-settings';
+import { getSystemTheme } from 'expo-system-theme';
 
 import App from './App';
 
 const queryClient = new QueryClient();
 
 export default function Main() {
-  const theme = Settings.getSystemTheme();
+  const theme = getSystemTheme();
 
   return (
     <QueryClientProvider client={queryClient}>

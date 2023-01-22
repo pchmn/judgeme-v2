@@ -5,7 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "expo-settings": ["../../packages/expo-system-theme/src/index"],
+      "expo-system-theme": ["../../packages/expo-system-theme/src/index"],
     },
   },
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js", "android", "ios", "build"]
