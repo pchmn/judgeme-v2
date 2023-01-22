@@ -1,4 +1,4 @@
-import ExpoSettingsModule from './ExpoSettingsModule';
+import ExpoSystemThemeModule from './ExpoSystemThemeModule';
 
 type SystemTheme = {
   baseColor: string;
@@ -10,5 +10,5 @@ type SystemTheme = {
 };
 
 export function getSystemTheme(): SystemTheme | null {
-  return ExpoSettingsModule.getTheme();
+  return ExpoSystemThemeModule.getTheme();
 }

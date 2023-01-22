@@ -8,9 +8,9 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.*
 
-class ExpoSettingsModule : Module() {
+class ExpoSystemThemeModule : Module() {
     override fun definition() = ModuleDefinition {
-        Name("ExpoSettings")
+        Name("ExpoSystemTheme")
 
         Function("getTheme") {
             return@Function getDynamicColorPalette("theme")

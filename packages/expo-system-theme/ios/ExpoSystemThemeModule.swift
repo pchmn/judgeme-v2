@@ -1,8 +1,8 @@
 import ExpoModulesCore
 
-public class ExpoSettingsModule: Module {
+public class ExpoSystemThemeModule: Module {
   public func definition() -> ModuleDefinition {
-    Name("ExpoSettings")
+    Name("ExpoSystemTheme")
 
     Function("getTheme") { () -> String? in
       nil
