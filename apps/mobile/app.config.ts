@@ -61,7 +61,18 @@ const config: ExpoConfig = {
     },
     googleServicesFile: process.env.GOOGLE_SERVICES_JSON_DEV,
   },
-  plugins: ['@react-native-firebase/app', '@react-native-firebase/auth'],
+  plugins: [
+    '@react-native-firebase/app',
+    '@react-native-firebase/auth',
+    [
+      'expo-build-properties',
+      {
+        ios: {
+          useFrameworks: 'static',
+        },
+      },
+    ],
+  ],
   web: {
     favicon: './assets/favicon.png',
   },
