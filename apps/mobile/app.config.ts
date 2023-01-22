@@ -65,10 +65,12 @@ const config: ExpoConfig = {
     '@react-native-firebase/app',
     '@react-native-firebase/auth',
     'expo-notifications',
+    './reactNativeMapsPlugin',
     [
       'expo-build-properties',
       {
         ios: {
+          deploymentTarget: '13.0',
           useFrameworks: 'static',
         },
       },

@@ -19,7 +19,7 @@ const { LightTheme, DarkTheme } = adaptNavigationTheme({
 type ColorScheme = 'light' | 'dark';
 
 interface UiProviderProps {
-  sourceColor?: string;
+  baseColor?: string;
   colorScheme?: ColorScheme;
   toggleColorScheme?: (colorScheme?: ColorScheme) => void;
   changeBaseColor?: (color: string) => void;
@@ -37,8 +37,8 @@ export function useUiProviderContext() {
   return ctx;
 }
 
-export function UiProvider({ children, sourceColor = '#FFD9DA' }: PropsWithChildren<UiProviderProps>) {
-  const { light: lightColors, dark: darkColors } = createDynamicThemeColors(sourceColor);
+export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildren<UiProviderProps>) {
+  const { light: lightColors, dark: darkColors } = createDynamicThemeColors(baseColor);
 
   const colorScheme = useColorScheme();
 
