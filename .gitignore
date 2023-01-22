@@ -14,5 +14,5 @@ dev-dist
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
-GoogleService-Info.plist
-google-services.json
+GoogleService-Info*.plist
+google-services*.json
