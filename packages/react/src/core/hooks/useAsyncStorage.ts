@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
 
 export function useAsyncStorage<T>(key: string, defaultValue?: T) {
-  const [value, setValue] = useState<T>(defaultValue);
+  const [value, setValue] = useState<T | undefined>(defaultValue);
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -16,7 +16,7 @@ export function useAsyncStorage<T>(key: string, defaultValue?: T) {
           setValue(defaultValue);
         }
       } catch (e) {
-        setError(e);
+        setError(e as Error);
       } finally {
         setIsLoading(false);
       }

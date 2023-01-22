@@ -8,6 +8,7 @@ module.exports = function (api) {
         {
           alias: {
             '@': './src',
+            'expo-settings': '../../packages/expo-system-theme/src/index.ts',
           },
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },

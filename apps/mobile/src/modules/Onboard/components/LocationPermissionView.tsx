@@ -22,7 +22,7 @@ export function LocationPermissionView({ onNext }: { onNext: () => void }) {
   };
 
   const checkLocationPermissionStatus = useCallback(
-    (status: LocationPermissionResponse) => {
+    (status: LocationPermissionResponse | null) => {
       if (status && status.granted) {
         onNext();
       }
@@ -31,7 +31,7 @@ export function LocationPermissionView({ onNext }: { onNext: () => void }) {
   );
 
   const handleRequestPermission = async () => {
-    if (locationPermissionStatus.status === 'denied' && !locationPermissionStatus.canAskAgain) {
+    if (locationPermissionStatus?.status === 'denied' && !locationPermissionStatus.canAskAgain) {
       toggleDialog();
       return;
     }
