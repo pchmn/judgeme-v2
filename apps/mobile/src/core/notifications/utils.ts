@@ -1,6 +1,13 @@
+import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+
+export interface DevicePushTokens {
+  expoToken: string;
+  fcmToken?: string;
+  apnToken?: string;
+}
 
 async function checkNotificationsPermission() {
   if (Device.isDevice) {
@@ -10,9 +17,7 @@ async function checkNotificationsPermission() {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
-    console.log({ finalStatus });
     if (Platform.OS === 'android') {
-      console.log('Notifications.setNotificationChannelAsync');
       Notifications.setNotificationChannelAsync('default', {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
@@ -26,12 +31,19 @@ async function checkNotificationsPermission() {
   }
 }
 
-export async function registerForPushNotifications() {
-  const status = await checkNotificationsPermission();
-  if (status !== 'granted') {
-    return;
+export async function getDevicePushTokens(): Promise<DevicePushTokens | undefined> {
+  try {
+    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    // const status = await checkNotificationsPermission();
+    // if (status !== 'granted') {
+    //   return;
+    // }
+    const expoToken = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    const nativeToken = await Notifications.getDevicePushTokenAsync();
+    return nativeToken.type === 'android'
+      ? { expoToken, fcmToken: nativeToken.data }
+      : { expoToken, apnToken: nativeToken.data };
+  } catch (e) {
+    console.error(e);
   }
-  const expoToken = (await Notifications.getExpoPushTokenAsync()).data;
-  const nativeToken = (await Notifications.getDevicePushTokenAsync()).data;
-  console.log({ expoToken, nativeToken });
 }

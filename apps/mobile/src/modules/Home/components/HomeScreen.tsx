@@ -1,10 +1,9 @@
 import { Flex, useEffectOnce } from '@kavout/react';
+import { firebase } from '@react-native-firebase/functions';
 import { Accuracy, LocationObjectCoords, LocationSubscription, watchPositionAsync } from 'expo-location';
 import { useRef, useState } from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
-
-import { registerForPushNotifications } from '@/core/notifications';
 
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 
@@ -18,6 +17,10 @@ export function HomeScreen() {
   const locationSubscription = useRef<LocationSubscription>();
 
   const animateToCurrentPosition = async (location: LocationObjectCoords | undefined = currentPosition) => {
+    firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
+      to: 'JoZQKGEfZ6jotwn2pRoe3PTZpsoH',
+    });
+
     if (location && isMapReady.current) {
       mapRef.current?.animateToRegion(
         {
@@ -54,7 +57,7 @@ export function HomeScreen() {
 
     watchPosition();
 
-    registerForPushNotifications();
+    // getDevicePushTokens();
 
     return () => {
       locationSubscription.current?.remove();

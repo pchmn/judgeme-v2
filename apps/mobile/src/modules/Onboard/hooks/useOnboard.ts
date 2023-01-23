@@ -1,10 +1,10 @@
-import { useAsyncStorage } from '@kavout/react';
+import { useSecureStore } from '@kavout/react';
 import { getForegroundPermissionsAsync, LocationPermissionResponse, useForegroundPermissions } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
 export function useOnboard() {
-  const { value, isLoading, set } = useAsyncStorage<boolean>('isFirstLaunch', true);
+  const { value, isLoading, set } = useSecureStore<boolean>('isFirstLaunch', true);
 
   const [status, requestPermission] = useForegroundPermissions();
 

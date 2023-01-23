@@ -11,12 +11,16 @@ import { linking } from '@/core/routes';
 import { HomeScreen } from '@/modules/Home';
 import { OnboardScreen, useOnboard } from '@/modules/Onboard';
 
+import { useRegisterForPushNotifications } from './core/notifications/useRegisterForPushNotifications';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
   const { mutate: signInAnonymously, isLoading: signInLoading } = useSignInAnonymously();
+
+  useRegisterForPushNotifications();
 
   useEffect(() => {
     signInAnonymously(undefined, {

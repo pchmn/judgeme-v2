@@ -1,1 +1,1 @@
-export * from './registerForPushNotifications';
+export * from './utils';

@@ -39,6 +39,9 @@ const config: ExpoConfig = {
           : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
     googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
+    infoPlist: {
+      UIBackgroundModes: ['fetch', 'remote-notification'],
+    },
   },
   android: {
     package:
