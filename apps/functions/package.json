@@ -12,14 +12,17 @@
     "shell": "pnpm run build && firebase functions:shell",
     "start": "pnpm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "postinstall": "cp ../../node_modules/.bin/firebase-functions ./node_modules/.bin/firebase-functions"
   },
   "engines": {
     "node": "16"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
+    "expo-server-sdk": "^3.7.0",
     "firebase-admin": "^11.3.0",
-    "firebase-functions": "^4.1.0"
+    "firebase-functions": "^4.2.0"
   },
   "devDependencies": {
     "@kavout/tsconfig": "workspace:*",
