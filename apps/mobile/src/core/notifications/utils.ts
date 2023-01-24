@@ -1,4 +1,5 @@
-import Constants from 'expo-constants';
+import { DeviceInfo } from '@kavout/core';
+import messaging from '@react-native-firebase/messaging';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
@@ -18,7 +19,7 @@ async function checkNotificationsPermission() {
       finalStatus = status;
     }
     if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
+      await Notifications.setNotificationChannelAsync('default', {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
@@ -31,18 +32,15 @@ async function checkNotificationsPermission() {
   }
 }
 
-export async function getDevicePushTokens(): Promise<DevicePushTokens | undefined> {
+export async function getDeviceInfo(): Promise<DeviceInfo | undefined> {
   try {
-    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-    // const status = await checkNotificationsPermission();
-    // if (status !== 'granted') {
-    //   return;
-    // }
-    const expoToken = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-    const nativeToken = await Notifications.getDevicePushTokenAsync();
-    return nativeToken.type === 'android'
-      ? { expoToken, fcmToken: nativeToken.data }
-      : { expoToken, apnToken: nativeToken.data };
+    const pushToken = await messaging().getToken();
+    return {
+      name: `${Device.manufacturer} ${Device.modelName}`,
+      os: `${Device.osName}`,
+      osVersion: `${Device.osVersion}`,
+      pushToken,
+    };
   } catch (e) {
     console.error(e);
   }

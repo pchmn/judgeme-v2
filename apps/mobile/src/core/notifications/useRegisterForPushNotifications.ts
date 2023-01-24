@@ -1,47 +1,33 @@
-import { DeviceDocument } from '@kavout/core';
-import { useFirebaseAuthUser, useFirestoreSetDoc, useSecureStore } from '@kavout/react';
+import { DeviceInfo, UserDocument } from '@kavout/core';
+import { useFirestoreSetDoc, useSecureStore } from '@kavout/react';
 import firestore from '@react-native-firebase/firestore';
-import { useCallback, useEffect, useMemo } from 'react';
+import installations from '@react-native-firebase/installations';
+import { useCallback } from 'react';
 
-import { DevicePushTokens, getDevicePushTokens } from './utils';
+import { getDeviceInfo } from './utils';
 
-function areStoredTokensOutdated(storedTokens: DevicePushTokens | undefined, tokens: DevicePushTokens) {
-  if (!storedTokens) return true;
-  return (
-    storedTokens.expoToken !== tokens.expoToken ||
-    storedTokens.fcmToken !== tokens.fcmToken ||
-    storedTokens.apnToken !== tokens.apnToken
-  );
-}
+function areStoredInfoOutdated(storedInfo: DeviceInfo | undefined, acutalInfo: DeviceInfo) {
+  if (!storedInfo) return true;
 
-function mapTokensToDocument(tokens: DevicePushTokens) {
-  const dataDoc = { expoTokens: firestore.FieldValue.arrayUnion(tokens.expoToken) };
-  return tokens.fcmToken
-    ? { ...dataDoc, fcmTokens: firestore.FieldValue.arrayUnion(tokens.fcmToken) }
-    : { ...dataDoc, apnTokens: firestore.FieldValue.arrayUnion(tokens.apnToken) };
+  return JSON.stringify(storedInfo) !== JSON.stringify(acutalInfo);
 }
 
 export function useRegisterForPushNotifications() {
-  const { value: storedTokens, isLoading, set } = useSecureStore<DevicePushTokens>('pushTokens');
+  const { value: storeInfo, set } = useSecureStore<DeviceInfo>('deviceInfo');
 
-  const { data: currentUser } = useFirebaseAuthUser();
+  const { mutate } = useFirestoreSetDoc<UserDocument>();
 
-  const devicesRef = useMemo(
-    () => (currentUser ? firestore().collection<DeviceDocument>('devices').doc(currentUser.uid) : undefined),
-    [currentUser]
+  const register = useCallback(
+    async (uid: string) => {
+      const deviceInfo = await getDeviceInfo();
+      const installationId = await installations().getId();
+      if (deviceInfo && areStoredInfoOutdated(storeInfo, deviceInfo)) {
+        const ref = firestore().collection<UserDocument>('users').doc(uid);
+        mutate({ ref, data: { devices: { [installationId]: deviceInfo } } }, { onSuccess: () => set(deviceInfo) });
+      }
+    },
+    [mutate, set, storeInfo]
   );
-  const { mutate } = useFirestoreSetDoc<DeviceDocument>();
 
-  const register = useCallback(async () => {
-    const tokens = await getDevicePushTokens();
-    if (tokens && areStoredTokensOutdated(storedTokens, tokens) && devicesRef) {
-      mutate({ ref: devicesRef, data: mapTokensToDocument(tokens) }, { onSuccess: () => set(tokens) });
-    }
-  }, [devicesRef, mutate, set, storedTokens]);
-
-  useEffect(() => {
-    if (!isLoading && devicesRef) {
-      register();
-    }
-  }, [isLoading, register, devicesRef]);
+  return { register };
 }

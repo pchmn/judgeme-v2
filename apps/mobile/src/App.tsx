@@ -1,9 +1,8 @@
 import 'expo-dev-client';
 
-import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react';
+import { Flex, useEffectOnce, useSignInAnonymously, useUiProviderContext } from '@kavout/react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useEffect } from 'react';
 import { ToastAndroid } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -20,15 +19,16 @@ export default function App() {
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
   const { mutate: signInAnonymously, isLoading: signInLoading } = useSignInAnonymously();
 
-  useRegisterForPushNotifications();
+  const { register } = useRegisterForPushNotifications();
 
-  useEffect(() => {
+  useEffectOnce(() => {
     signInAnonymously(undefined, {
       onSuccess: (user) => {
+        register(user.user.uid);
         ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
       },
     });
-  }, [signInAnonymously]);
+  });
 
   if (onboardLoading && signInLoading) {
     return (

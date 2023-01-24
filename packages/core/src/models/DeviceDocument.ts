@@ -1,5 +1,10 @@
-export interface DeviceDocument {
-  expoTokens: string[];
-  fcmTokens: string[];
-  apnTokens: string[];
+export interface DeviceInfo {
+  name: string;
+  os: string;
+  osVersion: string;
+  pushToken: string;
+}
+
+export interface UserDocument {
+  devices: Record<string, DeviceInfo>;
 }

@@ -52,6 +52,8 @@ importers:
       '@react-native-firebase/auth': ^16.5.0
       '@react-native-firebase/firestore': ^16.5.0
       '@react-native-firebase/functions': ^16.5.1
+      '@react-native-firebase/installations': ^16.5.2
+      '@react-native-firebase/messaging': ^16.5.2
       '@react-navigation/native': ^6.1.1
       '@react-navigation/native-stack': ^6.9.7
       '@tanstack/react-query': ^4.22.0
@@ -96,6 +98,8 @@ importers:
       '@react-native-firebase/auth': 16.5.0_xgfjkptgjyrs53s4qa7wbcipsq
       '@react-native-firebase/firestore': 16.5.0_xgfjkptgjyrs53s4qa7wbcipsq
       '@react-native-firebase/functions': 16.5.1_xgfjkptgjyrs53s4qa7wbcipsq
+      '@react-native-firebase/installations': 16.5.2_xgfjkptgjyrs53s4qa7wbcipsq
+      '@react-native-firebase/messaging': 16.5.2_xgfjkptgjyrs53s4qa7wbcipsq
       '@react-navigation/native': 6.1.1_ed6hdicvoe3mtgaxburxkml6qq
       '@react-navigation/native-stack': 6.9.7_5vsbgjpwqdsfei35nhrx3tqxau
       '@tanstack/react-query': 4.22.0_jxg3gmv67zhzsqimxn3ut4st3q
@@ -4168,6 +4172,22 @@ packages:
     resolution: {integrity: sha512-bW7mzYLF46nRB7ilqWhFLw/gy9U9ihvOhH3vIsCo+8Oqys2rplADv/f90wIp2eFEPcA7545//ajCUTk4SbM14w==}
     peerDependencies:
       '@react-native-firebase/app': 16.5.1
+    dependencies:
+      '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
+    dev: false
+
+  /@react-native-firebase/installations/16.5.2_xgfjkptgjyrs53s4qa7wbcipsq:
+    resolution: {integrity: sha512-0haKzE5EjqHWbd1VwH5x8e89voXpeTS97LNpWuPNHtW+r2CUPW44vNQWzyLLcntMoe3DNZ/E3hsO9WeYJ5DbaQ==}
+    peerDependencies:
+      '@react-native-firebase/app': 16.5.2
+    dependencies:
+      '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
+    dev: false
+
+  /@react-native-firebase/messaging/16.5.2_xgfjkptgjyrs53s4qa7wbcipsq:
+    resolution: {integrity: sha512-wT3iPj8kCFBGvha0a8kIcgSJyIuCMoyKr2eMyBO09j75ym0/G/TBpZc6luYnOnJccMSaT0uPageEa3ymT6VQwg==}
+    peerDependencies:
+      '@react-native-firebase/app': 16.5.2
     dependencies:
       '@react-native-firebase/app': 16.5.0_ed6hdicvoe3mtgaxburxkml6qq
     dev: false
