@@ -5,6 +5,9 @@ export interface DeviceInfo {
   pushToken: string;
 }
 
+export interface DevicesDocument {
+  [installationId: string]: DeviceInfo;
+}
 export interface UserDocument {
   devices: Record<string, DeviceInfo>;
 }
