@@ -1,13 +1,12 @@
 import { DeviceInfo } from '@kavout/core';
+import installations from '@react-native-firebase/installations';
 import messaging from '@react-native-firebase/messaging';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-export interface DevicePushTokens {
-  expoToken: string;
-  fcmToken?: string;
-  apnToken?: string;
+export interface InstallationDevice {
+  [installationId: string]: DeviceInfo;
 }
 
 async function checkNotificationsPermission() {
@@ -32,16 +31,15 @@ async function checkNotificationsPermission() {
   }
 }
 
-export async function getDeviceInfo(): Promise<DeviceInfo | undefined> {
-  try {
-    const pushToken = await messaging().getToken();
-    return {
+export async function getInstallationDevice(): Promise<InstallationDevice | undefined> {
+  const pushToken = await messaging().getToken();
+  const installationId = await installations().getId();
+  return {
+    [installationId]: {
       name: `${Device.manufacturer} ${Device.modelName}`,
       os: `${Device.osName}`,
       osVersion: `${Device.osVersion}`,
       pushToken,
-    };
-  } catch (e) {
-    console.error(e);
-  }
+    },
+  };
 }

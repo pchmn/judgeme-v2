@@ -1,1 +1,1 @@
-export * from './DeviceDocument';
+export * from './user.document';

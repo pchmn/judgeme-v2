@@ -10,7 +10,7 @@ import { linking } from '@/core/routes';
 import { HomeScreen } from '@/modules/Home';
 import { OnboardScreen, useOnboard } from '@/modules/Onboard';
 
-import { useRegisterForPushNotifications } from './core/notifications/useRegisterForPushNotifications';
+import { useRegisterDevice } from './core/notifications';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +19,7 @@ export default function App() {
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
   const { mutate: signInAnonymously, isLoading: signInLoading } = useSignInAnonymously();
 
-  const { register } = useRegisterForPushNotifications();
+  const { register } = useRegisterDevice();
 
   useEffectOnce(() => {
     signInAnonymously(undefined, {
