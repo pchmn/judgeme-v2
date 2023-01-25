@@ -1,13 +1,13 @@
 import 'dotenv/config';
 
-import { DeviceDocument, FunctionParams, FunctionValidation } from '@kavout/core';
-import Expo from 'expo-server-sdk';
+import { DevicesDocument, FunctionParams, FunctionValidation } from '@kavout/core';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getMessaging, MulticastMessage } from 'firebase-admin/messaging';
 import { CallableContext, HttpsError } from 'firebase-functions/v1/https';
 
-const expoClient = new Expo({ accessToken: process.env.EXPO_TOKEN });
 const db = getFirestore(initializeApp());
+const messaging = getMessaging();
 
 export default async (data: FunctionParams['sendMessage'], context: CallableContext) => {
   try {
@@ -25,30 +25,31 @@ export default async (data: FunctionParams['sendMessage'], context: CallableCont
 
   const { to } = data;
 
-  const recipientDevice = (await db.collection('devices').doc(to).get()).data() as DeviceDocument;
-  console.log('recipientDevice', recipientDevice);
+  const recipientDevice = (
+    await db.collection('users').doc(to).collection('private').doc('devices').get()
+  ).data() as DevicesDocument;
 
-  const receiptIds = [];
-  for (const token of recipientDevice.expoTokens) {
-    if (!Expo.isExpoPushToken(token)) {
-      console.error(`Push token ${token} is not a valid Expo push token`);
-      continue;
-    }
+  const tokens = Object.values(recipientDevice).map(({ pushToken }) => pushToken);
 
-    const res = await expoClient.sendPushNotificationsAsync([
-      {
-        to: token,
-        title: 'Push notification title',
-        priority: 'high',
-        data: { withSome: 'data' },
-      },
-    ]);
-    console.log('res', res);
-    receiptIds.push(res.filter(({ status }) => status === 'ok').map((ticket: any) => ticket.id));
-  }
+  const message: MulticastMessage = {
+    data: {
+      message: 'hello',
+    },
+    notification: {
+      title: 'Hello',
+      body: 'World',
+    },
+    android: {
+      priority: 'high',
+    },
+    tokens,
+  };
 
-  for (const receiptId of receiptIds) {
-    console.log('receiptId', await expoClient.getPushNotificationReceiptsAsync(receiptId));
+  try {
+    messaging.sendMulticast(message);
+    console.log('Message sent successfully');
+  } catch (error) {
+    console.error(error);
   }
 
   return { success: true };
