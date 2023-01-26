@@ -59,7 +59,7 @@ jobs:
           packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
           projectId: kavout-dev
-          args: deploy --only functions
+          args: deploy --only functions --debug
 
       - uses: geekyeggo/delete-artifact@v2
         with:
