@@ -46,8 +46,6 @@ jobs:
 
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
-        with:
-          keep-npmrc: false
 
       - name: 📦 Remove local dependencies
         working-directory: apps/functions
