@@ -1,4 +1,5 @@
-import { Flex, useEffectOnce } from '@kavout/react';
+import { Flex, useEffectOnce, useFirebaseAuthUser } from '@kavout/react';
+import { firebase } from '@react-native-firebase/functions';
 import { Accuracy, LocationObjectCoords, LocationSubscription, watchPositionAsync } from 'expo-location';
 import { useRef, useState } from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -15,10 +16,12 @@ export function HomeScreen() {
   const [currentPosition, setCurrentPosition] = useState<LocationObjectCoords>();
   const locationSubscription = useRef<LocationSubscription>();
 
+  const { data: currentUser } = useFirebaseAuthUser();
+
   const animateToCurrentPosition = async (location: LocationObjectCoords | undefined = currentPosition) => {
-    // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
-    //   to: 'JoZQKGEfZ6jotwn2pRoe3PTZpsoH',
-    // });
+    firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
+      to: currentUser?.uid,
+    });
 
     if (location && isMapReady.current) {
       mapRef.current?.animateToRegion(

@@ -2,7 +2,8 @@ import { DevicesDocument } from '@kavout/core';
 import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStore } from '@kavout/react';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { Alert } from 'react-native';
 
 import { getInstallationDevice, InstallationDevice } from './utils';
 
@@ -38,5 +39,10 @@ export function useRegisterDevice() {
     return () => unsubscribe();
   });
 
+  useEffect(() => {
+    messaging().onMessage(async (message) => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(message));
+    });
+  }, []);
   return { register };
 }
