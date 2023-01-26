@@ -24,7 +24,8 @@ jobs:
           install: true
 
       - name: 🔨 Build
-        run: pnpm build:functions
+        working-directory: apps/functions
+        run: pnpm build:rollup
 
       - uses: actions/upload-artifact@v3
         with:
