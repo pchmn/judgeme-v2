@@ -10,13 +10,10 @@
     "node": "16"
   },
   "scripts": {
-    "build": "rm -rf ./dist && tsc",
-    "build:watch": "rm -rf ./dist && tsc-watch --onSuccess \"tsc-alias\"",
-    "build:rollup": "rm -rf ./dist && rollup -c rollup.config.js",
-    "dev": "pnpm run build:watch | firebase emulators:start --only functions",
-    "shell": "pnpm run build && firebase functions:shell",
-    "start": "pnpm run shell",
-    "deploy": "firebase deploy --only functions",
+    "build": "rm -rf ./dist && rollup -c rollup.config.js",
+    "dev": "rm -rf ./dist && rollup -w -c rollup.config.js",
+    "remove:local-dependencies": "pnpm remove @kavout/core && pnpm remove -D @kavout/tsconfig eslint-config-kavout-ts",
+    "deploy": "pnpm remove:local-dependencies && firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "dependencies": {

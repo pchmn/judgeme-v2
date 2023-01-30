@@ -12,26 +12,6 @@ on:
       - ".github/workflows/deploy-functions-dev.yml"
 
 jobs:
-  build:
-    name: Build Functions
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: 🏗 Setup node
-        uses: ./.github/actions/setup-node
-        with:
-          install: true
-
-      - name: 🔨 Build
-        working-directory: apps/functions
-        run: pnpm build:rollup
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: functions-dist
-          path: apps/functions/dist/
-
   deploy:
     name: Deploy Functions
     runs-on: ubuntu-latest
@@ -47,19 +27,15 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
-      - name: 📦 Remove local dependencies
-        working-directory: apps/functions
-        run: |
-          pnpm remove @kavout/core
-          pnpm remove -D @kavout/tsconfig eslint-config-kavout-ts
-
-      - name: 🚀 Deploy to kavout-dev
+      - name: 🏗 Setup firebase CLI
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
           projectId: kavout-dev
-          args: deploy --only functions --debug
+
+      - name: 🚀 Deploy to kavout-dev
+        run: pnpm deploy:functions
 
       - uses: geekyeggo/delete-artifact@v2
         with:
