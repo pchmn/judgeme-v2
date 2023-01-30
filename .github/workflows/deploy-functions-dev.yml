@@ -18,11 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: functions-dist
-          path: apps/functions/dist
-
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
@@ -35,7 +30,3 @@ jobs:
 
       - name: 🚀 Deploy to kavout-dev
         run: pnpm deploy:functions
-
-      - uses: geekyeggo/delete-artifact@v2
-        with:
-          name: functions-dist
