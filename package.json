@@ -5,11 +5,11 @@
   "description": "kavout is a private photo sharing platform",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pchmn/kavout-v2.git"
+    "url": "git+https://github.com/pchmn/kavout.git"
   },
   "author": "pchmn",
   "license": "MIT",
-  "homepage": "https://github.com/pchmn/kavout-v2",
+  "homepage": "https://github.com/pchmn/kavout",
   "scripts": {
     "dev:mobile": "pnpm --filter @kavout/mobile run dev",
     "dev:functions": "pnpm --filter @kavout/functions run dev",
@@ -25,7 +25,6 @@
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
     "@commitlint/prompt-cli": "^17.0.3",
-    "concurrently": "^7.6.0",
     "husky": "^8.0.1",
     "lint-staged": "^11.2.3",
     "turbo": "^1.7.0"
