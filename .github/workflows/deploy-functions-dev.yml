@@ -20,6 +20,8 @@ jobs:
 
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
+        with:
+          install: true
 
       - name: 🏗 Setup firebase CLI
         uses: pchmn/firebase-cli-github-action@main
