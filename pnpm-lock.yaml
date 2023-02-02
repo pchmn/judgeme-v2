@@ -30,7 +30,6 @@ importers:
       firebase-functions: ^4.2.0
       firebase-functions-test: ^0.2.0
       rollup: ^3.11.0
-      rollup-plugin-rename-node-modules: ^1.3.1
       tsc-alias: ^1.8.1
       tsc-watch: ^5.0.3
       typescript: ^4.9.4
@@ -48,7 +47,6 @@ importers:
       eslint-config-kavout-ts: link:../../packages/eslint-config-ts
       firebase-functions-test: 0.2.3_k74bi56obrtft4fh4qzhywzzci
       rollup: 3.11.0
-      rollup-plugin-rename-node-modules: 1.3.1_rollup@3.11.0
       tsc-alias: 1.8.2
       tsc-watch: 5.0.3_typescript@4.9.4
       typescript: 4.9.4
@@ -9348,12 +9346,6 @@ packages:
       lodash.clonedeep: 4.5.0
       lru-cache: 4.0.2
 
-  /magic-string/0.25.9:
-    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
-    dependencies:
-      sourcemap-codec: 1.4.8
-    dev: true
-
   /make-dir/2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
@@ -11269,16 +11261,6 @@ packages:
     dependencies:
       glob: 7.2.3
 
-  /rollup-plugin-rename-node-modules/1.3.1_rollup@3.11.0:
-    resolution: {integrity: sha512-46TUPqO94GXuACYqVZjdbzNXTQAp+wTdZg/vUx2gaINb0da/ZPdaOtno2RGUOKBF4sbVM9v2ZqV98r4TQbp1UA==}
-    peerDependencies:
-      rollup: ^2.28.2
-    dependencies:
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
-      rollup: 3.11.0
-    dev: true
-
   /rollup/3.11.0:
     resolution: {integrity: sha512-+uWPPkpWQ2H3Qi7sNBcRfhhHJyUNgBYhG4wKe5wuGRj2m55kpo+0p5jubKNBjQODyPe6tSBE3tNpdDwEisQvAQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
@@ -11633,11 +11615,6 @@ packages:
   /source-map/0.7.4:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
     engines: {node: '>= 8'}
-
-  /sourcemap-codec/1.4.8:
-    resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
-    deprecated: Please use @jridgewell/sourcemap-codec instead
-    dev: true
 
   /spdx-correct/3.1.1:
     resolution: {integrity: sha512-cOYcUWwhCuHCXi49RhFRCyJEK3iPj1Ziz9DpViV3tbZOwXD49QzIN3MpOLJNxh2qwq2lJJZaKMVw9qNi4jTC0w==}

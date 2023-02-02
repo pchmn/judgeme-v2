@@ -1,9 +1,8 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import renameNodeModules from "rollup-plugin-rename-node-modules";
 import { createRequire } from 'module';
-
 const require = createRequire(import.meta.url);
+
 const pkg = require('./package.json');
 
 export default {
@@ -14,6 +13,7 @@ export default {
     sourcemap: true,
     preserveModules: true,
     preserveModulesRoot: 'src',
+    entryFileNames: (chunkInfo) => chunkInfo.name.replace('node_modules/', 'external/') + '.js',
   },
   external: [...Object.keys(pkg.dependencies).filter((key) => key !== '@kavout/core')],
   plugins: [
@@ -21,6 +21,5 @@ export default {
     nodeResolve({
       extensions: ['.ts', '.js'],
     }),
-    renameNodeModules('external')
   ],
 };
