@@ -11,15 +11,10 @@ export default {
     dir: 'dist',
     format: 'es',
     sourcemap: true,
-    preserveModules: true,
-    preserveModulesRoot: 'src',
-    entryFileNames: (chunkInfo) => chunkInfo.name.replace('node_modules/', 'external/') + '.js',
   },
   external: [...Object.keys(pkg.dependencies).filter((key) => key !== '@kavout/core')],
   plugins: [
     typescript(),
-    nodeResolve({
-      extensions: ['.ts', '.js'],
-    }),
+    nodeResolve(),
   ],
 };
