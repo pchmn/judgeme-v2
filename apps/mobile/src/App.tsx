@@ -1,6 +1,6 @@
 import 'expo-dev-client';
 
-import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react';
+import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';

@@ -1,9 +1,5 @@
 import { FunctionParams, FunctionValidation } from '@kavout/core';
-import { initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { CallableContext, HttpsError } from 'firebase-functions/v1/https';
-
-const db = getFirestore(initializeApp());
+import { CallableContext, HttpsError } from 'src/types';
 
 export default async (data: FunctionParams['sendMessage'], context: CallableContext) => {
   try {

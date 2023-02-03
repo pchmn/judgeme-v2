@@ -1,4 +1,4 @@
-import { Flex, useToggle } from '@kavout/react';
+import { Flex, useToggle } from '@kavout/react-native';
 import { openSettings } from 'expo-linking';
 import { LocationPermissionResponse } from 'expo-location';
 import { useCallback, useEffect } from 'react';

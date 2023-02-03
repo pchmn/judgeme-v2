@@ -1,6 +1,6 @@
 import '@/core/i18n';
 
-import { UiProvider } from '@kavout/react';
+import { UiProvider } from '@kavout/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getSystemTheme } from 'expo-system-theme';
 

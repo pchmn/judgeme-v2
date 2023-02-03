@@ -1,4 +1,4 @@
-import { useAsyncStorage } from '@kavout/react';
+import { useAsyncStorage } from '@kavout/react-native';
 import { getForegroundPermissionsAsync, LocationPermissionResponse, useForegroundPermissions } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
