@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    'kavout-ts',
+    './base',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',

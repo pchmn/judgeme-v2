@@ -1,4 +1,4 @@
-import { Flex, useEffectOnce } from '@kavout/react';
+import { Flex, useEffectOnce } from '@kavout/react-native';
 import { Accuracy, LocationObjectCoords, LocationSubscription, watchPositionAsync } from 'expo-location';
 import { useRef, useState } from 'react';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';

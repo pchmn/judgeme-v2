@@ -10,9 +10,9 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@kavout/eslint-config": "workspace:*",
     "@kavout/tsconfig": "workspace:*",
     "eslint": "^8.21.0",
-    "eslint-config-kavout-ts": "workspace:*",
     "typescript": "^4.9.4",
     "zod": "^3.19.1"
   }

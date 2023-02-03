@@ -19,7 +19,8 @@
     "deploy:rules": "firebase deploy --only firestore:rules",
     "deploy:functions": "turbo run deploy --filter @kavout/functions",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
-    "lint": "eslint --cache --fix ."
+    "lint": "eslint --cache --fix .",
+    "clean": "npkill"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
