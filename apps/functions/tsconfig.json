@@ -7,7 +7,10 @@
     "isolatedModules": false,
     "baseUrl": ".",
     "outDir": "dist",
-    "rootDir": "../.."
+    "rootDir": "../..",
+    "paths": {
+      "@kavout/core": ["../../packages/core/src/index"]
+    }
   },
   "include": ["../../packages/core/**/*.ts", "src"]
 }

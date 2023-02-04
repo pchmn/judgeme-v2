@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import { DevicesDocument, FunctionParams, FunctionValidation } from '@kavout/core';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
