@@ -1,4 +1,4 @@
-import { useSecureStore } from '@kavout/react';
+import { useSecureStore } from '@kavout/react-native';
 import { getForegroundPermissionsAsync, LocationPermissionResponse, useForegroundPermissions } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';

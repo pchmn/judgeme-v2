@@ -1,4 +1,4 @@
-import { Flex, Space } from '@kavout/react';
+import { Flex, Space } from '@kavout/react-native';
 import { Image, ImageSourcePropType } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 

@@ -1,6 +1,6 @@
 import '@/core/i18n';
 
-import { UiProvider } from '@kavout/react';
+import { UiProvider } from '@kavout/react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';

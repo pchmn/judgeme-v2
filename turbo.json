@@ -1,0 +1,14 @@
+{
+  "pipeline": {
+    "dev": {
+      "cache": false
+    },
+    "@kavout/functions#build": {
+      "outputs": ["dist"]
+    },
+    "@kavout/functions#deploy": {
+      "dependsOn": ["^@kavout/functions#build"],
+      "outputs": []
+    }
+  }
+}

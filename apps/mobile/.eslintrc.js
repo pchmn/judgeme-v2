@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['kavout-react'],
+  extends: ['@kavout/eslint-config/react'],
   overrides: [
     {
       files: ['*.js'],

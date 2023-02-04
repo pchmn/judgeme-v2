@@ -1,4 +1,4 @@
-import { Flex, useEffectOnce, useFirebaseAuthUser } from '@kavout/react';
+import { Flex, useEffectOnce, useFirebaseAuthUser } from '@kavout/react-native';
 import { firebase } from '@react-native-firebase/functions';
 import { Accuracy, LocationObjectCoords, LocationSubscription, watchPositionAsync } from 'expo-location';
 import { useRef, useState } from 'react';

@@ -5,27 +5,30 @@
   "description": "kavout is a private photo sharing platform",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pchmn/kavout-v2.git"
+    "url": "git+https://github.com/pchmn/kavout.git"
   },
   "author": "pchmn",
   "license": "MIT",
-  "homepage": "https://github.com/pchmn/kavout-v2",
+  "homepage": "https://github.com/pchmn/kavout",
   "scripts": {
     "dev:mobile": "pnpm --filter @kavout/mobile run dev",
-    "build:functions": "pnpm --filter @kavout/functions run build",
-    "build:watch:functions": "pnpm --filter @kavout/functions run build:watch",
-    "emulators:start": "pnpm build:watch:functions | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
+    "dev:functions": "pnpm --filter @kavout/functions run dev",
+    "build:functions": "turbo run build --filter @kavout/functions",
+    "emulators:start": "pnpm dev:functions | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
     "emulators:stop": "lsof -t -i:5001 -i:8080 -i:9099 | xargs kill -9",
     "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:functions": "turbo run deploy --filter @kavout/functions",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
-    "lint": "eslint --cache --fix ."
+    "lint": "eslint --cache --fix .",
+    "clean": "npkill"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
     "@commitlint/prompt-cli": "^17.0.3",
     "husky": "^8.0.1",
-    "lint-staged": "^11.2.3"
+    "lint-staged": "^11.2.3",
+    "turbo": "^1.7.0"
   },
   "pnpm": {
     "peerDependencyRules": {

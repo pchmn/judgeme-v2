@@ -4,10 +4,10 @@
     "declaration": false,
     "declarationMap": false,
     "sourceMap": true,
-    "outDir": "dist",
+    "isolatedModules": false,
     "baseUrl": ".",
-    "paths": {
-      "@kavout/core": ["../../packages/core/src/index"]
-    }
+    "outDir": "dist",
+    "rootDir": "../.."
   },
+  "include": ["../../packages/core/**/*.ts", "src"]
 }
