@@ -1,5 +1,5 @@
 import { DevicesDocument } from '@kavout/core';
-import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStore } from '@kavout/react';
+import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStore } from '@kavout/react-native';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import { useCallback, useEffect } from 'react';
