@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "paths": {
+      "@kavout/core": ["../../packages/core/src/index"]
+    }
+  },
+  "exclude": ["src/**/*.test.ts", "src/__test__"],
+}

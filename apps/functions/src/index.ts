@@ -1,9 +1,9 @@
 import { FunctionName } from '@kavout/core';
-import { region } from 'firebase-functions';
+import { CloudFunction, region } from 'firebase-functions';
 
-const functions: Record<FunctionName, unknown> = {
+const functions: Record<FunctionName, CloudFunction<unknown>> = {
   sendMessage: region('europe-west1').https.onCall(async (data, context) => {
-    await (await import('./sendMessage')).default(data, context);
+    return await (await import('./sendMessage')).default(data, context);
   }),
 };
 

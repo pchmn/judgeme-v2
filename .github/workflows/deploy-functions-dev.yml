@@ -30,5 +30,14 @@ jobs:
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
           projectId: kavout-dev
 
+      - name: 🏗 Create service account key file for tests
+        shell: bash
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKey.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo ${{ runner.temp }}/serviceAccountKey.json)" >> $GITHUB_ENV
+
+      - name: 🧪 Test functions
+        run: pnpm test:functions
+
       - name: 🚀 Deploy to kavout-dev
         run: pnpm deploy:functions
