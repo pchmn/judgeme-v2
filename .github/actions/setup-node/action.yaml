@@ -55,19 +55,19 @@ runs:
       uses: actions/cache@v3
       with:
         path: apps/mobile/node_modules/.cache/metro
-        key: ${{ runner.os }}-metro-cache-${{ github.run_id }}-${{ github.sha }}
+        key: ${{ runner.os }}-metro-cache-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-metro-cache-${{ github.run_id }}-${{ github.ref }}
-          ${{ runner.os }}-metro-cache-${{ github.run_id }}-${{ github.base_ref }}
-          ${{ runner.os }}-metro-cache-${{ github.run_id }}-
+          ${{ runner.os }}-metro-cache-${{ github.ref }}
+          ${{ runner.os }}-metro-cache-${{ github.base_ref }}
+          ${{ runner.os }}-metro-cache-
 
     - if: ${{ inputs.turbo-cache == 'true' }}
       name: Restore Turbo cache
       uses: actions/cache@v3
       with:
         path: node_modules/.cache/turbo
-        key: ${{ runner.os }}-turbo-cache-${{ github.run_id }}-${{ github.sha }}
+        key: ${{ runner.os }}-turbo-cache-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-turbo-cache-${{ github.run_id }}-${{ github.ref }}
-          ${{ runner.os }}-turbo-cache-${{ github.run_id }}-${{ github.base_ref }}
-          ${{ runner.os }}-turbo-cache-${{ github.run_id }}-
+          ${{ runner.os }}-turbo-cache-${{ github.ref }}
+          ${{ runner.os }}-turbo-cache-${{ github.base_ref }}
+          ${{ runner.os }}-turbo-cache-
