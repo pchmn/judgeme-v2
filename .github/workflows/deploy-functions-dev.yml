@@ -12,8 +12,27 @@ on:
       - ".github/workflows/deploy-functions-dev.yml"
 
 jobs:
+  test:
+    name: 🧪 Test Functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
+
+      - name: 🏗 Create service account key file for tests
+        run: |
+          echo '${{ inputs.serviceAccountKey }}' > ${{ runner.temp }}/serviceAccountKey.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo ${{ runner.temp }}/serviceAccountKey.json)" >> $GITHUB_ENV
+
+      - name: 🧪 Test functions
+        run: pnpm test:functions
+
   deploy:
-    name: Deploy Functions
+    name: 🚀 Deploy Functions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,15 +48,6 @@ jobs:
           packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
           projectId: kavout-dev
-
-      - name: 🏗 Create service account key file for tests
-        shell: bash
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKey.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo ${{ runner.temp }}/serviceAccountKey.json)" >> $GITHUB_ENV
-
-      - name: 🧪 Test functions
-        run: pnpm test:functions
 
       - name: 🚀 Deploy to kavout-dev
         run: pnpm deploy:functions
