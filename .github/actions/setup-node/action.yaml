@@ -46,8 +46,9 @@ runs:
       uses: actions/cache@v3
       with:
         path: apps/mobile/node_modules/.cache/metro
-        key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
+        key: ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.sha }}
         restore-keys: |
+          ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.ref }}
           ${{ runner.os }}-metro-cache-${{ matrix.app }}-${{ github.base_ref }}
           ${{ runner.os }}-metro-cache-${{ matrix.app }}-
 
@@ -55,7 +56,8 @@ runs:
       uses: actions/cache@v3
       with:
         path: node_modules/.cache/turbo
-        key: ${{ runner.os }}-turbo-cache-${{ matrix.app }}-${{ github.ref }}
+        key: ${{ runner.os }}-turbo-cache-${{ matrix.app }}-${{ github.sha }}
         restore-keys: |
+          ${{ runner.os }}-turbo-cache-${{ matrix.app }}-${{ github.ref }}
           ${{ runner.os }}-turbo-cache-${{ matrix.app }}-${{ github.base_ref }}
           ${{ runner.os }}-turbo-cache-${{ matrix.app }}-
