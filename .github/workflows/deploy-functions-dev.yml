@@ -42,6 +42,7 @@ jobs:
         uses: ./.github/actions/setup-node
         with:
           install: true
+          turbo-cache: true
 
       - name: 🏗 Setup firebase CLI
         uses: pchmn/firebase-cli-github-action@main

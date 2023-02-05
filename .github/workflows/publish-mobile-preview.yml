@@ -24,6 +24,7 @@ jobs:
         uses: ./.github/actions/setup-node
         with:
           install: true
+          metro-cache: true
 
       - name: 🏗 Setup expo
         uses: expo/expo-github-action@v7
