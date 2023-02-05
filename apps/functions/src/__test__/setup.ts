@@ -10,7 +10,7 @@ const testFunctions = firebaseFunctionsTest(
   {
     projectId: testProjectId,
   },
-  process.env.GOOGLE_APPLICATION_CREDENTIALS
+  process.env.GOOGLE_APPLICATION_CREDENTIALS_TEST
 );
 
 export { functions, testFunctions, testProjectId };

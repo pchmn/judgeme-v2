@@ -14,11 +14,11 @@
     "dev:mobile": "pnpm --filter @kavout/mobile run dev",
     "dev:functions": "pnpm --filter @kavout/functions run dev",
     "build:functions": "turbo run build --filter @kavout/functions",
-    "test:functions": "pnpm --filter @kavout/functions run test",
+    "test:functions": "turbo run test --filter @kavout/functions",
+    "deploy:functions": "turbo run deploy --filter @kavout/functions",
     "emulators:start": "pnpm dev:functions | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
     "emulators:stop": "lsof -t -i:5001 -i:8080 -i:9099 | xargs kill -9",
     "deploy:rules": "firebase deploy --only firestore:rules",
-    "deploy:functions": "turbo run deploy --filter @kavout/functions",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
     "lint": "eslint --cache --fix .",
     "clean": "npkill"

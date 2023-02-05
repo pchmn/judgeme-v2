@@ -3,12 +3,13 @@
     "dev": {
       "cache": false
     },
+    "@kavout/functions#test": {
+    },
     "@kavout/functions#build": {
       "outputs": ["dist"]
     },
     "@kavout/functions#deploy": {
-      "dependsOn": ["^@kavout/functions#build"],
-      "outputs": []
+      "dependsOn": ["^@kavout/functions#build"]
     }
   }
 }
