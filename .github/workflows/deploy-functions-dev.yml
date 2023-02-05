@@ -25,7 +25,7 @@ jobs:
 
       - name: 🏗 Create service account key file for tests
         run: |
-          echo '${{ inputs.serviceAccountKey }}' > ${{ runner.temp }}/serviceAccountKey.json
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKey.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo ${{ runner.temp }}/serviceAccountKey.json)" >> $GITHUB_ENV
 
       - name: 🧪 Test functions
@@ -34,6 +34,7 @@ jobs:
   deploy:
     name: 🚀 Deploy Functions
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v3
 
