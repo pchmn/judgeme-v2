@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+coverage
+.eslintcache
+.nvmrc
+*.code-workspace
+dev-dist
+.turbo
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.emulators-data
