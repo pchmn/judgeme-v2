@@ -1,6 +1,6 @@
 import 'expo-dev-client';
 
-import { Flex, useSignInAnonymously, useUiProviderContext } from '@kavout/react-native';
+import { Flex, useEffectOnce, useSignInAnonymously, useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ToastAndroid } from 'react-native';
@@ -42,7 +42,11 @@ export default function App() {
     <NavigationContainer theme={navigationTheme} linking={linking}>
       <Stack.Navigator
         initialRouteName={isFirstLaunch || !locationPermissionStatus?.granted ? 'Onboard' : 'Home'}
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: false,
+          navigationBarColor: navigationTheme?.colors.background,
+          statusBarColor: navigationTheme?.dark ? 'light' : 'dark',
+        }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />

@@ -76,6 +76,9 @@ const config: ExpoConfig = {
           deploymentTarget: '13.0',
           useFrameworks: 'static',
         },
+        android: {
+          enableProguardInReleaseBuilds: true,
+        },
       },
     ],
   ],
