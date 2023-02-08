@@ -3,7 +3,7 @@
     "dev": {
       "cache": false
     },
-    "@kavout/functions#test": {
+    "@kavout/functions#test:coverage": {
     },
     "@kavout/functions#build": {
       "outputs": ["dist"]
