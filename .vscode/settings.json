@@ -12,6 +12,5 @@
   "i18n-ally.localesPaths": [
     "apps/mobile/src/core/i18n"
   ],
-  "i18n-ally.keystyle": "nested",
-  "vitest.commandLine": "pnpm test:functions"
+  "i18n-ally.keystyle": "nested"
 }

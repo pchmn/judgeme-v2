@@ -1,8 +1,9 @@
 import { firestore } from 'firebase-admin';
 import { UserRecord } from 'firebase-admin/auth';
 import { getMessaging } from 'firebase-admin/messaging';
-import { functions, testFunctions } from 'src/__test__/setup';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
+
+import { functions, testFunctions } from '../__test__/setup';
 
 const wrapped = testFunctions.wrap(functions.sendMessage);
 
