@@ -9,5 +9,10 @@ export interface DevicesDocument {
   [installationId: string]: DeviceInfo;
 }
 export interface UserDocument {
-  devices: Record<string, DeviceInfo>;
+  location: {
+    geohash: string;
+    lat: number;
+    lng: number;
+    alt: number | null;
+  };
 }
