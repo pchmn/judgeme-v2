@@ -4,15 +4,15 @@ import firestore from '@react-native-firebase/firestore';
 import { Accuracy, LocationObjectCoords, LocationSubscription, watchPositionAsync } from 'expo-location';
 import { geohashForLocation } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import RNMapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 
-export function HomeScreen() {
+export function MapView() {
   const theme = useTheme();
 
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<RNMapView>(null);
   const isMapReady = useRef(false);
 
   const [currentPosition, setCurrentPosition] = useState<LocationObjectCoords>();
@@ -99,7 +99,7 @@ export function HomeScreen() {
 
   return (
     <Flex flex={1}>
-      <MapView
+      <RNMapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ width: '100%', height: '100%' }}

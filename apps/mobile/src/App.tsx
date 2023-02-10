@@ -8,8 +8,8 @@ import { useEffect, useRef } from 'react';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
-import { HomeScreen } from '@/modules/Home';
-import { OnboardScreen, useOnboard } from '@/modules/Onboard';
+import HomeScreen from '@/modules/Home';
+import OnboardScreen, { useOnboard } from '@/modules/Onboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +23,6 @@ export default function App() {
   const rootViewReady = useRef(false);
 
   useEffect(() => {
-    console.log('App: useEffect', { authLoading, onboardLoading, rootViewReady: rootViewReady.current });
     if (!authLoading && !onboardLoading && rootViewReady.current) {
       hideAsync();
     }
