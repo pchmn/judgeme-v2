@@ -54,9 +54,9 @@ export function HomeScreen() {
         data: {
           location: {
             geohash,
-            lat: location.latitude,
-            lng: location.longitude,
-            alt: location.altitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            altitude: location.altitude,
           },
         },
       });

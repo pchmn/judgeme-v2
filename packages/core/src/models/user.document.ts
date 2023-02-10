@@ -8,11 +8,13 @@ export interface DeviceInfo {
 export interface DevicesDocument {
   [installationId: string]: DeviceInfo;
 }
+
+export interface LocationInfo {
+  geohash: string;
+  latitude: number;
+  longitude: number;
+  altitude: number | null;
+}
 export interface UserDocument {
-  location: {
-    geohash: string;
-    lat: number;
-    lng: number;
-    alt: number | null;
-  };
+  location: LocationInfo;
 }
