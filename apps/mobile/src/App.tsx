@@ -1,51 +1,44 @@
 import 'expo-dev-client';
 
-import { Flex, useEffectOnce, useSignInAnonymously, useUiProviderContext } from '@kavout/react-native';
+import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ToastAndroid } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { hideAsync, preventAutoHideAsync } from 'expo-splash-screen';
+import { useEffect, useRef } from 'react';
 
+import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
 import { HomeScreen } from '@/modules/Home';
 import { OnboardScreen, useOnboard } from '@/modules/Onboard';
 
-import { useRegisterDevice } from './core/notifications';
-
 const Stack = createNativeStackNavigator();
+
+preventAutoHideAsync();
 
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
-  const { mutate: signInAnonymously, isLoading: signInLoading } = useSignInAnonymously();
+  const { isLoading: authLoading } = useAuth();
 
-  const { register } = useRegisterDevice();
+  const rootViewReady = useRef(false);
 
-  useEffectOnce(() => {
-    signInAnonymously(undefined, {
-      onSuccess: (user) => {
-        register(user.user.uid);
-        ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
-      },
-    });
-  });
+  useEffect(() => {
+    console.log('App: useEffect', { authLoading, onboardLoading, rootViewReady: rootViewReady.current });
+    if (!authLoading && !onboardLoading && rootViewReady.current) {
+      hideAsync();
+    }
+  }, [authLoading, onboardLoading, rootViewReady]);
 
-  if (onboardLoading && signInLoading) {
-    return (
-      <Flex flex={1} align="center" justify="center">
-        <ActivityIndicator size="large" />
-      </Flex>
-    );
+  if (onboardLoading && authLoading) {
+    return null;
   }
 
   return (
-    <NavigationContainer theme={navigationTheme} linking={linking}>
+    <NavigationContainer theme={navigationTheme} linking={linking} onReady={() => (rootViewReady.current = true)}>
       <Stack.Navigator
         initialRouteName={isFirstLaunch || !locationPermissionStatus?.granted ? 'Onboard' : 'Home'}
         screenOptions={{
           headerShown: false,
-          navigationBarColor: navigationTheme?.colors.background,
-          statusBarColor: navigationTheme?.dark ? 'light' : 'dark',
         }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />

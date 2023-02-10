@@ -3,7 +3,8 @@ import {
   DefaultTheme as NavigationDefaultTheme,
   Theme,
 } from '@react-navigation/native';
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
+import * as NavigationBar from 'expo-navigation-bar';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
 import { ThemeProp } from 'react-native-paper/lib/typescript/types';
@@ -59,6 +60,11 @@ export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildre
         : { ...LightTheme, ...MD3LightTheme, colors: { ...LightTheme.colors, ...lightColors } },
     [colorScheme, lightColors, darkColors]
   );
+
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync(theme.colors.background);
+    NavigationBar.setButtonStyleAsync(theme.dark ? 'light' : 'dark');
+  }, [theme]);
 
   return (
     <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme, navigationTheme }}>

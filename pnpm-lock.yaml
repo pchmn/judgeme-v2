@@ -93,6 +93,7 @@ importers:
       expo-linking: ~3.3.0
       expo-localization: ~14.0.0
       expo-location: ~15.0.1
+      expo-navigation-bar: ~2.0.1
       expo-notifications: ~0.17.0
       expo-secure-store: ~12.0.0
       expo-splash-screen: ~0.17.5
@@ -130,6 +131,7 @@ importers:
       expo-linking: 3.3.0_expo@47.0.12
       expo-localization: 14.0.0_expo@47.0.12
       expo-location: 15.0.1_expo@47.0.12
+      expo-navigation-bar: 2.0.1_expo@47.0.12
       expo-notifications: 0.17.0_expo@47.0.12
       expo-secure-store: 12.0.0_expo@47.0.12
       expo-splash-screen: 0.17.5_expo@47.0.12
@@ -7690,6 +7692,18 @@ packages:
     dependencies:
       compare-versions: 3.6.0
       invariant: 2.2.4
+
+  /expo-navigation-bar/2.0.1_expo@47.0.12:
+    resolution: {integrity: sha512-lR+77eOJ4unrDVtrOHRK95c2QGsbRlYt2PmAST9Y+AFEiqVsYWg2JZTp2f2XZxe/10i8jqgSHBMRm7I7w2DcBA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      '@react-native/normalize-color': 2.1.0
+      debug: 4.3.4
+      expo: 47.0.12_@babel+core@7.20.7
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /expo-notifications/0.17.0_expo@47.0.12:
     resolution: {integrity: sha512-PPjV5WaL5iIKAqi/qsNUVf0g4htz+Mx+6tZ/Py7vIurAHbA2PymgV7UPSEB1gUbhzi5PZMGj/DNFJpSZwgqmNg==}

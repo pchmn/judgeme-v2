@@ -44,5 +44,6 @@ export function useRegisterDevice() {
       Alert.alert('A new FCM message arrived!', JSON.stringify(message));
     });
   }, []);
+
   return { register };
 }
