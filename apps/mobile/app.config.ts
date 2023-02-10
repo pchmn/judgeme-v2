@@ -39,6 +39,9 @@ const config: ExpoConfig = {
           : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
     googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
+    infoPlist: {
+      UIBackgroundModes: ['fetch', 'remote-notification'],
+    },
   },
   android: {
     package:
@@ -63,14 +66,17 @@ const config: ExpoConfig = {
   },
   plugins: [
     '@react-native-firebase/app',
+    'expo-notifications',
     './reactNativeMapsPlugin',
-    // '@react-native-firebase/auth',
     [
       'expo-build-properties',
       {
         ios: {
           deploymentTarget: '13.0',
           useFrameworks: 'static',
+        },
+        android: {
+          enableProguardInReleaseBuilds: true,
         },
       },
     ],

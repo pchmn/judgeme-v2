@@ -1,3 +1,5 @@
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import { createRequire } from 'module';
@@ -9,12 +11,9 @@ export default {
   input: 'src/index.ts',
   output: {
     dir: 'dist',
-    format: 'es',
+    format: 'cjs',
     sourcemap: true,
   },
   external: [...Object.keys(pkg.dependencies).filter((key) => key !== '@kavout/core')],
-  plugins: [
-    typescript(),
-    nodeResolve(),
-  ],
+  plugins: [typescript(), nodeResolve(), json(), commonjs()],
 };

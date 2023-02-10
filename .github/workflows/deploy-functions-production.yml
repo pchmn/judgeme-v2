@@ -27,5 +27,13 @@ jobs:
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_PROD }}
           projectId: kavout-da989
 
+      - name: 🏗 Create service account key file for tests
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKeyTest.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS_TEST=$(echo ${{ runner.temp }}/serviceAccountKeyTest.json)" >> $GITHUB_ENV
+
+      - name: 🧪 Test functions
+        run: pnpm test:functions:coverage
+
       - name: 🚀 Deploy to kavout
         run: pnpm deploy:functions

@@ -1,13 +1,8 @@
 {
   "extends": "@kavout/tsconfig/base.json",
   "compilerOptions": {
-    "declaration": false,
-    "declarationMap": false,
-    "sourceMap": true,
     "isolatedModules": false,
     "baseUrl": ".",
-    "outDir": "dist",
-    "rootDir": "../.."
   },
-  "include": ["../../packages/core/**/*.ts", "src"]
+  "include": ["src"]
 }

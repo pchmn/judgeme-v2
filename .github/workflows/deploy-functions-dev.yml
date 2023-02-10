@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Functions
+    name: 🚀 Deploy Functions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,6 +22,7 @@ jobs:
         uses: ./.github/actions/setup-node
         with:
           install: true
+          turbo-cache: true
 
       - name: 🏗 Setup firebase CLI
         uses: pchmn/firebase-cli-github-action@main
@@ -29,6 +30,14 @@ jobs:
           packager: pnpm
           serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
           projectId: kavout-dev
+
+      - name: 🏗 Create service account key file for tests
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKeyTest.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS_TEST=$(echo ${{ runner.temp }}/serviceAccountKeyTest.json)" >> $GITHUB_ENV
+
+      - name: 🧪 Test functions
+        run: pnpm test:functions:coverage
 
       - name: 🚀 Deploy to kavout-dev
         run: pnpm deploy:functions
