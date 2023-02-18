@@ -1,1 +1,2 @@
-export * from './useMap';
+export * from './useCurrentPosition';
+export * from './useInitialRegion';
