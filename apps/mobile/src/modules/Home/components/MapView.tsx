@@ -50,8 +50,8 @@ export function MapView() {
   };
 
   const checkCurrentPosition = useCallback(
-    (region: Region) => {
-      if (currentPosition) {
+    (region?: Region) => {
+      if (region && currentPosition) {
         setIsCurrentPosition(
           distanceBetween([region.latitude, region.longitude], [currentPosition.latitude, currentPosition.longitude]) <
             0.1
@@ -66,7 +66,8 @@ export function MapView() {
       isMapReady.current = true;
       animateToLocation(currentPosition);
     }
-  }, [animateToLocation, currentPosition, initialRegion]);
+    checkCurrentPosition(initialRegion);
+  }, [animateToLocation, checkCurrentPosition, currentPosition, initialRegion]);
 
   return (
     <Flex flex={1}>
