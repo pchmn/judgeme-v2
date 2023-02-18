@@ -4,12 +4,12 @@ import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { hideAsync, preventAutoHideAsync } from 'expo-splash-screen';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
-import { HomeScreen } from '@/modules/Home';
-import { OnboardScreen, useOnboard } from '@/modules/Onboard';
+import HomeScreen, { useInitialRegion } from '@/modules/Home';
+import OnboardScreen, { useOnboard } from '@/modules/Onboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,22 +19,22 @@ export default function App() {
   const { navigationTheme } = useUiProviderContext();
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
   const { isLoading: authLoading } = useAuth();
+  const { preferredRegion, isLoading: preferredRegionLoading } = useInitialRegion();
 
-  const rootViewReady = useRef(false);
+  const [rootViewReady, setRootViewReady] = useState(false);
 
   useEffect(() => {
-    console.log('App: useEffect', { authLoading, onboardLoading, rootViewReady: rootViewReady.current });
-    if (!authLoading && !onboardLoading && rootViewReady.current) {
+    if (!authLoading && !onboardLoading && !preferredRegionLoading && rootViewReady) {
       hideAsync();
     }
-  }, [authLoading, onboardLoading, rootViewReady]);
+  }, [authLoading, onboardLoading, preferredRegionLoading, rootViewReady]);
 
-  if (onboardLoading && authLoading) {
+  if (onboardLoading || authLoading || preferredRegionLoading) {
     return null;
   }
 
   return (
-    <NavigationContainer theme={navigationTheme} linking={linking} onReady={() => (rootViewReady.current = true)}>
+    <NavigationContainer theme={navigationTheme} linking={linking} onReady={() => setRootViewReady(true)}>
       <Stack.Navigator
         initialRouteName={isFirstLaunch || !locationPermissionStatus?.granted ? 'Onboard' : 'Home'}
         screenOptions={{
@@ -42,7 +42,7 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" initialParams={{ initialRegion: preferredRegion }} component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
