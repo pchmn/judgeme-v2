@@ -1,35 +1,73 @@
-import { Flex } from '@kavout/react-native';
-import { useRef } from 'react';
-import RNMapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { Flex, useSecureStore } from '@kavout/react-native';
+import { useRoute } from '@react-navigation/native';
+import { useCallback, useEffect, useRef } from 'react';
+import RNMapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
-import { useMap } from '../hooks';
+import { RouteParams } from '@/core/routes/types';
+
+import { useCurrentPosition } from '../hooks';
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 
 export function MapView() {
+  const {
+    params: { initialRegion },
+  } = useRoute<RouteParams<'Home'>>();
+
   const theme = useTheme();
 
   const mapRef = useRef<RNMapView>(null);
   const isMapReady = useRef(false);
-  const { currentPosition, animateToCurrentPosition } = useMap(mapRef);
 
-  const getMapBoundaries = async () => {
-    // console.log('camera', await mapRef.current?.getCamera());
+  const currentPosition = useCurrentPosition();
+
+  const { set } = useSecureStore<Region & { age: number }>('lastRegionOnMap');
+
+  const animateToLocation = useCallback(
+    async (location?: { latitude: number; longitude: number }) => {
+      // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
+      //   to: currentUser?.uid,
+      // });
+
+      if (location) {
+        mapRef.current?.animateToRegion(
+          {
+            ...location,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          },
+          1500
+        );
+      }
+    },
+    [mapRef]
+  );
+
+  const getMapBoundaries = async (region: Region) => {
+    // console.log('region', region);
+    set({ ...region, age: Date.now() });
   };
+
+  useEffect(() => {
+    if (!isMapReady.current && !initialRegion) {
+      isMapReady.current = true;
+      animateToLocation(currentPosition);
+    }
+  }, [animateToLocation, currentPosition, initialRegion]);
 
   return (
     <Flex flex={1}>
       <RNMapView
+        initialRegion={initialRegion}
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ width: '100%', height: '100%' }}
         customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
         onRegionChangeComplete={getMapBoundaries}
         onMapLoaded={() => {
-          if (!isMapReady.current) {
+          if (!isMapReady.current && !initialRegion) {
             isMapReady.current = true;
-            console.log('onMapLoaded animateToCurrentPosition');
-            animateToCurrentPosition(currentPosition);
+            animateToLocation(currentPosition);
           }
         }}
         showsPointsOfInterest={false}
@@ -38,7 +76,7 @@ export function MapView() {
       <FAB
         icon="crosshairs-gps"
         style={{ position: 'absolute', bottom: 16, right: 16 }}
-        onPress={() => animateToCurrentPosition()}
+        onPress={() => animateToLocation(currentPosition)}
       />
     </Flex>
   );

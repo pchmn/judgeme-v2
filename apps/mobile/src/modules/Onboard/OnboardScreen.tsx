@@ -21,7 +21,7 @@ export function OnboardScreen() {
     <Flex flex={1}>
       <PagerView ref={pagerViewRef} style={{ flex: 1 }} initialPage={params.page} scrollEnabled={false}>
         <ExplanationView onNext={() => setPage(1)} key="1" />
-        <LocationPermissionView key="2" onNext={() => navigation.navigate('Home')} />
+        <LocationPermissionView key="2" onNext={() => navigation.navigate({ key: 'Home' })} />
       </PagerView>
     </Flex>
   );
