@@ -4,15 +4,11 @@ import { useEffect, useState } from 'react';
 import { Region } from 'react-native-maps';
 
 export function useInitialRegion() {
-  const { value, set } = useSecureStore<Region & { age: number }>('lastRegionOnMap');
+  const { value } = useRegionOnMapStore();
 
   const [initialRegion, setInitialRegion] = useState<Region>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const storeRegion = (region: Region) => {
-    set({ ...region, age: Date.now() });
-  };
 
   useEffect(() => {
     if (value && isLessThanOneHour(value.age)) {
@@ -37,7 +33,17 @@ export function useInitialRegion() {
     setIsLoading(false);
   }, 500);
 
-  return { preferredRegion: initialRegion, isLoading, storeRegion };
+  return { preferredRegion: initialRegion, isLoading };
+}
+
+export function useRegionOnMapStore() {
+  const { value, set: setStore } = useSecureStore<Region & { age: number }>('regionOnMap');
+
+  const set = (region: Region) => {
+    setStore({ ...region, age: Date.now() });
+  };
+
+  return { value, set };
 }
 
 function isLessThanOneHour(date: number) {
