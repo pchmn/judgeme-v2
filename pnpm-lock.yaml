@@ -1,5 +1,10 @@
 lockfileVersion: 5.4
 
+patchedDependencies:
+  '@expo/config-plugins@6.0.0':
+    hash: glfeghvuauhdcyaketvuhxatsy
+    path: apps/mobile/patches/@expo__config-plugins@6.0.0.patch
+
 importers:
 
   .:
@@ -112,7 +117,7 @@ importers:
       react-native-screens: ~3.20.0
       typescript: ^4.9.4
     dependencies:
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@kavout/core': link:../../packages/core
       '@kavout/react-native': link:../../packages/react-native
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.3
@@ -3550,7 +3555,7 @@ packages:
       '@babel/runtime': 7.20.7
       '@expo/code-signing-certificates': 0.0.5
       '@expo/config': 8.0.1
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/dev-server': 0.2.2
       '@expo/devcert': 1.1.0
       '@expo/json-file': 8.2.37
@@ -3641,7 +3646,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@expo/config-plugins/6.0.0:
+  /@expo/config-plugins/6.0.0_glfeghvuauhdcyaketvuhxatsy:
     resolution: {integrity: sha512-Hp9ZbAvonzPTJFcoBBfmxwLwxHFOQuj8YcbYzSW2UiXeco79Q0itsCEKenvfc16V+ZwMkcjpbahy5/8uVn6aiA==}
     dependencies:
       '@expo/config-types': 48.0.0
@@ -3661,6 +3666,7 @@ packages:
       xml2js: 0.4.23
     transitivePeerDependencies:
       - supports-color
+    patched: true
 
   /@expo/config-types/47.0.0:
     resolution: {integrity: sha512-r0pWfuhkv7KIcXMUiNACJmJKKwlTBGMw9VZHNdppS8/0Nve8HZMTkNRFQzTHW1uH3pBj8jEXpyw/2vSWDHex9g==}
@@ -3690,7 +3696,7 @@ packages:
     resolution: {integrity: sha512-mwz2vmOnwbSJfLpAx3HaaQDtItnDuC3MNFsi1j8ld8y7yBFhipa73t8qkJ4g4FG5mqgC35+kv0ejwnh7v1gROQ==}
     dependencies:
       '@babel/code-frame': 7.10.4
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/config-types': 48.0.0
       '@expo/json-file': 8.2.37
       getenv: 1.0.0
@@ -3951,7 +3957,7 @@ packages:
         optional: true
     dependencies:
       '@expo/config': 8.0.1
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/config-types': 48.0.0
       '@expo/image-utils': 0.3.22
       '@expo/json-file': 8.2.37
@@ -3974,7 +3980,7 @@ packages:
         optional: true
     dependencies:
       '@expo/config': 8.0.1
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/config-types': 48.0.0
       '@expo/image-utils': 0.3.22
       '@expo/json-file': 8.2.37
@@ -8440,7 +8446,7 @@ packages:
     dependencies:
       '@expo/code-signing-certificates': 0.0.5
       '@expo/config': 8.0.1
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/metro-config': 0.6.0
       arg: 4.1.0
       expo: 48.0.1_@babel+core@7.20.7
@@ -8497,7 +8503,7 @@ packages:
       '@babel/runtime': 7.20.7
       '@expo/cli': 0.6.1_6weo4dzsrefthwodkc5gdxxcii
       '@expo/config': 8.0.1
-      '@expo/config-plugins': 6.0.0
+      '@expo/config-plugins': 6.0.0_glfeghvuauhdcyaketvuhxatsy
       '@expo/vector-icons': 13.0.0
       babel-preset-expo: 9.3.0_@babel+core@7.20.7
       cross-spawn: 6.0.5
