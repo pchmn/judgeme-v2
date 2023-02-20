@@ -24,8 +24,8 @@
     "@types/react": "^18.0.25",
     "@types/react-native": "^0.70.6",
     "eslint": "^8.21.0",
-    "expo-module-scripts": "^3.0.4",
-    "expo-modules-core": "^1.1.0"
+    "expo-module-scripts": "^3.0.7",
+    "expo-modules-core": "^1.2.1"
   },
   "peerDependencies": {
     "expo": "*",
