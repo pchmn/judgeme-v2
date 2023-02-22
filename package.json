@@ -40,9 +40,6 @@
         "react-native-vector-icons*",
         "@firebase/app-types*"
       ]
-    },
-    "patchedDependencies": {
-      "@expo/config-plugins@6.0.0": "apps/mobile/patches/@expo__config-plugins@6.0.0.patch"
     }
   }
 }
