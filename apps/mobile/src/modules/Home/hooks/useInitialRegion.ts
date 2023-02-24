@@ -33,7 +33,7 @@ export function useInitialRegion() {
     setIsLoading(false);
   }, 500);
 
-  return { preferredRegion: initialRegion, isLoading };
+  return { initialRegion, isLoading };
 }
 
 export function useRegionOnMapStore() {

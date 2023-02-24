@@ -19,17 +19,17 @@ export default function App() {
   const { navigationTheme } = useUiProviderContext();
   const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
   const { isLoading: authLoading } = useAuth();
-  const { preferredRegion, isLoading: preferredRegionLoading } = useInitialRegion();
+  const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
 
   const [rootViewReady, setRootViewReady] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !onboardLoading && !preferredRegionLoading && rootViewReady) {
+    if (!authLoading && !onboardLoading && !initialRegionLoading && rootViewReady) {
       hideAsync();
     }
-  }, [authLoading, onboardLoading, preferredRegionLoading, rootViewReady]);
+  }, [authLoading, onboardLoading, initialRegionLoading, rootViewReady]);
 
-  if (onboardLoading || authLoading || preferredRegionLoading) {
+  if (onboardLoading || authLoading || initialRegionLoading) {
     return null;
   }
 
@@ -42,7 +42,7 @@ export default function App() {
         }}
       >
         <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
-        <Stack.Screen name="Home" initialParams={{ initialRegion: preferredRegion }} component={HomeScreen} />
+        <Stack.Screen name="Home" initialParams={{ initialRegion }} component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
