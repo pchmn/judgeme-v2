@@ -1,4 +1,4 @@
-import { Flex, Space } from '@kavout/react-native';
+import { Flex } from '@kavout/react-native';
 import { Image, ImageSourcePropType } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 
@@ -19,17 +19,17 @@ export function PageView({
     <Flex justify="space-between" flex={1} padding={50}>
       <Flex flex={1} align="center" justify="center">
         <Image source={imageSrc} style={{ width: 175, height: 175 }} />
-        <Space height={100} />
-        <Text variant="headlineLarge" style={{ textAlign: 'center', fontWeight: '800' }}>
-          {title}
-        </Text>
-        <Space height={10} />
-        <Text variant="bodyLarge" style={{ textAlign: 'center' }}>
-          {description}
-        </Text>
       </Flex>
 
-      <Flex align="center" justify="center">
+      <Flex align="center" justify="center" gap={50} style={{ alignSelf: 'flex-end', width: '100%' }}>
+        <Flex gap={20}>
+          <Text variant="headlineSmall" style={{ textAlign: 'center' }}>
+            {title}
+          </Text>
+          <Text variant="bodyMedium" style={{ textAlign: 'center', opacity: 0.75, lineHeight: 25 }}>
+            {description}
+          </Text>
+        </Flex>
         <Button mode="contained" onPress={onPress}>
           {buttonLabel}
         </Button>
