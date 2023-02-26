@@ -18,7 +18,7 @@ export function MapView() {
   const theme = useTheme();
 
   const mapRef = useRef<RNMapView>(null);
-  const isMapReady = useRef(false);
+  const isRegionFocused = useRef(false);
 
   const currentPosition = useCurrentPosition();
   const { set: storeRegion } = useRegionOnMapStore();
@@ -45,7 +45,6 @@ export function MapView() {
   );
 
   const getMapBoundaries = async (region: Region) => {
-    // console.log('region', region);
     storeRegion({ ...region });
   };
 
@@ -62,8 +61,8 @@ export function MapView() {
   );
 
   useEffect(() => {
-    if (!isMapReady.current && !initialRegion) {
-      isMapReady.current = true;
+    if (currentPosition && !isRegionFocused.current && !initialRegion) {
+      isRegionFocused.current = true;
       animateToLocation(currentPosition);
     }
     checkCurrentPosition(initialRegion);
@@ -80,8 +79,8 @@ export function MapView() {
         onRegionChange={checkCurrentPosition}
         onRegionChangeComplete={getMapBoundaries}
         onMapLoaded={() => {
-          if (!isMapReady.current && !initialRegion) {
-            isMapReady.current = true;
+          if (!isRegionFocused.current && !initialRegion) {
+            isRegionFocused.current = true;
             animateToLocation(currentPosition);
           }
         }}
