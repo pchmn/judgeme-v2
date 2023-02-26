@@ -17,6 +17,7 @@
     "locationPermissionView": {
       "title": "Location permission",
       "description": "We need your location to find people around you",
+      "grantLocation": "Allow location",
       "dialog": {
         "title": "Location permission",
         "description": "Kavout needs your location to work.\nYou can change this permission in the app settings."
@@ -25,7 +26,7 @@
     "notificationsPermissionView": {
       "title": "Notifications permission",
       "description": "Activate notifications to know when someone sends you a message",
-      "grantNotifications": "Notifications permission",
+      "grantNotifications": "Allow notifications",
       "dialog": {
         "title": "Notifications permission",
         "description": "If you want to receive notifications, you need to grant Kavout the permission to send them.\nYou can change this permission in the app settings."
