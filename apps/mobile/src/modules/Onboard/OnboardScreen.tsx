@@ -1,19 +1,31 @@
 import { Flex } from '@kavout/react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useMemo, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';
 import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import { useTheme } from 'react-native-paper';
 
-import { RouteParams } from '@/core/routes/types';
-
-import { ExplanationView, LocationPermissionView } from './components';
+import { ExplanationView, LocationPermissionView, NotificationsPermissionView } from './components';
+import { useIsFirstLaunch } from './hooks';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
+interface OnboardView {
+  page: number;
+  name: 'explanation' | 'location' | 'notifications';
+  isCompleted?: boolean;
+}
+
+const onboardViews: OnboardView[] = [
+  { name: 'explanation', page: 0 },
+  { name: 'location', page: 1 },
+  { name: 'notifications', page: 2 },
+];
+
 export function OnboardScreen() {
-  const { params } = useRoute<RouteParams<'Onboard'>>();
+  const { set: setIsFirstLaunch } = useIsFirstLaunch();
+
   const navigation = useNavigation();
 
   const theme = useTheme();
@@ -22,10 +34,10 @@ export function OnboardScreen() {
   const width = Dimensions.get('window').width;
   const scrollOffsetAnimatedValue = useRef(new Animated.Value(0)).current;
   const positionAnimatedValue = useRef(new Animated.Value(0)).current;
-  const inputRange = [0, 2];
+  const inputRange = [0, onboardViews.length];
   const scrollX = Animated.add(scrollOffsetAnimatedValue, positionAnimatedValue).interpolate({
     inputRange,
-    outputRange: [0, 2 * width],
+    outputRange: [0, onboardViews.length * width],
   });
 
   const setPage = (page: number) => {
@@ -51,14 +63,49 @@ export function OnboardScreen() {
     []
   );
 
+  const handleNext = (from: 'explanation' | 'location' | 'notifications') => {
+    const view = onboardViews.find(({ name }) => name === from);
+
+    if (view) {
+      view.isCompleted = true;
+      const nextView = onboardViews.find(({ isCompleted }) => !isCompleted);
+      if (nextView) {
+        setPage(nextView.page);
+      } else {
+        goToHome();
+      }
+    }
+  };
+
+  const goToHome = () => {
+    setIsFirstLaunch(false);
+    navigation.navigate('Home', {});
+  };
+
   return (
     <Flex flex={1} gap={20}>
-      <AnimatedPagerView ref={pagerViewRef} style={{ flex: 1 }} initialPage={params.page} onPageScroll={onPageScroll}>
-        <ExplanationView onNext={() => setPage(1)} key="1" />
-        <LocationPermissionView key="2" onNext={() => navigation.navigate('Home', {})} />
+      <AnimatedPagerView
+        ref={pagerViewRef}
+        style={{ flex: 1 }}
+        initialPage={0}
+        onPageScroll={onPageScroll}
+        scrollEnabled={false}
+      >
+        {onboardViews.map(({ name }) => {
+          switch (name) {
+            case 'explanation':
+              return <ExplanationView key="0" onNext={() => handleNext('explanation')} />;
+            case 'location':
+              return <LocationPermissionView key="1" onNext={() => handleNext('location')} />;
+            case 'notifications':
+              return (
+                <NotificationsPermissionView key="2" onNext={() => handleNext('notifications')} onSkip={goToHome} />
+              );
+          }
+        })}
       </AnimatedPagerView>
       <ExpandingDot
-        data={[1, 2]}
+        data={onboardViews}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         scrollX={scrollX}

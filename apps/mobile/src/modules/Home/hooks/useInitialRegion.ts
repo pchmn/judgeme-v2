@@ -19,12 +19,18 @@ export function useInitialRegion() {
 
   useEffect(() => {
     const getLastKnownPosition = async () => {
-      const location = await getLastKnownPositionAsync();
-      if (location) {
-        setInitialRegion((prev) => (prev ? prev : { ...location.coords, latitudeDelta: 0.05, longitudeDelta: 0.05 }));
+      try {
+        const location = await getLastKnownPositionAsync();
+        if (location) {
+          setInitialRegion((prev) => (prev ? prev : { ...location.coords, latitudeDelta: 0.05, longitudeDelta: 0.05 }));
+          setIsLoading(false);
+        }
+      } catch (e) {
+        console.error('Error while getting last known position', e);
         setIsLoading(false);
       }
     };
+
     getLastKnownPosition();
   }, []);
 

@@ -1,47 +1,50 @@
 import 'expo-dev-client';
+import '@/core/i18n';
 
 import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { hideAsync, preventAutoHideAsync } from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { hideAsync } from 'expo-splash-screen';
+import { useEffect } from 'react';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
 import HomeScreen, { useInitialRegion } from '@/modules/Home';
-import OnboardScreen, { useOnboard } from '@/modules/Onboard';
+import OnboardScreen, { LocationPermissionView, useIsFirstLaunch, useLocationPermissions } from '@/modules/Onboard';
 
 const Stack = createNativeStackNavigator();
 
-preventAutoHideAsync();
-
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
-  const { isFirstLaunch, locationPermissionStatus, isLoading: onboardLoading } = useOnboard();
+
+  const { value: isFirstLaunch, isLoading: isFirstLaunchLoading } = useIsFirstLaunch();
+  const { locationPermissions, isLoading: locationPermissionsLoading } = useLocationPermissions();
   const { isLoading: authLoading } = useAuth();
   const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
 
-  const [rootViewReady, setRootViewReady] = useState(false);
-
   useEffect(() => {
-    if (!authLoading && !onboardLoading && !initialRegionLoading && rootViewReady) {
+    if (!authLoading && !isFirstLaunchLoading && !locationPermissionsLoading && !initialRegionLoading) {
       hideAsync();
     }
-  }, [authLoading, onboardLoading, initialRegionLoading, rootViewReady]);
+  }, [authLoading, isFirstLaunchLoading, locationPermissionsLoading, initialRegionLoading]);
 
-  if (onboardLoading || authLoading || initialRegionLoading) {
+  if (isFirstLaunchLoading || authLoading || initialRegionLoading || locationPermissionsLoading) {
     return null;
   }
 
+  if (!locationPermissions?.granted && !isFirstLaunch) {
+    return <LocationPermissionView />;
+  }
+
   return (
-    <NavigationContainer theme={navigationTheme} linking={linking} onReady={() => setRootViewReady(true)}>
+    <NavigationContainer theme={navigationTheme} linking={linking}>
       <Stack.Navigator
-        initialRouteName={isFirstLaunch || !locationPermissionStatus?.granted ? 'Onboard' : 'Home'}
+        initialRouteName={isFirstLaunch ? 'Onboard' : 'Home'}
         screenOptions={{
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Onboard" initialParams={{ page: isFirstLaunch ? 0 : 1 }} component={OnboardScreen} />
+        <Stack.Screen name="Onboard" component={OnboardScreen} />
         <Stack.Screen name="Home" initialParams={{ initialRegion }} component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>

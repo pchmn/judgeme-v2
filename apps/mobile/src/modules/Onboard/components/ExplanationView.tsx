@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next';
 
-import { useOnboard } from '../hooks';
+import { useIsFirstLaunch } from '../hooks';
 import { PageView } from './PageView';
 
 export function ExplanationView({ onNext }: { onNext: () => void }) {
   const { t } = useTranslation();
 
-  const { setIsFirstLaunch } = useOnboard();
+  const { set: setIsFirstLaunch } = useIsFirstLaunch();
 
   const handleNextPress = () => {
-    setIsFirstLaunch(false);
+    // setIsFirstLaunch(false);
     onNext();
   };
 

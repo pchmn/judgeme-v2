@@ -1,6 +1,6 @@
 import { Flex } from '@kavout/react-native';
 import { Image, ImageSourcePropType } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button, Text, useTheme } from 'react-native-paper';
 
 export function PageView({
   imageSrc,
@@ -8,15 +8,25 @@ export function PageView({
   description,
   buttonLabel,
   onPress,
+  onSkip,
 }: {
   imageSrc: ImageSourcePropType;
   title: string;
   description: string;
   buttonLabel: string;
   onPress: () => void;
+  onSkip?: () => void;
 }) {
+  const theme = useTheme();
+
   return (
-    <Flex justify="space-between" flex={1} padding={50}>
+    <Flex
+      justify="space-between"
+      flex={1}
+      paddingX={20}
+      paddingY={50}
+      style={{ backgroundColor: theme.colors.background }}
+    >
       <Flex flex={1} align="center" justify="center">
         <Image source={imageSrc} style={{ width: 175, height: 175 }} />
       </Flex>
@@ -30,9 +40,17 @@ export function PageView({
             {description}
           </Text>
         </Flex>
-        <Button mode="contained" onPress={onPress}>
-          {buttonLabel}
-        </Button>
+
+        <Flex gap={10}>
+          <Button mode="contained" onPress={onPress}>
+            {buttonLabel}
+          </Button>
+          {onSkip && (
+            <Button mode="text" onPress={onSkip}>
+              Passer
+            </Button>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   );

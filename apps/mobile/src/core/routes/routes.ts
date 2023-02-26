@@ -4,7 +4,7 @@ import { Region } from 'react-native-maps';
 
 export type RootStackParamList = {
   Home: { initialRegion?: Region };
-  Onboard: { page: number };
+  Onboard: undefined;
 };
 
 export const linking: LinkingOptions<ReactNavigation.RootParamList> = {

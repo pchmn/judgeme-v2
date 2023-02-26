@@ -11,18 +11,25 @@
   },
   "welcomeScreen": {
     "explalantionView": {
-      "title": "Qui est-ce ?",
-      "description": "Communique anonymement avec des iconnus autour de toi"
+      "title": "Kavout ?",
+      "description": "Trouve des personnes autour de toi et envoie leur des messages de manière anonyme"
     },
     "locationPermissionView": {
-      "title": "Permission de localisation",
-      "description": "Nous avons besoin de votre localisation pour trouver des personnes autour de vous",
+      "title": "Localisation",
+      "description": "Nous avons besoin de ta localisation pour trouver des personnes autour de toi",
       "dialog": {
         "title": "Autoriser la localisation",
-        "description": "Kavout a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
-      },
-      "grantLocation": "Autoriser la localisation",
-      "openSettingsDescription": "Kavout a besoin de la localisation pour fonctionner.\nVous pouvez l'autoriser dans les paramètres de l'application."
+        "description": "Kavout a besoin de la localisation pour fonctionner.\nTu peux l'autoriser dans les paramètres de l'application."
+      }
+    },
+    "notificationsPermissionView": {
+      "title": "Notifications",
+      "description": "Active les notifications pour être alerté quand quelqu'un t'envoie un message",
+      "grantNotifications": "Autoriser les notifications",
+      "dialog": {
+        "title": "Autoriser les notifications",
+        "description": "Si tu veux être alerté quand quelqu'un t'envoie un message, tu dois autoriser les notifications.\nTu peux les autoriser dans les paramètres de l'application."
+      }
     }
   }
 }

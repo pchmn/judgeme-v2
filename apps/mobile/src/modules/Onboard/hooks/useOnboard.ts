@@ -1,41 +1,39 @@
-import { useSecureStore } from '@kavout/react-native';
-import { getForegroundPermissionsAsync, LocationPermissionResponse, useForegroundPermissions } from 'expo-location';
+import { getForegroundPermissionsAsync } from 'expo-location';
+import { getPermissionsAsync as getNotificationsPermissionsAsync } from 'expo-notifications';
 import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
+
+interface OnboardView {
+  page: number;
+  name: 'explanation' | 'location' | 'notifications';
+  isCompleted?: boolean;
+  mandatory?: boolean;
+}
 
 export function useOnboard() {
-  const { value, isLoading, set } = useSecureStore<boolean>('isFirstLaunch', true);
-
-  const [status, requestPermission] = useForegroundPermissions();
-
-  const [locationPermissionStatus, setLocationPermissionStatus] = useState(status);
+  const [viewsToShow, setViewsToShow] = useState<OnboardView[]>([]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', async (nextAppState) => {
-      if (nextAppState === 'active') {
-        const newStatus = await getForegroundPermissionsAsync();
-        handleSetLocationPermissionStatus(newStatus);
-      }
-    });
+    const checkPermissions = async () => {
+      const notificationsPermissions = await getNotificationsPermissionsAsync();
+      const locationPermissions = await getForegroundPermissionsAsync();
 
-    return () => {
-      subscription.remove();
+      let page = 0;
+      const views: OnboardView[] = [{ name: 'explanation', page }];
+      if (!locationPermissions.granted) {
+        page++;
+        views.push({ name: 'location', page, mandatory: true });
+      }
+      if (!notificationsPermissions.granted) {
+        page++;
+        views.push({ name: 'notifications', page });
+      }
+      setViewsToShow(views);
     };
+    checkPermissions();
   }, []);
 
-  useEffect(() => {
-    handleSetLocationPermissionStatus(status);
-  }, [status]);
-
-  const handleSetLocationPermissionStatus = (newStatus: LocationPermissionResponse | null) => {
-    setLocationPermissionStatus((prev) => (JSON.stringify(prev) !== JSON.stringify(newStatus) ? newStatus : prev));
-  };
-
   return {
-    isFirstLaunch: value,
-    setIsFirstLaunch: set,
-    isLoading: isLoading || locationPermissionStatus === null,
-    locationPermissionStatus,
-    requestLocationPermission: requestPermission,
+    viewsToShow: viewsToShow.sort((a, b) => a.page - b.page),
+    isLoading: viewsToShow.length === 0,
   };
 }
