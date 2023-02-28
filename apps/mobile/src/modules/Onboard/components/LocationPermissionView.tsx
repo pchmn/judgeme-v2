@@ -7,6 +7,7 @@ import { ActivityIndicator } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 
 import { useLocationPermissions } from '../hooks';
+import LocationImage from './LocationImage';
 import { PageView } from './PageView';
 
 export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
@@ -57,6 +58,7 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
         description={t('welcomeScreen.locationPermissionView.description')}
         buttonLabel={t('welcomeScreen.locationPermissionView.grantLocation')}
         imageSrc={require('./location-permission.png')}
+        image={<LocationImage />}
         onPress={handleRequestPermission}
       />
       <Portal>

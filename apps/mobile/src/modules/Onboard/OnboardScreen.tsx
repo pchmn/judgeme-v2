@@ -89,7 +89,7 @@ export function OnboardScreen() {
         style={{ flex: 1 }}
         initialPage={0}
         onPageScroll={onPageScroll}
-        scrollEnabled={false}
+        scrollEnabled={true}
       >
         {onboardViews.map(({ name }) => {
           switch (name) {

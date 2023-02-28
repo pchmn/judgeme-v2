@@ -7,6 +7,7 @@ import { ActivityIndicator } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 
 import { useNotificationsPermissions } from '../hooks/useNotificationsPermissions';
+import NotificationsImage from './NotificationsImage';
 import { PageView } from './PageView';
 
 export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () => void; onSkip?: () => void }) {
@@ -57,6 +58,7 @@ export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () =>
         description={t('welcomeScreen.notificationsPermissionView.description')}
         buttonLabel={t('welcomeScreen.notificationsPermissionView.grantNotifications')}
         imageSrc={require('./users-around-world.png')}
+        image={<NotificationsImage />}
         onPress={handleRequestPermission}
         onSkip={onSkip}
       />
