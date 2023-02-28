@@ -3,12 +3,14 @@ import { openSettings } from 'expo-linking';
 import { LocationPermissionResponse } from 'expo-location';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 
 import { useLocationPermissions } from '../hooks';
 import LocationImage from './LocationImage';
 import { PageView } from './PageView';
+
+const width = Dimensions.get('window').width;
 
 export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
   const { t } = useTranslation();
@@ -57,8 +59,7 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
         title={t('welcomeScreen.locationPermissionView.title')}
         description={t('welcomeScreen.locationPermissionView.description')}
         buttonLabel={t('welcomeScreen.locationPermissionView.grantLocation')}
-        imageSrc={require('./location-permission.png')}
-        image={<LocationImage />}
+        image={<LocationImage height={width / 1.75} width={width / 1.75} />}
         onPress={handleRequestPermission}
       />
       <Portal>

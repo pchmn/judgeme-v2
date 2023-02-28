@@ -1,9 +1,7 @@
 import { Flex } from '@kavout/react-native';
-import { ImageSourcePropType } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 
 export function PageView({
-  imageSrc,
   image,
   title,
   description,
@@ -11,7 +9,6 @@ export function PageView({
   onPress,
   onSkip,
 }: {
-  imageSrc?: ImageSourcePropType;
   image?: React.ReactNode;
   title: string;
   description: string;
@@ -31,15 +28,6 @@ export function PageView({
     >
       <Flex flex={1} align="center" justify="center">
         {image}
-        {/* <Image source={imageSrc} style={{ width: 250, height: 250 }} /> */}
-        {/* <Flex
-          padding={60}
-          align="center"
-          justify="center"
-          style={{ backgroundColor: theme.colors.secondary + '33', borderRadius: 200 }}
-        >
-          <Image source={imageSrc} style={{ width: 200, height: 200 }} />
-        </Flex> */}
       </Flex>
 
       <Flex align="center" justify="center" gap={50} style={{ alignSelf: 'flex-end', width: '100%' }}>

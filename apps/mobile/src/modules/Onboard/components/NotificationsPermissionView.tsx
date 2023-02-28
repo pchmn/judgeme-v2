@@ -3,12 +3,14 @@ import { openSettings } from 'expo-linking';
 import { NotificationPermissionsStatus } from 'expo-notifications';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import { Button, Dialog, Portal, Text } from 'react-native-paper';
 
 import { useNotificationsPermissions } from '../hooks/useNotificationsPermissions';
 import NotificationsImage from './NotificationsImage';
 import { PageView } from './PageView';
+
+const width = Dimensions.get('window').width;
 
 export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () => void; onSkip?: () => void }) {
   const { t } = useTranslation();
@@ -57,8 +59,7 @@ export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () =>
         title={t('welcomeScreen.notificationsPermissionView.title')}
         description={t('welcomeScreen.notificationsPermissionView.description')}
         buttonLabel={t('welcomeScreen.notificationsPermissionView.grantNotifications')}
-        imageSrc={require('./users-around-world.png')}
-        image={<NotificationsImage />}
+        image={<NotificationsImage height={width / 2} width={width / 2} />}
         onPress={handleRequestPermission}
         onSkip={onSkip}
       />

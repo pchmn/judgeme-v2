@@ -2,10 +2,10 @@ import { useTheme } from 'react-native-paper';
 import Svg, { Defs, Ellipse, G, Path, Rect, SvgProps } from 'react-native-svg';
 /* SVGR has dropped some elements not supported by react-native-svg: filter */
 
-const EarthImage = (props: SvgProps) => {
+const EarthImage = ({ height = 250, width = 250, ...props }: SvgProps) => {
   const theme = useTheme();
   return (
-    <Svg height={250} width={250} fill="none" {...props}>
+    <Svg width={width} height={height} fill="none" viewBox="0 0 250 250" {...props}>
       <G filter="url(#a)">
         <Path
           d="M47 13c0-5.523 4.477-10 10-10h23c5.523 0 10 4.477 10 10s-4.477 10-10 10H57c-5.523 0-10-4.477-10-10Z"

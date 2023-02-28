@@ -1,11 +1,40 @@
 import { useTheme } from 'react-native-paper';
 import Svg, { Ellipse, Path, SvgProps } from 'react-native-svg';
 
-const LocationImage = (props: SvgProps) => {
+const LocationImage = ({ height = 250, width = 250, ...props }: SvgProps) => {
   const theme = useTheme();
   return (
-    <Svg width={245} height={251} fill="none" {...props}>
+    <Svg width={width} height={height} fill="none" viewBox="0 0 250 250" {...props}>
+      <Path fill={theme.colors.secondary} d="m79.046 94.05 19.176-1.415 11.47 149.915-19.177 1.416z" />
+      <Path fill={theme.colors.secondary} d="m37.33 163.674 2.956-18.664 181.687 27.758-2.956 18.665z" />
       <Path
+        d="M65.089 92.788h117.236a15 15 0 0 1 14.259 10.343l40.102 122.777c3.167 9.696-4.058 19.658-14.258 19.658H27.12c-10.101 0-17.315-9.782-14.33-19.432l37.968-122.778a15 15 0 0 1 14.33-10.568Z"
+        stroke={theme.colors.outline}
+        strokeWidth={10}
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M98.617 97.788h83.708a10 10 0 0 1 9.506 6.895l21.823 66.815-110.692-16.912-4.346-56.798ZM109.54 240.566h112.888c6.8 0 11.617-6.641 9.505-13.105l-12.541-38.397-.375 2.369-114.575-17.505 5.098 66.638ZM37.27 163.899l-19.704 63.712c-1.99 6.434 2.82 12.955 9.554 12.955h63.135l-5.326-69.619-46.13-7.048h-1.53Z"
+        fill={theme.colors.secondaryContainer}
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M79.332 97.788H65.089a10 10 0 0 0-9.554 7.045l-12.552 40.589 40.466 6.182-4.117-53.816Z"
+        fill="#73A273"
+      />
+      <Ellipse cx={156.633} cy={139.5} rx={20.918} ry={9.5} fill="#000" fillOpacity={0.1} />
+      <Path
+        d="M217.596 61.455c.027 43.635-45.175 69.891-58.271 76.582a7.65 7.65 0 0 1-7.032 0c-13.104-6.691-58.338-32.947-58.364-76.582-.02-33.628 27.646-60.89 61.796-60.89s61.85 27.262 61.871 60.89Z"
+        fill={theme.colors.primary}
+      />
+      <Path
+        d="M154.038 87.47c14.568 1.378 27.512-9.136 28.911-23.482 1.399-14.347-9.277-27.094-23.845-28.472-14.568-1.378-27.512 9.136-28.911 23.482-1.399 14.347 9.277 27.094 23.845 28.472Z"
+        fill="#fff"
+      />
+
+      {/* <Path
         fill={theme.dark ? theme.colors.secondary : theme.colors.secondary}
         d="m77.465 94.05 18.792-1.415 11.24 149.915-18.792 1.416z"
       />
@@ -38,7 +67,7 @@ const LocationImage = (props: SvgProps) => {
       <Path
         d="M150.957 87.47c14.277 1.378 26.962-9.136 28.333-23.482 1.371-14.347-9.091-27.094-23.368-28.472-14.276-1.378-26.961 9.136-28.332 23.482-1.372 14.347 9.091 27.094 23.367 28.472Z"
         fill="#fff"
-      />
+      /> */}
     </Svg>
   );
 };
