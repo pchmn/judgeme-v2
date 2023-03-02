@@ -70,7 +70,7 @@ export function OnboardScreen() {
 
   const goToHome = () => {
     setIsFirstLaunch(false);
-    navigation.navigate('Home', {});
+    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
   };
 
   if (isLoading) {
