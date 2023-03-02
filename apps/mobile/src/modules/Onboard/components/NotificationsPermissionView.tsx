@@ -59,7 +59,7 @@ export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () =>
         title={t('welcomeScreen.notificationsPermissionView.title')}
         description={t('welcomeScreen.notificationsPermissionView.description')}
         buttonLabel={t('welcomeScreen.notificationsPermissionView.grantNotifications')}
-        image={<NotificationsImage height={width / 2} width={width / 2} />}
+        image={<NotificationsImage height={width / 1.75} width={width / 1.75} />}
         onPress={handleRequestPermission}
         onSkip={onSkip}
       />

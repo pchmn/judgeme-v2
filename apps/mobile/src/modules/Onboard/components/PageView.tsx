@@ -1,5 +1,7 @@
 import { Flex } from '@kavout/react-native';
+import { View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function PageView({
   image,
@@ -17,6 +19,7 @@ export function PageView({
   onSkip?: () => void;
 }) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Flex
@@ -24,7 +27,7 @@ export function PageView({
       flex={1}
       paddingX={20}
       paddingY={50}
-      style={{ backgroundColor: theme.colors.background }}
+      style={{ backgroundColor: theme.colors.background, position: 'relative' }}
     >
       <Flex flex={1} align="center" justify="center">
         {image}
@@ -40,17 +43,17 @@ export function PageView({
           </Text>
         </Flex>
 
-        <Flex gap={10}>
-          <Button mode="contained" onPress={onPress}>
-            {buttonLabel}
-          </Button>
-          {onSkip && (
-            <Button mode="text" onPress={onSkip}>
-              Passer
-            </Button>
-          )}
-        </Flex>
+        <Button mode="contained" onPress={onPress}>
+          {buttonLabel}
+        </Button>
       </Flex>
+      {onSkip && (
+        <View style={{ position: 'absolute', top: (insets.top || 0) + 20, right: 30 }}>
+          <Button mode="text" onPress={onSkip}>
+            Passer
+          </Button>
+        </View>
+      )}
     </Flex>
   );
 }
