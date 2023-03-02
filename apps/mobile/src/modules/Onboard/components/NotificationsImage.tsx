@@ -16,7 +16,7 @@ const NotificationsImage = ({ height = 250, width = 250, ...props }: SvgProps) =
         fillRule="evenodd"
         clipRule="evenodd"
         d="M240.647 169.437c-9.429 24.519-26.438 45.303-48.181 59.452H96.178a7 7 0 0 1-7-7v-45.452a7 7 0 0 1 7-7h144.469Z"
-        fill={theme.colors.onSecondary}
+        fill={theme.dark ? theme.colors.onSecondary : theme.colors.onSecondary + 'B3'}
       />
       <Path
         fillRule="evenodd"
@@ -54,7 +54,7 @@ const NotificationsImage = ({ height = 250, width = 250, ...props }: SvgProps) =
         fillRule="evenodd"
         clipRule="evenodd"
         d="M191.994 20.808C213.847 34.888 231 55.662 240.531 80.26H96.178a7 7 0 0 1-7-7V27.808a7 7 0 0 1 7-7h95.816Z"
-        fill={theme.colors.onSecondary}
+        fill={theme.dark ? theme.colors.onSecondary : theme.colors.onSecondary + 'B3'}
       />
       <Path
         fillRule="evenodd"
