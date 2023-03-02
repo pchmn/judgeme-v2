@@ -3,8 +3,8 @@ import { openSettings } from 'expo-linking';
 import { LocationPermissionResponse } from 'expo-location';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Dimensions } from 'react-native';
-import { Button, Dialog, Portal, Text } from 'react-native-paper';
+import { Dimensions } from 'react-native';
+import { ActivityIndicator, Button, Dialog, Portal, Text } from 'react-native-paper';
 
 import { useLocationPermissions } from '../hooks';
 import LocationImage from './LocationImage';

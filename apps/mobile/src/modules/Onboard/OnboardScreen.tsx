@@ -4,27 +4,18 @@ import { useMemo, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';
 import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { useTheme } from 'react-native-paper';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
 
 import { ExplanationView, LocationPermissionView, NotificationsPermissionView } from './components';
 import { useIsFirstLaunch } from './hooks';
+import { useOnboard } from './hooks/useOnboard';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
-interface OnboardView {
-  page: number;
-  name: 'explanation' | 'location' | 'notifications';
-  isCompleted?: boolean;
-}
-
-const onboardViews: OnboardView[] = [
-  { name: 'explanation', page: 0 },
-  { name: 'location', page: 1 },
-  { name: 'notifications', page: 2 },
-];
-
 export function OnboardScreen() {
   const { set: setIsFirstLaunch } = useIsFirstLaunch();
+
+  const { viewsToShow: onboardViews, isLoading } = useOnboard();
 
   const navigation = useNavigation();
 
@@ -82,6 +73,14 @@ export function OnboardScreen() {
     navigation.navigate('Home', {});
   };
 
+  if (isLoading) {
+    return (
+      <Flex flex={1} align="center" justify="center">
+        <ActivityIndicator size="large" />
+      </Flex>
+    );
+  }
+
   return (
     <Flex flex={1} gap={20}>
       <AnimatedPagerView
@@ -89,7 +88,7 @@ export function OnboardScreen() {
         style={{ flex: 1 }}
         initialPage={0}
         onPageScroll={onPageScroll}
-        scrollEnabled={true}
+        scrollEnabled={false}
       >
         {onboardViews.map(({ name }) => {
           switch (name) {
