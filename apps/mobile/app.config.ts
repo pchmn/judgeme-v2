@@ -78,6 +78,7 @@ const config: ExpoConfig = {
         },
         android: {
           enableProguardInReleaseBuilds: true,
+          extraProguardRules: '-keep public class com.horcrux.svg.** {*;}',
         },
       },
     ],
