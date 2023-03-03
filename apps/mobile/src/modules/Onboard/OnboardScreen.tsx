@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';
 import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 
 import { ExplanationView, LocationPermissionView, NotificationsPermissionView } from './components';
 import { useIsFirstLaunch } from './hooks';
@@ -74,11 +74,7 @@ export function OnboardScreen() {
   };
 
   if (isLoading) {
-    return (
-      <Flex flex={1} align="center" justify="center">
-        <ActivityIndicator size="large" />
-      </Flex>
-    );
+    return null;
   }
 
   return (

@@ -67,7 +67,8 @@ const config: ExpoConfig = {
   plugins: [
     '@react-native-firebase/app',
     'expo-notifications',
-    './reactNativeMapsPlugin',
+    './plugins/reactNativeMapsPlugin',
+    './plugins/splashScreenPlugin',
     'sentry-expo',
     [
       'expo-build-properties',
