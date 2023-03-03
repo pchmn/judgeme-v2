@@ -68,6 +68,7 @@ const config: ExpoConfig = {
     '@react-native-firebase/app',
     'expo-notifications',
     './reactNativeMapsPlugin',
+    'sentry-expo',
     [
       'expo-build-properties',
       {
@@ -81,6 +82,18 @@ const config: ExpoConfig = {
       },
     ],
   ],
+  hooks: {
+    postPublish: [
+      {
+        file: 'sentry-expo/upload-sourcemaps',
+        config: {
+          organization: 'pchmn',
+          project: process.env.APP_ENV === 'production' ? 'kavout' : 'kavout-dev',
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+        },
+      },
+    ],
+  },
   web: {
     favicon: './assets/favicon.png',
   },

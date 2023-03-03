@@ -9,8 +9,15 @@ import { AndroidImportance, setNotificationChannelAsync } from 'expo-notificatio
 import { preventAutoHideAsync } from 'expo-splash-screen';
 import { getSystemTheme } from 'expo-system-theme';
 import { Platform } from 'react-native';
+import * as Sentry from 'sentry-expo';
 
 import App from './App';
+
+Sentry.init({
+  dsn: 'https://2f1bdcf4041c4a1f8aae0f6950e15224@o4504771591274496.ingest.sentry.io/4504774174703616',
+  enableInExpoDevelopment: true,
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+});
 
 preventAutoHideAsync();
 
