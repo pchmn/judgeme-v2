@@ -4,8 +4,8 @@ import '@/core/i18n';
 import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { hideAsync } from 'expo-splash-screen';
 import { useEffect } from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
@@ -23,8 +23,9 @@ export default function App() {
   const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
 
   useEffect(() => {
+    RNBootSplash.getVisibilityStatus().then((status) => console.log(status));
     if (!authLoading && !isFirstLaunchLoading && !locationPermissionsLoading && !initialRegionLoading) {
-      hideAsync();
+      RNBootSplash.hide({ fade: true, duration: 500 });
     }
   }, [authLoading, isFirstLaunchLoading, locationPermissionsLoading, initialRegionLoading]);
 

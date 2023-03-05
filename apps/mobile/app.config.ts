@@ -11,11 +11,11 @@ const config: ExpoConfig = {
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
-  splash: {
-    image: './assets/splash.png',
-    resizeMode: 'contain',
-    backgroundColor: '#ffffff',
-  },
+  // splash: {
+  //   image: './assets/splash.png',
+  //   resizeMode: 'contain',
+  //   backgroundColor: '#ffffff',
+  // },
   updates: {
     url: 'https://u.expo.dev/81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
   },
@@ -68,7 +68,8 @@ const config: ExpoConfig = {
     '@react-native-firebase/app',
     'expo-notifications',
     './plugins/reactNativeMapsPlugin',
-    './plugins/splashScreenPlugin',
+    // './plugins/splashScreenPlugin',
+    './plugins/bootsplashPlugin',
     'sentry-expo',
     [
       'expo-build-properties',
