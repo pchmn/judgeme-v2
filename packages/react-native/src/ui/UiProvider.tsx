@@ -4,8 +4,9 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as NavigationBar from 'expo-navigation-bar';
+import { StatusBar } from 'expo-status-bar';
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
 import { ThemeProp } from 'react-native-paper/lib/typescript/types';
 
@@ -39,6 +40,7 @@ export function useUiProviderContext() {
 
 export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildren<UiProviderProps>) {
   const { light: lightColors, dark: darkColors } = createDynamicThemeColors(baseColor);
+  console.log('darkColors', darkColors);
 
   const colorScheme = useColorScheme();
 
@@ -62,14 +64,14 @@ export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildre
   );
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(theme.colors.background);
+    NavigationBar.setBackgroundColorAsync(theme.colors.elevation.level2);
     NavigationBar.setButtonStyleAsync(theme.dark ? 'light' : 'dark');
   }, [theme]);
 
   return (
     <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme, navigationTheme }}>
       <PaperProvider theme={theme}>
-        <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
+        <StatusBar style={theme.dark ? 'light' : 'dark'} backgroundColor="transparent" translucent />
         {children}
       </PaperProvider>
     </UiProviderContext.Provider>

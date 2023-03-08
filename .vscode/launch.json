@@ -1,0 +1,12 @@
+{
+  "configurations": [
+  {
+    "type": "kotlin",
+    "request": "attach",
+    "name": "Kotlin Attach",
+    "hostName": "localhost",
+    "port": 8000,
+    "timeout": 30000
+  }
+  ]
+}

@@ -4,6 +4,7 @@ const { AndroidConfig, withAndroidStyles } = require('@expo/config-plugins');
 const withSplashWindowIsTranslucent = (config) => {
   return withAndroidStyles(config, async (config) => {
     config.modResults = await configureFullScreenDialog(config.modResults);
+    // config.modResults.resources.style.
     return config;
   });
 };
