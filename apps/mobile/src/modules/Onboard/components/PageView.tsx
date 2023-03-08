@@ -1,39 +1,59 @@
-import { Flex, Space } from '@kavout/react-native';
-import { Image, ImageSourcePropType } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Flex } from '@kavout/react-native';
+import { View } from 'react-native';
+import { Button, Text, useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function PageView({
-  imageSrc,
+  image,
   title,
   description,
   buttonLabel,
   onPress,
+  onSkip,
 }: {
-  imageSrc: ImageSourcePropType;
+  image?: React.ReactNode;
   title: string;
   description: string;
   buttonLabel: string;
   onPress: () => void;
+  onSkip?: () => void;
 }) {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
   return (
-    <Flex justify="space-between" flex={1} padding={50}>
+    <Flex
+      justify="space-between"
+      flex={1}
+      paddingX={20}
+      paddingY={50}
+      style={{ backgroundColor: theme.colors.background, position: 'relative' }}
+    >
       <Flex flex={1} align="center" justify="center">
-        <Image source={imageSrc} style={{ width: 175, height: 175 }} />
-        <Space height={100} />
-        <Text variant="headlineLarge" style={{ textAlign: 'center', fontWeight: '800' }}>
-          {title}
-        </Text>
-        <Space height={10} />
-        <Text variant="bodyLarge" style={{ textAlign: 'center' }}>
-          {description}
-        </Text>
+        {image}
       </Flex>
 
-      <Flex align="center" justify="center">
+      <Flex align="center" justify="center" gap={50} style={{ alignSelf: 'flex-end', width: '100%' }}>
+        <Flex gap={20}>
+          <Text variant="headlineSmall" style={{ textAlign: 'center' }}>
+            {title}
+          </Text>
+          <Text variant="bodyMedium" style={{ textAlign: 'center', opacity: 0.75, lineHeight: 25 }}>
+            {description}
+          </Text>
+        </Flex>
+
         <Button mode="contained" onPress={onPress}>
           {buttonLabel}
         </Button>
       </Flex>
+      {onSkip && (
+        <View style={{ position: 'absolute', top: (insets.top || 0) + 20, right: 30 }}>
+          <Button mode="text" onPress={onSkip}>
+            Passer
+          </Button>
+        </View>
+      )}
     </Flex>
   );
 }

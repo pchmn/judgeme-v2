@@ -67,7 +67,9 @@ const config: ExpoConfig = {
   plugins: [
     '@react-native-firebase/app',
     'expo-notifications',
-    './reactNativeMapsPlugin',
+    './plugins/reactNativeMapsPlugin',
+    './plugins/splashScreenPlugin',
+    'sentry-expo',
     [
       'expo-build-properties',
       {
@@ -77,10 +79,23 @@ const config: ExpoConfig = {
         },
         android: {
           enableProguardInReleaseBuilds: true,
+          extraProguardRules: '-keep public class com.horcrux.svg.** {*;}',
         },
       },
     ],
   ],
+  hooks: {
+    postPublish: [
+      {
+        file: 'sentry-expo/upload-sourcemaps',
+        config: {
+          organization: 'pchmn',
+          project: process.env.APP_ENV === 'production' ? 'kavout' : 'kavout-dev',
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+        },
+      },
+    ],
+  },
   web: {
     favicon: './assets/favicon.png',
   },

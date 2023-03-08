@@ -10,6 +10,8 @@ interface FlexProps {
   height?: number | string;
   width?: number | string;
   padding?: number;
+  paddingY?: number;
+  paddingX?: number;
   backgroundColor?: string;
   flex?: number;
   style?: ViewStyle;
@@ -21,6 +23,8 @@ export function Flex({
   align,
   justify,
   wrap,
+  paddingX,
+  paddingY,
   style,
   ...otherProps
 }: PropsWithChildren<FlexProps>) {
@@ -32,6 +36,8 @@ export function Flex({
         alignItems: align,
         justifyContent: justify,
         flexWrap: wrap,
+        paddingHorizontal: paddingX,
+        paddingVertical: paddingY,
         ...style,
         ...otherProps,
       }}

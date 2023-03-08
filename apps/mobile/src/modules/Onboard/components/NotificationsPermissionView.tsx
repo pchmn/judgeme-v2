@@ -1,21 +1,21 @@
 import { Flex, useToggle } from '@kavout/react-native';
 import { openSettings } from 'expo-linking';
-import { LocationPermissionResponse } from 'expo-location';
+import { NotificationPermissionsStatus } from 'expo-notifications';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions } from 'react-native';
 import { ActivityIndicator, Button, Dialog, Portal, Text } from 'react-native-paper';
 
-import { useLocationPermissions } from '../hooks';
-import LocationImage from './LocationImage';
+import { useNotificationsPermissions } from '../hooks/useNotificationsPermissions';
+import NotificationsImage from './NotificationsImage';
 import { PageView } from './PageView';
 
 const width = Dimensions.get('window').width;
 
-export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
+export function NotificationsPermissionView({ onNext, onSkip }: { onNext?: () => void; onSkip?: () => void }) {
   const { t } = useTranslation();
 
-  const { locationPermissions: locationPermission, requestPermissions, isLoading } = useLocationPermissions();
+  const { notificationsPermission, requestPermissions, isLoading } = useNotificationsPermissions();
 
   const [visible, toggleDialog] = useToggle();
 
@@ -25,8 +25,8 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
   };
 
   const checkLocationPermission = useCallback(
-    (status: LocationPermissionResponse | null) => {
-      if (status && status.granted) {
+    (permissions?: NotificationPermissionsStatus) => {
+      if (permissions && permissions.granted) {
         onNext?.();
       }
     },
@@ -34,7 +34,7 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
   );
 
   const handleRequestPermission = async () => {
-    if (locationPermission?.status === 'denied' && !locationPermission.canAskAgain) {
+    if (notificationsPermission?.status === 'denied' && !notificationsPermission.canAskAgain) {
       toggleDialog();
       return;
     }
@@ -42,8 +42,8 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
   };
 
   useEffect(() => {
-    checkLocationPermission(locationPermission);
-  }, [checkLocationPermission, locationPermission]);
+    checkLocationPermission(notificationsPermission);
+  }, [checkLocationPermission, notificationsPermission]);
 
   if (isLoading) {
     return (
@@ -56,17 +56,18 @@ export function LocationPermissionView({ onNext }: { onNext?: () => void }) {
   return (
     <>
       <PageView
-        title={t('welcomeScreen.locationPermissionView.title')}
-        description={t('welcomeScreen.locationPermissionView.description')}
-        buttonLabel={t('welcomeScreen.locationPermissionView.grantLocation')}
-        image={<LocationImage height={width / 1.75} width={width / 1.75} />}
+        title={t('welcomeScreen.notificationsPermissionView.title')}
+        description={t('welcomeScreen.notificationsPermissionView.description')}
+        buttonLabel={t('welcomeScreen.notificationsPermissionView.grantNotifications')}
+        image={<NotificationsImage height={width / 1.75} width={width / 1.75} />}
         onPress={handleRequestPermission}
+        onSkip={onSkip}
       />
       <Portal>
         <Dialog visible={visible} onDismiss={toggleDialog}>
-          <Dialog.Title>{t('welcomeScreen.locationPermissionView.dialog.title')}</Dialog.Title>
+          <Dialog.Title>{t('welcomeScreen.notificationsPermissionView.dialog.title')}</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">{t('welcomeScreen.locationPermissionView.dialog.description')}</Text>
+            <Text variant="bodyMedium">{t('welcomeScreen.notificationsPermissionView.dialog.description')}</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={toggleDialog}>{t('common.cancel')}</Button>
