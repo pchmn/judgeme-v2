@@ -39,7 +39,7 @@ export default function App() {
   return (
     <NavigationContainer theme={navigationTheme} linking={linking}>
       <Stack.Navigator
-        initialRouteName={'Onboard'}
+        initialRouteName={isFirstLaunch ? 'Onboard' : 'Home'}
         screenOptions={{
           headerShown: false,
         }}
