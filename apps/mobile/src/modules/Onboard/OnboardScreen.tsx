@@ -70,7 +70,7 @@ export function OnboardScreen() {
 
   const goToHome = () => {
     setIsFirstLaunch(false);
-    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    // navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
   };
 
   if (isLoading) {
@@ -84,7 +84,7 @@ export function OnboardScreen() {
         style={{ flex: 1 }}
         initialPage={0}
         onPageScroll={onPageScroll}
-        scrollEnabled={false}
+        // scrollEnabled={false}
       >
         {onboardViews.map(({ name }) => {
           switch (name) {
