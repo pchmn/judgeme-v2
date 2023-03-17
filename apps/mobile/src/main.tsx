@@ -7,7 +7,6 @@ import { firebase } from '@react-native-firebase/functions';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AndroidImportance, setNotificationChannelAsync } from 'expo-notifications';
 import { preventAutoHideAsync } from 'expo-splash-screen';
-import { getSystemTheme } from 'expo-system-theme';
 import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 
@@ -39,11 +38,9 @@ if (Platform.OS === 'android') {
 }
 
 export default function Main() {
-  const theme = getSystemTheme();
-
   return (
     <QueryClientProvider client={queryClient}>
-      <UiProvider baseColor={theme?.baseColor}>
+      <UiProvider>
         <App />
       </UiProvider>
     </QueryClientProvider>

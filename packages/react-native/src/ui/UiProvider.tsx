@@ -1,3 +1,4 @@
+import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
@@ -8,8 +9,6 @@ import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from
 import { StatusBar, useColorScheme } from 'react-native';
 import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
 import { ThemeProp } from 'react-native-paper/lib/typescript/types';
-
-import { createDynamicThemeColors } from './theme';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -38,14 +37,15 @@ export function useUiProviderContext() {
 }
 
 export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildren<UiProviderProps>) {
-  const { light: lightColors, dark: darkColors } = createDynamicThemeColors(baseColor);
+  const { theme } = useMaterial3Theme({ fallbackSourceColor: '#FFD9DA' });
+  // const theme = createDynamicThemeColors(baseColor);
 
   const colorScheme = useColorScheme();
 
-  const theme = useMemo(
+  const paperTheme = useMemo(
     () =>
-      colorScheme === 'dark' ? { ...MD3DarkTheme, colors: darkColors } : { ...MD3LightTheme, colors: lightColors },
-    [colorScheme, darkColors, lightColors]
+      colorScheme === 'dark' ? { ...MD3DarkTheme, colors: theme.dark } : { ...MD3LightTheme, colors: theme.light },
+    [colorScheme, theme]
   );
 
   const navigationTheme: Theme = useMemo(
@@ -54,21 +54,21 @@ export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildre
         ? {
             ...DarkTheme,
             ...MD3DarkTheme,
-            colors: { ...DarkTheme.colors, ...darkColors },
+            colors: { ...DarkTheme.colors, ...theme.dark },
             mode: 'adaptive',
           }
-        : { ...LightTheme, ...MD3LightTheme, colors: { ...LightTheme.colors, ...lightColors } },
-    [colorScheme, lightColors, darkColors]
+        : { ...LightTheme, ...MD3LightTheme, colors: { ...LightTheme.colors, ...theme.light } },
+    [colorScheme, theme]
   );
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(theme.colors.background);
-    NavigationBar.setButtonStyleAsync(theme.dark ? 'light' : 'dark');
-  }, [theme]);
+    NavigationBar.setBackgroundColorAsync(paperTheme.colors.background);
+    NavigationBar.setButtonStyleAsync(paperTheme.dark ? 'light' : 'dark');
+  }, [paperTheme]);
 
   return (
-    <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme, navigationTheme }}>
-      <PaperProvider theme={theme}>
+    <UiProviderContext.Provider value={{ colorScheme: colorScheme || undefined, theme: paperTheme, navigationTheme }}>
+      <PaperProvider theme={paperTheme}>
         <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
         {children}
       </PaperProvider>
