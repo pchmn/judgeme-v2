@@ -36,9 +36,8 @@ export function useUiProviderContext() {
   return ctx;
 }
 
-export function UiProvider({ children, baseColor = '#FFD9DA' }: PropsWithChildren<UiProviderProps>) {
+export function UiProvider({ children }: PropsWithChildren<UiProviderProps>) {
   const { theme } = useMaterial3Theme({ fallbackSourceColor: '#FFD9DA' });
-  // const theme = createDynamicThemeColors(baseColor);
 
   const colorScheme = useColorScheme();
 

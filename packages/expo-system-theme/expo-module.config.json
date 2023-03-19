@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android"],
-  "ios": {
-    "modules": ["ExpoSystemThemeModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.settings.ExpoSystemThemeModule"]
-  }
-}
