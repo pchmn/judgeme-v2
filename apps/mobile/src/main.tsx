@@ -1,12 +1,13 @@
 import '@/core/i18n';
 
-import { UiProvider } from '@kavout/react-native';
+import { initSecureStorage, UiProvider } from '@kavout/react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AndroidImportance, setNotificationChannelAsync } from 'expo-notifications';
 import { preventAutoHideAsync } from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Sentry from 'sentry-expo';
 
@@ -37,7 +38,24 @@ if (Platform.OS === 'android') {
   });
 }
 
+let didInit = false;
+
 export default function Main() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (!didInit) {
+      didInit = true;
+      initSecureStorage()
+        .then(() => setIsReady(true))
+        .catch((err) => console.log('err', err));
+    }
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <UiProvider>

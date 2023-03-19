@@ -1,5 +1,5 @@
-import { useSecureStore } from '@kavout/react-native';
+import { useSecureStorage } from '@kavout/react-native';
 
 export function useIsFirstLaunch() {
-  return useSecureStore<boolean>('isFirstLaunch', true);
+  return useSecureStorage<boolean>('isFirstLaunch', true);
 }

@@ -7,7 +7,7 @@ import { FAB, useTheme } from 'react-native-paper';
 
 import { RouteParams } from '@/core/routes/types';
 
-import { useCurrentPosition, useRegionOnMapStore } from '../hooks';
+import { useCurrentPosition, useRegionOnMap } from '../hooks';
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 
 export function MapView() {
@@ -21,7 +21,7 @@ export function MapView() {
   const isRegionFocused = useRef(false);
 
   const currentPosition = useCurrentPosition();
-  const { set: storeRegion } = useRegionOnMapStore();
+  const [, setRegionOnMap] = useRegionOnMap();
   const [isCurrentPosition, setIsCurrentPosition] = useState(false);
 
   const animateToLocation = useCallback(
@@ -45,7 +45,7 @@ export function MapView() {
   );
 
   const getMapBoundaries = async (region: Region) => {
-    storeRegion({ ...region });
+    setRegionOnMap({ ...region });
   };
 
   const checkCurrentPosition = useCallback(

@@ -5,7 +5,6 @@ import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { hideAsync } from 'expo-splash-screen';
-import { useEffect } from 'react';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
@@ -17,18 +16,16 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
 
-  const { value: isFirstLaunch, isLoading: isFirstLaunchLoading } = useIsFirstLaunch();
+  const [isFirstLaunch] = useIsFirstLaunch();
   const { locationPermissions, isLoading: locationPermissionsLoading } = useLocationPermissions();
   const { isLoading: authLoading } = useAuth();
   const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
 
-  useEffect(() => {
-    if (!authLoading && !isFirstLaunchLoading && !locationPermissionsLoading && !initialRegionLoading) {
-      hideAsync();
-    }
-  }, [authLoading, isFirstLaunchLoading, locationPermissionsLoading, initialRegionLoading]);
+  if (!authLoading && !locationPermissionsLoading && !initialRegionLoading) {
+    hideAsync();
+  }
 
-  if (isFirstLaunchLoading || authLoading || initialRegionLoading || locationPermissionsLoading) {
+  if (authLoading || initialRegionLoading || locationPermissionsLoading) {
     return null;
   }
 

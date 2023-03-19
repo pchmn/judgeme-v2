@@ -1,5 +1,5 @@
 import { DevicesDocument } from '@kavout/core';
-import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStore } from '@kavout/react-native';
+import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStorage } from '@kavout/react-native';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import { useCallback, useEffect } from 'react';
@@ -14,7 +14,8 @@ function areStoredDataOutdated(storedData: InstallationDevice | undefined, actua
 }
 
 export function useRegisterDevice() {
-  const { value: storedData, set } = useSecureStore<InstallationDevice>('installationDevice');
+  const [existingInstallationDevice, setInstallationDevice] =
+    useSecureStorage<InstallationDevice>('installationDevice');
 
   const { data: currentUser } = useFirebaseAuthUser();
 
@@ -23,12 +24,12 @@ export function useRegisterDevice() {
   const register = useCallback(
     async (uid: string) => {
       const installationDevice = await getInstallationDevice();
-      if (installationDevice && areStoredDataOutdated(storedData, installationDevice)) {
+      if (installationDevice && areStoredDataOutdated(existingInstallationDevice, installationDevice)) {
         const ref = firestore().collection('users').doc(uid).collection('private').doc('devices');
-        mutate({ ref, data: installationDevice }, { onSuccess: () => set(installationDevice) });
+        mutate({ ref, data: installationDevice }, { onSuccess: () => setInstallationDevice(installationDevice) });
       }
     },
-    [mutate, set, storedData]
+    [mutate, setInstallationDevice, existingInstallationDevice]
   );
 
   useEffectOnce(() => {

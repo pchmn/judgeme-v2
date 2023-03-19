@@ -13,7 +13,7 @@ import { useOnboard } from './hooks/useOnboard';
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 export function OnboardScreen() {
-  const { set: setIsFirstLaunch } = useIsFirstLaunch();
+  const [, setIsFirstLaunch] = useIsFirstLaunch();
 
   const { viewsToShow: onboardViews, isLoading } = useOnboard();
 
