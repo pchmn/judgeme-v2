@@ -3,6 +3,8 @@ import { getLastKnownPositionAsync } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { Region } from 'react-native-maps';
 
+let didInit = false;
+
 export function useInitialRegion() {
   const [regionOnMap] = useRegionOnMap();
 
@@ -10,12 +12,10 @@ export function useInitialRegion() {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (regionOnMap && isLessThanOneHour(regionOnMap.age)) {
-      setInitialRegion((prev) => (prev ? prev : { ...regionOnMap }));
-      setIsLoading(false);
-    }
-  }, [regionOnMap]);
+  if (regionOnMap && isLessThanOneHour(regionOnMap.age) && !initialRegion) {
+    setInitialRegion((prev) => (prev ? prev : regionOnMap));
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     const getLastKnownPosition = async () => {
@@ -31,7 +31,10 @@ export function useInitialRegion() {
       }
     };
 
-    getLastKnownPosition();
+    if (!didInit) {
+      didInit = true;
+      getLastKnownPosition();
+    }
   }, []);
 
   // We don't want to wait more than 500ms for the preferred location to be set
