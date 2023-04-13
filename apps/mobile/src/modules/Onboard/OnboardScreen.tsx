@@ -6,9 +6,10 @@ import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import { useTheme } from 'react-native-paper';
 
-import { ExplanationView, LocationPermissionView, NotificationsPermissionView } from './components';
-import { useIsFirstLaunch } from './hooks';
+import { useIsFirstLaunch } from '@/shared/hooks';
+
 import { useOnboard } from './hooks/useOnboard';
+import { ExplanationView, LocationPermissionView, NotificationsPermissionView } from './views';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 

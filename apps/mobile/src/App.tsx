@@ -8,8 +8,10 @@ import { hideAsync } from 'expo-splash-screen';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
-import HomeScreen, { useInitialRegion } from '@/modules/Home';
-import OnboardScreen, { LocationPermissionView, useIsFirstLaunch, useLocationPermissions } from '@/modules/Onboard';
+import OnboardScreen, { LocationPermissionView } from '@/modules/Onboard';
+import { useInitialRegion, useIsFirstLaunch, useLocationPermissions } from '@/shared/hooks';
+
+import HomeScreen from './modules/Home';
 
 const Stack = createNativeStackNavigator();
 

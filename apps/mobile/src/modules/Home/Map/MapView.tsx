@@ -6,9 +6,10 @@ import RNMapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
 import { RouteParams } from '@/core/routes/types';
+import { useRegionOnMap } from '@/shared/hooks';
 
-import { useCurrentPosition, useRegionOnMap } from '../hooks';
 import { darkMapStyle, lightMapStyle } from './mapStyle';
+import { useCurrentPosition } from './useCurrentPosition';
 
 export function MapView() {
   const {

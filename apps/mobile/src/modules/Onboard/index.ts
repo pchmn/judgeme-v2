@@ -1,5 +1,5 @@
 import { OnboardScreen } from './OnboardScreen';
+import { LocationPermissionView } from './views';
 
-export * from './components';
-export * from './hooks';
+export { LocationPermissionView };
 export default OnboardScreen;
