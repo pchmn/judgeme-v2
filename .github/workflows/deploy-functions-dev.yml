@@ -28,8 +28,8 @@ jobs:
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_DEV }}
-          projectId: kavout-dev
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+          projectId: kuzpot-dev
 
       - name: 🏗 Create service account key file for tests
         run: |
@@ -39,5 +39,5 @@ jobs:
       - name: 🧪 Test functions
         run: pnpm test:functions:coverage
 
-      - name: 🚀 Deploy to kavout-dev
+      - name: 🚀 Deploy to kuzpot-dev
         run: pnpm deploy:functions

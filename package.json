@@ -1,22 +1,22 @@
 {
-  "name": "@kavout/monorepo",
+  "name": "@kuzpot/monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "kavout is a private photo sharing platform",
+  "description": "kuzpot is a private photo sharing platform",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pchmn/kavout.git"
+    "url": "git+https://github.com/pchmn/kuzpot.git"
   },
   "author": "pchmn",
   "license": "MIT",
-  "homepage": "https://github.com/pchmn/kavout",
+  "homepage": "https://github.com/pchmn/kuzpot",
   "scripts": {
-    "dev:mobile": "pnpm --filter @kavout/mobile run dev",
-    "dev:functions": "pnpm --filter @kavout/functions run dev",
-    "build:functions": "turbo run build --filter @kavout/functions",
-    "test:functions": "pnpm --filter @kavout/functions run test",
-    "test:functions:coverage": "turbo run test:coverage --filter @kavout/functions",
-    "deploy:functions": "turbo run deploy --filter @kavout/functions",
+    "dev:mobile": "pnpm --filter @kuzpot/mobile run dev",
+    "dev:functions": "pnpm --filter @kuzpot/functions run dev",
+    "build:functions": "turbo run build --filter @kuzpot/functions",
+    "test:functions": "pnpm --filter @kuzpot/functions run test",
+    "test:functions:coverage": "turbo run test:coverage --filter @kuzpot/functions",
+    "deploy:functions": "turbo run deploy --filter @kuzpot/functions",
     "emulators:start": "pnpm dev:functions | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
     "emulators:stop": "lsof -t -i:5001 -i:8080 -i:9099 | xargs kill -9",
     "deploy:rules": "firebase deploy --only firestore:rules",

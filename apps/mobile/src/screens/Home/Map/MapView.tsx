@@ -1,4 +1,4 @@
-import { Flex } from '@kavout/react-native';
+import { Flex } from '@kuzpot/react-native';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef } from 'react';

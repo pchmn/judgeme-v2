@@ -20,7 +20,7 @@
       "grantLocation": "Allow location",
       "dialog": {
         "title": "Location permission",
-        "description": "Kavout needs your location to work.\nYou can change this permission in the app settings."
+        "description": "Kuzpot needs your location to work.\nYou can change this permission in the app settings."
       }
     },
     "notificationsPermissionView": {
@@ -29,7 +29,7 @@
       "grantNotifications": "Allow notifications",
       "dialog": {
         "title": "Notifications permission",
-        "description": "If you want to receive notifications, you need to grant Kavout the permission to send them.\nYou can change this permission in the app settings."
+        "description": "If you want to receive notifications, you need to grant Kuzpot the permission to send them.\nYou can change this permission in the app settings."
       }
     }
   }

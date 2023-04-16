@@ -7,7 +7,7 @@
     "baseUrl": ".",
     "outDir": "dist",
     "paths": {
-      "@kavout/core": ["../../packages/core/src/index"]
+      "@kuzpot/core": ["../../packages/core/src/index"]
     }
   },
   "exclude": ["src/**/*.test.ts", "src/__test__"],

@@ -3,13 +3,13 @@
     "dev": {
       "cache": false
     },
-    "@kavout/functions#test:coverage": {
+    "@kuzpot/functions#test:coverage": {
     },
-    "@kavout/functions#build": {
+    "@kuzpot/functions#build": {
       "outputs": ["dist"]
     },
-    "@kavout/functions#deploy": {
-      "dependsOn": ["^@kavout/functions#build"]
+    "@kuzpot/functions#deploy": {
+      "dependsOn": ["^@kuzpot/functions#build"]
     }
   }
 }

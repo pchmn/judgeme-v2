@@ -1,4 +1,4 @@
-import { Flex } from '@kavout/react-native';
+import { Flex } from '@kuzpot/react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMemo, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';

@@ -1,4 +1,4 @@
 {
-  "extends": "@kavout/tsconfig/base.json",
+  "extends": "@kuzpot/tsconfig/base.json",
   "include": ["src"]
 }

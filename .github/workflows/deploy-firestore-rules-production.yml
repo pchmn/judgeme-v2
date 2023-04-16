@@ -18,10 +18,10 @@ jobs:
       - name: 🏗 Setup node
         uses: ./.github/actions/setup-node
 
-      - name: 🚀 Deploy to kavout
+      - name: 🚀 Deploy to kuzpot
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KAVOUT_PROD }}
-          projectId: kavout-da989
+          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PROD }}
+          projectId: kuzpot-prod
           args: deploy --only firestore:rules

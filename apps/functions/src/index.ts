@@ -1,4 +1,4 @@
-import { FunctionName } from '@kavout/core';
+import { FunctionName } from '@kuzpot/core';
 import { CloudFunction, region } from 'firebase-functions';
 
 const functions: Record<FunctionName, CloudFunction<unknown>> = {

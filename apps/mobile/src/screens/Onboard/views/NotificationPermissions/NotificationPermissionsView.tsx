@@ -1,4 +1,4 @@
-import { Flex, useToggle } from '@kavout/react-native';
+import { Flex, useToggle } from '@kuzpot/react-native';
 import { openSettings } from 'expo-linking';
 import { NotificationPermissionsStatus } from 'expo-notifications';
 import { useCallback, useEffect } from 'react';

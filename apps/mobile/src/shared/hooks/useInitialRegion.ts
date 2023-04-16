@@ -1,4 +1,4 @@
-import { useSecureStorage, useTimeout } from '@kavout/react-native';
+import { useSecureStorage, useTimeout } from '@kuzpot/react-native';
 import { getLastKnownPositionAsync } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { Region } from 'react-native-maps';

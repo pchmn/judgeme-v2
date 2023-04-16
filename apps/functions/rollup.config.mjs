@@ -14,6 +14,6 @@ export default {
     format: 'cjs',
     sourcemap: true,
   },
-  external: [...Object.keys(pkg.dependencies).filter((key) => key !== '@kavout/core')],
+  external: [...Object.keys(pkg.dependencies).filter((key) => key !== '@kuzpot/core')],
   plugins: [typescript(), nodeResolve(), json(), commonjs()],
 };

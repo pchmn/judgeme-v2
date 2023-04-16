@@ -1,4 +1,4 @@
-import { DeviceInfo } from '@kavout/core';
+import { DeviceInfo } from '@kuzpot/core';
 import installations from '@react-native-firebase/installations';
 import messaging from '@react-native-firebase/messaging';
 import * as Device from 'expo-device';
