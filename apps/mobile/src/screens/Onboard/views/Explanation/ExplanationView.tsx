@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Dimensions } from 'react-native';
 
+import { PageView } from '../../components/PageView';
 import EarthImage from './EarthImage';
-import { PageView } from './PageView';
 
 const width = Dimensions.get('window').width;
 

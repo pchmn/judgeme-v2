@@ -1,21 +1,21 @@
-import { useSecureStore, useTimeout } from '@kavout/react-native';
+import { useSecureStorage, useTimeout } from '@kavout/react-native';
 import { getLastKnownPositionAsync } from 'expo-location';
 import { useEffect, useState } from 'react';
 import { Region } from 'react-native-maps';
 
+let didInit = false;
+
 export function useInitialRegion() {
-  const { value } = useRegionOnMapStore();
+  const [regionOnMap] = useRegionOnMap();
 
   const [initialRegion, setInitialRegion] = useState<Region>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (value && isLessThanOneHour(value.age)) {
-      setInitialRegion((prev) => (prev ? prev : { ...value }));
-      setIsLoading(false);
-    }
-  }, [value]);
+  if (regionOnMap && isLessThanOneHour(regionOnMap.age) && !initialRegion) {
+    setInitialRegion((prev) => (prev ? prev : regionOnMap));
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     const getLastKnownPosition = async () => {
@@ -31,7 +31,10 @@ export function useInitialRegion() {
       }
     };
 
-    getLastKnownPosition();
+    if (!didInit) {
+      didInit = true;
+      getLastKnownPosition();
+    }
   }, []);
 
   // We don't want to wait more than 500ms for the preferred location to be set
@@ -42,14 +45,14 @@ export function useInitialRegion() {
   return { initialRegion, isLoading };
 }
 
-export function useRegionOnMapStore() {
-  const { value, set: setStore } = useSecureStore<Region & { age: number }>('regionOnMap');
+export function useRegionOnMap() {
+  const [regionOnMap, setRegionOnMap] = useSecureStorage<Region & { age: number }>('regionOnMap');
 
   const set = (region: Region) => {
-    setStore({ ...region, age: Date.now() });
+    setRegionOnMap({ ...region, age: Date.now() });
   };
 
-  return { value, set };
+  return [regionOnMap, set] as const;
 }
 
 function isLessThanOneHour(date: number) {

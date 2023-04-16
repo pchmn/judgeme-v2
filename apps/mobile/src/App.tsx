@@ -5,30 +5,28 @@ import { useUiProviderContext } from '@kavout/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { hideAsync } from 'expo-splash-screen';
-import { useEffect } from 'react';
 
 import { useAuth } from '@/core/auth';
 import { linking } from '@/core/routes';
-import HomeScreen, { useInitialRegion } from '@/modules/Home';
-import OnboardScreen, { LocationPermissionView, useIsFirstLaunch, useLocationPermissions } from '@/modules/Onboard';
+import HomeScreen from '@/screens/Home';
+import OnboardScreen, { LocationPermissionView } from '@/screens/Onboard';
+import { useInitialRegion, useIsFirstLaunch, useLocationPermissions } from '@/shared/hooks';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { navigationTheme } = useUiProviderContext();
 
-  const { value: isFirstLaunch, isLoading: isFirstLaunchLoading } = useIsFirstLaunch();
+  const [isFirstLaunch] = useIsFirstLaunch();
   const { locationPermissions, isLoading: locationPermissionsLoading } = useLocationPermissions();
   const { isLoading: authLoading } = useAuth();
   const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
 
-  useEffect(() => {
-    if (!authLoading && !isFirstLaunchLoading && !locationPermissionsLoading && !initialRegionLoading) {
-      hideAsync();
-    }
-  }, [authLoading, isFirstLaunchLoading, locationPermissionsLoading, initialRegionLoading]);
+  if (!authLoading && !locationPermissionsLoading && !initialRegionLoading) {
+    hideAsync();
+  }
 
-  if (isFirstLaunchLoading || authLoading || initialRegionLoading || locationPermissionsLoading) {
+  if (authLoading || initialRegionLoading || locationPermissionsLoading) {
     return null;
   }
 

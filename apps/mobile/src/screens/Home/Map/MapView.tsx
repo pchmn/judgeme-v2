@@ -1,14 +1,15 @@
 import { Flex } from '@kavout/react-native';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import RNMapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
 import { RouteParams } from '@/core/routes/types';
+import { useRegionOnMap } from '@/shared/hooks';
 
-import { useCurrentPosition, useRegionOnMapStore } from '../hooks';
 import { darkMapStyle, lightMapStyle } from './mapStyle';
+import { useCurrentPosition } from './useCurrentPosition';
 
 export function MapView() {
   const {
@@ -21,8 +22,19 @@ export function MapView() {
   const isRegionFocused = useRef(false);
 
   const currentPosition = useCurrentPosition();
-  const { set: storeRegion } = useRegionOnMapStore();
-  const [isCurrentPosition, setIsCurrentPosition] = useState(false);
+  const [regionOnMap, setRegionOnMap] = useRegionOnMap();
+
+  const isCurrentPosition = useMemo(() => {
+    if (regionOnMap && currentPosition) {
+      return (
+        distanceBetween(
+          [regionOnMap.latitude, regionOnMap.longitude],
+          [currentPosition.latitude, currentPosition.longitude]
+        ) < 0.1
+      );
+    }
+    return false;
+  }, [currentPosition, regionOnMap]);
 
   const animateToLocation = useCallback(
     async (location?: { latitude: number; longitude: number }) => {
@@ -45,28 +57,15 @@ export function MapView() {
   );
 
   const getMapBoundaries = async (region: Region) => {
-    storeRegion({ ...region });
+    setRegionOnMap({ ...region });
   };
-
-  const checkCurrentPosition = useCallback(
-    (region?: Region) => {
-      if (region && currentPosition) {
-        setIsCurrentPosition(
-          distanceBetween([region.latitude, region.longitude], [currentPosition.latitude, currentPosition.longitude]) <
-            0.1
-        );
-      }
-    },
-    [currentPosition]
-  );
 
   useEffect(() => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
       isRegionFocused.current = true;
       animateToLocation(currentPosition);
     }
-    checkCurrentPosition(initialRegion);
-  }, [animateToLocation, checkCurrentPosition, currentPosition, initialRegion]);
+  }, [animateToLocation, currentPosition, initialRegion]);
 
   return (
     <Flex flex={1}>
@@ -76,10 +75,10 @@ export function MapView() {
         provider={PROVIDER_GOOGLE}
         style={{ width: '100%', height: '100%' }}
         customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
-        onRegionChange={checkCurrentPosition}
+        onRegionChange={setRegionOnMap}
         onRegionChangeComplete={getMapBoundaries}
         onMapLoaded={() => {
-          if (!isRegionFocused.current && !initialRegion) {
+          if (currentPosition && !isRegionFocused.current && !initialRegion) {
             isRegionFocused.current = true;
             animateToLocation(currentPosition);
           }
