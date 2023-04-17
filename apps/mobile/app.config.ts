@@ -17,7 +17,7 @@ const config: ExpoConfig = {
     backgroundColor: '#ffffff',
   },
   updates: {
-    url: 'https://u.expo.dev/81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
+    url: 'https://u.expo.dev/5b16185f-e09f-4429-bb11-7e7a9344ca86',
   },
   runtimeVersion: {
     policy: 'appVersion',
