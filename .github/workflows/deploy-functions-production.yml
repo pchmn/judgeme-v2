@@ -34,6 +34,8 @@ jobs:
 
       - name: 🧪 Test functions
         run: pnpm test:functions:coverage
+        env:
+          TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
 
       - name: 🚀 Deploy to kuzpot
         run: pnpm deploy:functions
