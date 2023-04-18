@@ -1,5 +1,5 @@
-import { UserDocument } from '@kavout/core';
-import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kavout/react-native';
+import { UserDocument } from '@kuzpot/core';
+import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kuzpot/react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   Accuracy,

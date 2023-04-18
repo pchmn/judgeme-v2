@@ -16,4 +16,5 @@ firestore-debug.log
 ui-debug.log
 GoogleService-Info*.plist
 google-services*.json
+service-account*.json
 .emulators-data

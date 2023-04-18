@@ -1,9 +1,9 @@
 {
-  "name": "@kavout/react-native",
+  "name": "@kuzpot/react-native",
   "version": "1.0.0",
   "main": "src/index.ts",
   "peerDependencies": {
-    "@pchmn/expo-material3-theme": "1.0.0-beta.1",
+    "@pchmn/expo-material3-theme": "^1.0.1",
     "@react-navigation/native": "^6.1.1",
     "@tanstack/react-query": "^4.22.0",
     "expo": "~48.0.1",
@@ -16,9 +16,9 @@
     "react-native-paper": "^5.1.2"
   },
   "devDependencies": {
-    "@kavout/eslint-config": "workspace:*",
-    "@kavout/tsconfig": "workspace:*",
-    "@pchmn/expo-material3-theme": "1.0.0-beta.1",
+    "@kuzpot/eslint-config": "workspace:*",
+    "@kuzpot/tsconfig": "workspace:*",
+    "@pchmn/expo-material3-theme": "^1.0.1",
     "@react-navigation/native": "^6.1.1",
     "@tanstack/react-query": "^4.22.0",
     "@types/color": "^3.0.3",

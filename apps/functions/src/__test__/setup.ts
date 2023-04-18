@@ -4,7 +4,7 @@ import firebaseFunctionsTest from 'firebase-functions-test';
 
 import * as functions from '../index';
 
-const testProjectId = 'test-project-5ce23';
+const testProjectId = process.env.TEST_PROJECT_ID;
 
 const testFunctions = firebaseFunctionsTest(
   {

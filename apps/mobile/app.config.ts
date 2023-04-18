@@ -4,9 +4,9 @@ import { ExpoConfig } from '@expo/config';
 
 const config: ExpoConfig = {
   owner: 'pchmn',
-  name: process.env.APP_ENV === 'production' ? 'Kavout' : process.env.APP_ENV === 'local' ? 'KavoutLocal' : 'KavoutDev',
-  slug: 'kavout',
-  scheme: 'kavout',
+  name: process.env.APP_ENV === 'production' ? 'Kuzpot' : process.env.APP_ENV === 'local' ? 'KuzpotLocal' : 'KuzpotDev',
+  slug: 'kuzpot',
+  scheme: 'kuzpot',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -17,7 +17,7 @@ const config: ExpoConfig = {
     backgroundColor: '#ffffff',
   },
   updates: {
-    url: 'https://u.expo.dev/81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
+    url: 'https://u.expo.dev/5b16185f-e09f-4429-bb11-7e7a9344ca86',
   },
   runtimeVersion: {
     policy: 'appVersion',
@@ -26,10 +26,10 @@ const config: ExpoConfig = {
   ios: {
     bundleIdentifier:
       process.env.APP_ENV === 'production'
-        ? 'com.pchmn.kavout'
+        ? 'com.pchmn.kuzpot'
         : process.env.APP_ENV === 'local'
-        ? 'com.pchmn.kavout.local'
-        : 'com.pchmn.kavout.dev',
+        ? 'com.pchmn.kuzpot.local'
+        : 'com.pchmn.kuzpot.dev',
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
@@ -46,10 +46,10 @@ const config: ExpoConfig = {
   android: {
     package:
       process.env.APP_ENV === 'production'
-        ? 'com.pchmn.kavout'
+        ? 'com.pchmn.kuzpot'
         : process.env.APP_ENV === 'local'
-        ? 'com.pchmn.kavout.local'
-        : 'com.pchmn.kavout.dev',
+        ? 'com.pchmn.kuzpot.local'
+        : 'com.pchmn.kuzpot.dev',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
@@ -90,7 +90,7 @@ const config: ExpoConfig = {
         file: 'sentry-expo/upload-sourcemaps',
         config: {
           organization: 'pchmn',
-          project: process.env.APP_ENV === 'production' ? 'kavout' : 'kavout-dev',
+          project: process.env.APP_ENV === 'production' ? 'kuzpot' : 'kuzpot-dev',
           authToken: process.env.SENTRY_AUTH_TOKEN,
         },
       },
@@ -101,7 +101,7 @@ const config: ExpoConfig = {
   },
   extra: {
     eas: {
-      projectId: '81b9ebc5-4e14-4578-a29c-1adf59c3bd9b',
+      projectId: '5b16185f-e09f-4429-bb11-7e7a9344ca86',
     },
   },
 };

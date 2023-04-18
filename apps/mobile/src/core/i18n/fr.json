@@ -11,7 +11,7 @@
   },
   "welcomeScreen": {
     "explalantionView": {
-      "title": "Kavout ?",
+      "title": "Kuzpot ?",
       "description": "Trouve des personnes autour de toi et envoie leur des messages de manière anonyme"
     },
     "locationPermissionView": {
@@ -20,7 +20,7 @@
       "grantLocation": "Autoriser la localisation",
       "dialog": {
         "title": "Autoriser la localisation",
-        "description": "Kavout a besoin de la localisation pour fonctionner.\nTu peux l'autoriser dans les paramètres de l'application."
+        "description": "Kuzpot a besoin de la localisation pour fonctionner.\nTu peux l'autoriser dans les paramètres de l'application."
       }
     },
     "notificationsPermissionView": {

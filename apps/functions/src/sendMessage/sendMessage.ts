@@ -1,4 +1,4 @@
-import { DevicesDocument, FunctionParams, FunctionValidation } from '@kavout/core';
+import { DevicesDocument, FunctionParams, FunctionValidation } from '@kuzpot/core';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getMessaging, MulticastMessage } from 'firebase-admin/messaging';

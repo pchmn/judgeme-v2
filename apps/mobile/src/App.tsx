@@ -1,7 +1,7 @@
 import 'expo-dev-client';
 import '@/core/i18n';
 
-import { useUiProviderContext } from '@kavout/react-native';
+import { useUiProviderContext } from '@kuzpot/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { hideAsync } from 'expo-splash-screen';

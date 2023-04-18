@@ -22,11 +22,17 @@ async function getEncryptionKey() {
 }
 
 export async function initSecureStorage() {
-  const encryptionKey = await getEncryptionKey();
-  storage = new MMKV({
-    id: 'kavout-storage',
-    encryptionKey,
-  });
+  if (!storage) {
+    const encryptionKey = await getEncryptionKey();
+    storage = new MMKV({
+      id: 'kuzpot-storage',
+      encryptionKey,
+    });
+  }
+}
+
+export function isSecureStorageInitialized() {
+  return !!storage;
 }
 
 export function useSecureStorage<T>(key: string, initialValue?: T) {

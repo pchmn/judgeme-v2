@@ -1,4 +1,4 @@
-import { Flex } from '@kavout/react-native';
+import { Flex } from '@kuzpot/react-native';
 import { View } from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

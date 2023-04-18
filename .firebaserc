@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "kavout-da989",
-    "development": "kavout-dev"
+    "default": "kuzpot-prod",
+    "development": "kuzpot-dev"
   }
 }

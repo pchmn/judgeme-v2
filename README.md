@@ -1,16 +1,16 @@
 <div align="center">
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/pchmn/kavout/blob/main/license)
-[![ci](https://github.com/pchmn/kavout/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pchmn/kavout/actions)
-[![codecov.io](https://codecov.io/gh/pchmn/kavout/coverage.svg?branch=main)](https://codecov.io/gh/pchmn/kavout?branch=master)
-<!-- [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4c695ce061c34c1bb1698acc19278f0e)](https://www.codacy.com/gh/pchmn/kavout/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pchmn/kavout&amp;utm_campaign=Badge_Grade) -->
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/pchmn/kuzpot/blob/main/license)
+[![ci](https://github.com/pchmn/kuzpot/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pchmn/kuzpot/actions)
+[![codecov.io](https://codecov.io/gh/pchmn/kuzpot/coverage.svg?branch=main)](https://codecov.io/gh/pchmn/kuzpot?branch=master)
+<!-- [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4c695ce061c34c1bb1698acc19278f0e)](https://www.codacy.com/gh/pchmn/kuzpot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pchmn/kuzpot&amp;utm_campaign=Badge_Grade) -->
 
 <!-- # React - TypeScript and Github Actions Template with Vite -->
 # Vite, React and Github Actions
 
 This a React v18 + TypeScript + Vitest and React Testing Library + Github Actions starter template built with Vite.
 
-[Demo](https://pchmn.github.io/kavout/)
+[Demo](https://pchmn.github.io/kuzpot/)
 
 </div>
 
@@ -37,7 +37,7 @@ This a React v18 + TypeScript + Vitest and React Testing Library + Github Action
 ### Github Actions
 
 - **Build**, **Test** and **Coverage Analysis** (with [Codecov](https://about.codecov.io/)) at each commit
-- **Deploy** to [Github Pages](https://pages.github.com/) on main branch (see deployment of this repo [here](https://pchmn.github.io/kavout/))
+- **Deploy** to [Github Pages](https://pages.github.com/) on main branch (see deployment of this repo [here](https://pchmn.github.io/kuzpot/))
 
 
 <br>
@@ -47,7 +47,7 @@ This a React v18 + TypeScript + Vitest and React Testing Library + Github Action
 ### Copy template
 
 ```
-npx degit pchmn/kavout app_name
+npx degit pchmn/kuzpot app_name
 ```
 
 ### Usage
@@ -98,7 +98,7 @@ pnpm serve
 
 If you want to use Github Actions in your repo, you'll need to make little configuration.
 
-Actual [workflow](https://github.com/pchmn/kavout/blob/main/.github/workflows/ci.yml) is:
+Actual [workflow](https://github.com/pchmn/kuzpot/blob/main/.github/workflows/ci.yml) is:
 
 ![image](https://user-images.githubusercontent.com/12658241/142628675-1f9e9617-e5da-4dff-aa79-abc0883cf037.png)
 

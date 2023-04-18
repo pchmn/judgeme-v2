@@ -1,5 +1,5 @@
-rm -rf /Users/paul/Dev/perso/kavout-eas-build-process
-rm -rf /Users/paul/Dev/perso/kavout-eas-build-artifacts
+rm -rf /Users/paul/Dev/perso/kuzpot-eas-build-process
+rm -rf /Users/paul/Dev/perso/kuzpot-eas-build-artifacts
 
 mv ../../.gitignore ../../.gitignore-bak
 mv ../../.gitignore-eas-build ../../.gitignore

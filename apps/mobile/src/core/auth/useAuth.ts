@@ -1,4 +1,4 @@
-import { useEffectOnce, useSignInAnonymously } from '@kavout/react-native';
+import { useEffectOnce, useSignInAnonymously } from '@kuzpot/react-native';
 import { useState } from 'react';
 import { ToastAndroid } from 'react-native';
 

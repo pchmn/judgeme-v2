@@ -1,6 +1,6 @@
 import '@/core/i18n';
 
-import { initSecureStorage, UiProvider } from '@kavout/react-native';
+import { initSecureStorage, isSecureStorageInitialized, UiProvider } from '@kuzpot/react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';
@@ -38,14 +38,11 @@ if (Platform.OS === 'android') {
   });
 }
 
-let didInit = false;
-
 export default function Main() {
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(isSecureStorageInitialized());
 
   useEffect(() => {
-    if (!didInit) {
-      didInit = true;
+    if (!isSecureStorageInitialized()) {
       initSecureStorage()
         .then(() => setIsReady(true))
         .catch((err) => console.log('err', err));

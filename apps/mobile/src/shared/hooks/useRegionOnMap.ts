@@ -1,4 +1,4 @@
-import { useSecureStorage } from '@kavout/react-native';
+import { useSecureStorage } from '@kuzpot/react-native';
 import { Region } from 'react-native-maps';
 
 export function useRegionOnMap() {
