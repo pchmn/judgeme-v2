@@ -47,17 +47,13 @@ function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
             (snapshot) => {
               const docs = snapshot.docs.map((doc) => doc.data());
 
-              if (docs.length === 0) {
-                // console.log('no docs found', docs);
-                if (data[key]) {
-                  // If there are no docs, but there were docs before, then we need to remove them
-                  delete data[key];
-                  onData(Object.values(data).flat());
-                }
+              if (docs.length === 0 && data[key]) {
+                // If there are no docs, but there were docs before, then we need to remove them
+                delete data[key];
+                onData(Object.values(data).flat());
               } else if (docs.length > 0) {
                 // If there are docs, then we need to add them
                 data[key] = docs;
-                console.log('docs found', Object.values(data).flat());
                 onData(Object.values(data).flat());
               }
             },
