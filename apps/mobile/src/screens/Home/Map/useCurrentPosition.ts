@@ -30,10 +30,8 @@ export function useCurrentPosition(storeLocation = true) {
       mutate({
         ref: userRef,
         data: {
-          location: {
-            geohash,
-            ...location,
-          },
+          geohash,
+          geopoint: new firestore.GeoPoint(location.latitude, location.longitude),
         },
       });
     },
