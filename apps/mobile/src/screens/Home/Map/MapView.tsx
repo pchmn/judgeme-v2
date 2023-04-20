@@ -1,7 +1,7 @@
-import { Flex } from '@kuzpot/react-native';
+import { Flex, GeoQueryOptions } from '@kuzpot/react-native';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import RNMapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
@@ -10,6 +10,7 @@ import { useRegionOnMap } from '@/shared/hooks';
 
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 import { useCurrentPosition } from './useCurrentPosition';
+import { useNearUsers } from './useNearUsers';
 
 export function MapView() {
   const {
@@ -23,6 +24,14 @@ export function MapView() {
 
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
+  const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
+
+  const { data: nearUsers } = useNearUsers(geoQueryOptions);
+  // console.log('nearUsers', nearUsers);
+
+  useEffect(() => {
+    console.log('nearUsers', nearUsers);
+  }, [nearUsers]);
 
   const isCurrentPosition = useMemo(() => {
     if (regionOnMap && currentPosition) {
@@ -58,6 +67,10 @@ export function MapView() {
 
   const getMapBoundaries = async (region: Region) => {
     setRegionOnMap({ ...region });
+    if (!mapRef.current) return;
+    const { northEast } = await mapRef.current.getMapBoundaries();
+    const distance = distanceBetween([northEast.latitude, northEast.longitude], [region.latitude, region.longitude]);
+    setGeoQueryOptions({ center: { latitude: region.latitude, longitude: region.longitude }, radius: distance * 1000 });
   };
 
   useEffect(() => {
