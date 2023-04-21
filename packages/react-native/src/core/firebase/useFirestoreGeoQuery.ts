@@ -3,7 +3,9 @@ import { QueryKey } from '@tanstack/react-query';
 import { geohashQueryBounds } from 'geofire-common';
 import { useCallback, useMemo } from 'react';
 
+import { DataWithId } from './types';
 import { useFirestoreData } from './useFirestoreData';
+import { getDataFromSnapshot } from './utils';
 
 export interface GeoQueryOptions {
   center: { latitude: number; longitude: number };
@@ -30,31 +32,29 @@ export function useFirestoreGeoQuery<T extends FirebaseFirestoreTypes.DocumentDa
   });
 }
 
+let initialData: DataWithId<any>[] = [];
+
 function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
   queryKey: QueryKey,
   queries: Record<string, FirebaseFirestoreTypes.Query<T>>,
   options?: { enabled?: boolean }
 ) {
   const subscribeFn = useCallback(
-    (onData: (data: T[]) => void, onError?: (error: Error) => void) => {
+    (onData: (data: DataWithId<T>[]) => void, onError?: (error: Error) => void) => {
       const unsubscribes: (() => void)[] = [];
-      const data: Record<string, T[]> = {};
-      onData(Object.values(data).flat());
+      const data: Record<string, DataWithId<T>[]> = {};
+      onData(initialData);
 
       for (const key in queries) {
         unsubscribes.push(
           queries[key].onSnapshot(
             (snapshot) => {
-              const docs = snapshot.docs.map((doc) => doc.data());
+              data[key] = snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false }));
 
-              if (docs.length === 0 && data[key]) {
-                // If there are no docs, but there were docs before, then we need to remove them
-                delete data[key];
+              if (Object.keys(data).length === Object.keys(queries).length) {
+                // Emit data when all queries are done
                 onData(Object.values(data).flat());
-              } else if (docs.length > 0) {
-                // If there are docs, then we need to add them
-                data[key] = docs;
-                onData(Object.values(data).flat());
+                initialData = Object.values(data).flat();
               }
             },
             (error) => {
@@ -73,8 +73,10 @@ function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
 
   const fetchFn = async () => {
     const data = await Promise.all(Object.values(queries).map((query) => query.get()));
-    return data.map((snapshot) => snapshot.docs.map((doc) => doc.data())).flat();
+    return data
+      .map((snapshot) => snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false })))
+      .flat();
   };
 
-  return useFirestoreData<T[]>(queryKey, fetchFn, subscribeFn, options);
+  return useFirestoreData<DataWithId<T>[]>(queryKey, fetchFn, subscribeFn, { ...options, initialData });
 }
