@@ -2,7 +2,7 @@ import { Flex, GeoQueryOptions } from '@kuzpot/react-native';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import RNMapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
 
 import { RouteParams } from '@/core/routes/types';
@@ -27,10 +27,9 @@ export function MapView() {
   const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
 
   const { data: nearUsers } = useNearUsers(geoQueryOptions);
-  // console.log('nearUsers', nearUsers);
 
   useEffect(() => {
-    console.log('nearUsers', nearUsers);
+    console.log('nearUsers', JSON.stringify(nearUsers, null, 2));
   }, [nearUsers]);
 
   const isCurrentPosition = useMemo(() => {
@@ -65,12 +64,29 @@ export function MapView() {
     [mapRef]
   );
 
-  const getMapBoundaries = async (region: Region) => {
+  const onMapLoaded = () => {
+    if (currentPosition && !isRegionFocused.current && !initialRegion) {
+      isRegionFocused.current = true;
+      animateToLocation(currentPosition);
+    }
+    handleGeoQueryOptions();
+  };
+
+  const onRegionChangeComplete = (region: Region) => {
     setRegionOnMap({ ...region });
-    if (!mapRef.current) return;
-    const { northEast } = await mapRef.current.getMapBoundaries();
-    const distance = distanceBetween([northEast.latitude, northEast.longitude], [region.latitude, region.longitude]);
-    setGeoQueryOptions({ center: { latitude: region.latitude, longitude: region.longitude }, radius: distance * 1000 });
+    handleGeoQueryOptions();
+  };
+
+  const handleGeoQueryOptions = async () => {
+    if (mapRef.current) {
+      const { center } = await mapRef.current.getCamera();
+      const { northEast } = await mapRef.current.getMapBoundaries();
+      const distance = distanceBetween([northEast.latitude, northEast.longitude], [center.latitude, center.longitude]);
+      setGeoQueryOptions({
+        center: { latitude: center.latitude, longitude: center.longitude },
+        radius: distance * 1000,
+      });
+    }
   };
 
   useEffect(() => {
@@ -89,16 +105,26 @@ export function MapView() {
         style={{ width: '100%', height: '100%' }}
         customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
         onRegionChange={setRegionOnMap}
-        onRegionChangeComplete={getMapBoundaries}
-        onMapLoaded={() => {
-          if (currentPosition && !isRegionFocused.current && !initialRegion) {
-            isRegionFocused.current = true;
-            animateToLocation(currentPosition);
-          }
-        }}
+        onRegionChangeComplete={onRegionChangeComplete}
+        onMapLoaded={onMapLoaded}
         showsPointsOfInterest={false}
         showsBuildings={false}
-      />
+        showsUserLocation
+        showsMyLocationButton={false}
+        moveOnMarkerPress={false}
+      >
+        {nearUsers?.map(({ geohash, geopoint }) => (
+          <Marker
+            key={geohash}
+            coordinate={{
+              latitude: geopoint.latitude,
+              longitude: geopoint.longitude,
+            }}
+            image={require('./pin.png')}
+            tracksViewChanges={false}
+          />
+        ))}
+      </RNMapView>
       <FAB
         icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
         style={{ position: 'absolute', bottom: 16, right: 16 }}
