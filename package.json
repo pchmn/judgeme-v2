@@ -17,7 +17,7 @@
     "test:functions": "pnpm --filter @kuzpot/functions run test",
     "test:functions:coverage": "turbo run test:coverage --filter @kuzpot/functions",
     "deploy:functions": "turbo run deploy --filter @kuzpot/functions",
-    "emulators:start": "pnpm dev:functions | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
+    "emulators:start": "pnpm dev:functions | pnpm emulators:stop | firebase emulators:start --only auth,firestore,functions --import=./.emulators-data --export-on-exit",
     "emulators:stop": "lsof -t -i:5001 -i:8080 -i:9099 | xargs kill -9",
     "deploy:rules": "firebase deploy --only firestore:rules",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",

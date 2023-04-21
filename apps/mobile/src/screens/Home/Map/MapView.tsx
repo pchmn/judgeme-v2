@@ -1,9 +1,13 @@
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { UserDocument } from '@kuzpot/core';
 import { Flex, GeoQueryOptions } from '@kuzpot/react-native';
+import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { FAB, useTheme } from 'react-native-paper';
+import { FAB, Text, useTheme } from 'react-native-paper';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
@@ -22,6 +26,9 @@ export function MapView() {
   const mapRef = useRef<RNMapView>(null);
   const isRegionFocused = useRef(false);
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
+
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
   const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
@@ -29,7 +36,7 @@ export function MapView() {
   const { data: nearUsers } = useNearUsers(geoQueryOptions);
 
   useEffect(() => {
-    console.log('nearUsers', JSON.stringify(nearUsers, null, 2));
+    console.log('nearUsers', nearUsers);
   }, [nearUsers]);
 
   const isCurrentPosition = useMemo(() => {
@@ -89,6 +96,16 @@ export function MapView() {
     }
   };
 
+  const handleMarkerPressed = useCallback(
+    (userId: string) => {
+      const user = nearUsers?.find(({ id }) => id === userId);
+      console.log('user', user);
+      setUserSelected(nearUsers?.find(({ id }) => id === userId));
+      bottomSheetModalRef.current?.present();
+    },
+    [nearUsers]
+  );
+
   useEffect(() => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
       isRegionFocused.current = true;
@@ -97,40 +114,68 @@ export function MapView() {
   }, [animateToLocation, currentPosition, initialRegion]);
 
   return (
-    <Flex flex={1}>
-      <RNMapView
-        initialRegion={initialRegion}
-        ref={mapRef}
-        provider={PROVIDER_GOOGLE}
-        style={{ width: '100%', height: '100%' }}
-        customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
-        onRegionChange={setRegionOnMap}
-        onRegionChangeComplete={onRegionChangeComplete}
-        onMapLoaded={onMapLoaded}
-        showsPointsOfInterest={false}
-        showsBuildings={false}
-        showsUserLocation
-        showsMyLocationButton={false}
-        moveOnMarkerPress={false}
-      >
-        {nearUsers?.map(({ geohash, geopoint }) => (
-          <Marker
-            key={geohash}
-            coordinate={{
-              latitude: geopoint.latitude,
-              longitude: geopoint.longitude,
-            }}
-            image={require('./pin.png')}
-            tracksViewChanges={false}
-          />
-        ))}
-      </RNMapView>
-      <FAB
-        icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
-        style={{ position: 'absolute', bottom: 16, right: 16 }}
-        animated={false}
-        onPress={() => animateToLocation(currentPosition)}
-      />
-    </Flex>
+    <BottomSheetModalProvider>
+      <Flex flex={1}>
+        <RNMapView
+          initialRegion={initialRegion}
+          ref={mapRef}
+          provider={PROVIDER_GOOGLE}
+          style={{ width: '100%', height: '100%' }}
+          customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
+          onRegionChange={setRegionOnMap}
+          onRegionChangeComplete={onRegionChangeComplete}
+          onMapLoaded={onMapLoaded}
+          showsPointsOfInterest={false}
+          showsBuildings={false}
+          showsUserLocation
+          showsMyLocationButton={false}
+          moveOnMarkerPress={false}
+          showsCompass={false}
+          onPress={() => bottomSheetModalRef.current?.dismiss()}
+        >
+          {nearUsers?.map(({ id, geopoint }) => (
+            <Marker
+              key={id}
+              coordinate={{
+                latitude: geopoint.latitude,
+                longitude: geopoint.longitude,
+              }}
+              image={require('./pin.png')}
+              onPress={() => handleMarkerPressed(id)}
+            />
+          ))}
+        </RNMapView>
+        <FAB
+          icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
+          style={{ position: 'absolute', bottom: 16, right: 16 }}
+          animated={false}
+          onPress={() => animateToLocation(currentPosition)}
+        />
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={['25%', '50%']}
+          backgroundStyle={{ backgroundColor: theme.colors.surface }}
+          handleIndicatorStyle={{ backgroundColor: theme.colors.onSurface, marginTop: 4 }}
+          style={{
+            backgroundColor: 'white', // <==== HERE
+            borderRadius: 24,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 12,
+            },
+            shadowOpacity: 0.58,
+            shadowRadius: 16.0,
+
+            elevation: 24,
+          }}
+        >
+          <View>
+            <Text>{userSelected?.id} 🎉</Text>
+          </View>
+        </BottomSheetModal>
+      </Flex>
+    </BottomSheetModalProvider>
   );
 }
