@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { UserDocument } from '@kuzpot/core';
-import { Flex, GeoQueryOptions, useSignOut } from '@kuzpot/react-native';
+import { Flex, GeoQueryOptions, useFirebaseAuthUser, useSignOut } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
@@ -39,6 +39,7 @@ export function MapView() {
   const { data: nearUsers } = useNearUsers(geoQueryOptions);
 
   const { mutate: signOut } = useSignOut();
+  const { data: currentUser } = useFirebaseAuthUser();
 
   useEffect(() => {
     console.log('nearUsers', nearUsers);
@@ -145,17 +146,19 @@ export function MapView() {
           showsCompass={false}
           onPress={() => bottomSheetModalRef.current?.dismiss()}
         >
-          {nearUsers?.map(({ id, geopoint }) => (
-            <Marker
-              key={id}
-              coordinate={{
-                latitude: geopoint.latitude,
-                longitude: geopoint.longitude,
-              }}
-              image={theme.dark ? require('./pin-dark.png') : require('./pin-light.png')}
-              onPress={() => handleMarkerPressed(id)}
-            />
-          ))}
+          {nearUsers
+            ?.filter(({ id }) => id !== currentUser?.uid)
+            .map(({ id, geopoint }) => (
+              <Marker
+                key={id}
+                coordinate={{
+                  latitude: geopoint.latitude,
+                  longitude: geopoint.longitude,
+                }}
+                image={theme.dark ? require('./pin-dark.png') : require('./pin-light.png')}
+                onPress={() => handleMarkerPressed(id)}
+              />
+            ))}
         </RNMapView>
         <FAB
           icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
