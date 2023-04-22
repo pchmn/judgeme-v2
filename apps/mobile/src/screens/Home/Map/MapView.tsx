@@ -152,7 +152,7 @@ export function MapView() {
                 latitude: geopoint.latitude,
                 longitude: geopoint.longitude,
               }}
-              image={require('./pin.png')}
+              image={theme.dark ? require('./pin-dark.png') : require('./pin-light.png')}
               onPress={() => handleMarkerPressed(id)}
             />
           ))}
