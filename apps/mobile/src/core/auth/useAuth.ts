@@ -13,11 +13,13 @@ export function useAuth() {
   useEffectOnce(() => {
     signInAnonymously(undefined, {
       onSuccess: async (user) => {
+        console.log('user', user.user.uid);
         try {
           await register(user.user.uid);
           setIsLoading(false);
-        } catch {
+        } catch (err) {
           setIsLoading(false);
+          console.error('err', err);
           ToastAndroid.show('An error occurred', ToastAndroid.LONG);
         }
         // ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);

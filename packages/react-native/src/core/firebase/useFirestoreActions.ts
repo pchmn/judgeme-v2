@@ -11,5 +11,6 @@ export function useFirestoreSetDoc<T extends FirebaseFirestoreTypes.DocumentData
       data: FirebaseFirestoreTypes.SetValue<Partial<T>>;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) => ref.set(data as any, { merge: true }),
+    onError: (error, { ref }) => console.error(`Error when setting doc`, { path: ref.path, error }),
   });
 }
