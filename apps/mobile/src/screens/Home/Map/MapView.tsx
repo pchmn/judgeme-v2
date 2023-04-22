@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { UserDocument } from '@kuzpot/core';
-import { Flex, GeoQueryOptions } from '@kuzpot/react-native';
+import { Flex, GeoQueryOptions, useSignOut } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
@@ -8,6 +8,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, Text, useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Shadow } from 'react-native-shadow-2';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
@@ -28,12 +30,15 @@ export function MapView() {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
+  const insets = useSafeAreaInsets();
 
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
   const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
 
   const { data: nearUsers } = useNearUsers(geoQueryOptions);
+
+  const { mutate: signOut } = useSignOut();
 
   useEffect(() => {
     console.log('nearUsers', nearUsers);
@@ -56,6 +61,13 @@ export function MapView() {
       // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
       //   to: currentUser?.uid,
       // });
+      // if (Platform.OS === 'ios') {
+      //   signOut(undefined, {
+      //     onSuccess: () => {
+      //       console.log('signOut success');
+      //     },
+      //   });
+      // }
 
       if (location) {
         mapRef.current?.animateToRegion(
@@ -153,13 +165,11 @@ export function MapView() {
         />
         <BottomSheetModal
           ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={['25%', '50%']}
+          snapPoints={['25%', '100%']}
           backgroundStyle={{ backgroundColor: theme.colors.surface }}
           handleIndicatorStyle={{ backgroundColor: theme.colors.onSurface, marginTop: 4 }}
+          handleComponent={SheetHandle}
           style={{
-            backgroundColor: 'white', // <==== HERE
-            borderRadius: 24,
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
@@ -169,6 +179,7 @@ export function MapView() {
             shadowRadius: 16.0,
 
             elevation: 24,
+            marginTop: insets.top,
           }}
         >
           <View>
@@ -177,5 +188,23 @@ export function MapView() {
         </BottomSheetModal>
       </Flex>
     </BottomSheetModalProvider>
+  );
+}
+
+function SheetHandle() {
+  const theme = useTheme();
+  return (
+    <Shadow
+      sides={{ top: true, start: false, bottom: false, end: false }}
+      corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
+      style={{ width: '100%', borderRadius: 18 }}
+      startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
+      endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
+      distance={5}
+    >
+      <Flex paddingY={12} align="center">
+        <View style={{ width: 30, height: 4, borderRadius: 4, backgroundColor: theme.colors.onSurface }} />
+      </Flex>
+    </Shadow>
   );
 }
