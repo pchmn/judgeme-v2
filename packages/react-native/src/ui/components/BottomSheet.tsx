@@ -21,9 +21,8 @@ type BottomSheetProps = {
   children?: React.ReactNode;
   containerStyle?: ViewStyle;
   indicatorStyle?: ViewStyle;
-  onIndexChange?: (index: number) => void;
+  onIndexChange?: (index: number, position: number) => void;
   onPositionChange?: (position: number) => void;
-  willMoveToIndex?: (index: number) => void;
 };
 
 export type BottomSheetRefProps = {
@@ -36,7 +35,7 @@ export type BottomSheetRefProps = {
 
 // eslint-disable-next-line react/display-name
 export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ children, containerStyle, indicatorStyle, onIndexChange, onPositionChange, willMoveToIndex }, ref) => {
+  ({ children, containerStyle, indicatorStyle, onIndexChange, onPositionChange }, ref) => {
     const insets = useSafeAreaInsets();
 
     const theme = useTheme();
@@ -67,20 +66,26 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
           index.value = newIndex;
         }
         translateY.value = withSpring(destination, { damping: 20, stiffness: 150, mass: 0.1 });
+        if (onPositionChange) {
+          runOnJS(onPositionChange)(translateY.value > 0 ? translateY.value : translateY.value + SCREEN_HEIGHT);
+        }
       },
-      [active, index, snapPoints, translateY]
+      [active, index, onPositionChange, snapPoints, translateY]
     );
 
     const snapToIndex = useCallback(
       (index: number) => {
         'worklet';
         const toIndex = Math.max(0, Math.min(index, 2));
-        if (willMoveToIndex) {
-          runOnJS(willMoveToIndex)(toIndex);
-        }
         snapToPosition(snapPoints[toIndex]);
+        if (onIndexChange) {
+          runOnJS(onIndexChange)(
+            toIndex,
+            snapPoints[toIndex] > 0 ? snapPoints[toIndex] : snapPoints[toIndex] + SCREEN_HEIGHT
+          );
+        }
       },
-      [willMoveToIndex, snapToPosition, snapPoints]
+      [snapToPosition, snapPoints, onIndexChange]
     );
 
     const toggle = useCallback(() => {
@@ -110,18 +115,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       open,
       close,
     ]);
-
-    useDerivedValue(() => {
-      if (onPositionChange) {
-        runOnJS(onPositionChange)(translateY.value);
-      }
-    });
-
-    useDerivedValue(() => {
-      if (onIndexChange) {
-        runOnJS(onIndexChange)(index.value);
-      }
-    });
 
     const context = useSharedValue({ y: 0 });
     const gesture = Gesture.Pan()
@@ -216,7 +209,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
                 width: '100%',
                 justifyContent: 'flex-end',
               },
-              // rTopViewStyle,
             ]}
             entering={FadeInUp.damping(20).stiffness(150).mass(0.1).duration(100)}
             exiting={FadeOutUp.damping(20).stiffness(150).mass(0.1).duration(100)}
