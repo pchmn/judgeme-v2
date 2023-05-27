@@ -1,24 +1,28 @@
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { UserDocument } from '@kuzpot/core';
-import { Flex, GeoQueryOptions, useFirebaseAuthUser, useSignOut } from '@kuzpot/react-native';
+import { BottomSheet, BottomSheetRefProps, Flex, GeoQueryOptions, useFirebaseAuthUser } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, Text, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Shadow } from 'react-native-shadow-2';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
 import { darkMapStyle, lightMapStyle } from './mapStyle';
+import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
 import { useNearUsers } from './useNearUsers';
 
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+
 export function MapView() {
+  const insets = useSafeAreaInsets();
+
   const {
     params: { initialRegion },
   } = useRoute<RouteParams<'Home'>>();
@@ -28,22 +32,23 @@ export function MapView() {
   const mapRef = useRef<RNMapView>(null);
   const isRegionFocused = useRef(false);
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetRef = useRef<BottomSheetRefProps>(null);
   const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
-  const insets = useSafeAreaInsets();
 
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
   const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
 
-  const { data: nearUsers } = useNearUsers(geoQueryOptions);
+  const [tracksViewChanges, setTracksViewChanges] = useState(false);
 
-  const { mutate: signOut } = useSignOut();
+  const { data: nearUsers } = useNearUsers(geoQueryOptions);
   const { data: currentUser } = useFirebaseAuthUser();
 
   useEffect(() => {
-    console.log('nearUsers', nearUsers);
-  }, [nearUsers]);
+    setTracksViewChanges(true);
+
+    setTimeout(() => setTracksViewChanges(false));
+  }, [theme]);
 
   const isCurrentPosition = useMemo(() => {
     if (regionOnMap && currentPosition) {
@@ -58,7 +63,7 @@ export function MapView() {
   }, [currentPosition, regionOnMap]);
 
   const animateToLocation = useCallback(
-    async (location?: { latitude: number; longitude: number }) => {
+    async (location?: { latitude: number; longitude: number }, duration?: number) => {
       // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
       //   to: currentUser?.uid,
       // });
@@ -74,14 +79,14 @@ export function MapView() {
         mapRef.current?.animateToRegion(
           {
             ...location,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
+            latitudeDelta: regionOnMap?.latitudeDelta || 0.05,
+            longitudeDelta: regionOnMap?.longitudeDelta || 0.05,
           },
-          1500
+          duration || 1500
         );
       }
     },
-    [mapRef]
+    [regionOnMap?.latitudeDelta, regionOnMap?.longitudeDelta]
   );
 
   const onMapLoaded = () => {
@@ -110,13 +115,36 @@ export function MapView() {
   };
 
   const handleMarkerPressed = useCallback(
-    (userId: string) => {
+    async (userId: string) => {
       const user = nearUsers?.find(({ id }) => id === userId);
-      console.log('user', user);
+      // console.log('user', user);
       setUserSelected(nearUsers?.find(({ id }) => id === userId));
-      bottomSheetModalRef.current?.present();
+
+      bottomSheetRef.current?.open();
     },
     [nearUsers]
+  );
+
+  const handleBottomSheetIndexChange = useCallback(
+    async (index: number, position: number) => {
+      if (index === 1 && userSelected) {
+        const currentCenter = SCREEN_HEIGHT / 2;
+        const userPosition = await mapRef.current?.pointForCoordinate({
+          latitude: userSelected.geopoint.latitude,
+          longitude: userSelected.geopoint.longitude,
+        });
+        if (userPosition && userPosition.y >= position - 10) {
+          const distance = (SCREEN_HEIGHT - position) / 2 - userPosition.y + insets.top;
+
+          const coordinate = await mapRef.current?.coordinateForPoint({
+            x: userPosition.x,
+            y: currentCenter - distance,
+          });
+          animateToLocation(coordinate, 500);
+        }
+      }
+    },
+    [animateToLocation, insets.top, userSelected]
   );
 
   useEffect(() => {
@@ -144,7 +172,7 @@ export function MapView() {
           showsMyLocationButton={false}
           moveOnMarkerPress={false}
           showsCompass={false}
-          onPress={() => bottomSheetModalRef.current?.dismiss()}
+          onPress={() => bottomSheetRef.current?.close()}
         >
           {nearUsers
             ?.filter(({ id }) => id !== currentUser?.uid)
@@ -155,9 +183,12 @@ export function MapView() {
                   latitude: geopoint.latitude,
                   longitude: geopoint.longitude,
                 }}
-                image={theme.dark ? require('./pin-dark.png') : require('./pin-light.png')}
                 onPress={() => handleMarkerPressed(id)}
-              />
+                title="hello world"
+                tracksViewChanges={tracksViewChanges}
+              >
+                <MarkerImage style={{ borderColor: 'red', borderWidth: 2 }} />
+              </Marker>
             ))}
         </RNMapView>
         <FAB
@@ -166,48 +197,28 @@ export function MapView() {
           animated={false}
           onPress={() => animateToLocation(currentPosition)}
         />
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          snapPoints={['25%', '100%']}
-          backgroundStyle={{ backgroundColor: theme.colors.surface }}
-          handleIndicatorStyle={{ backgroundColor: theme.colors.onSurface, marginTop: 4 }}
-          handleComponent={SheetHandle}
-          style={{
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 12,
-            },
-            shadowOpacity: 0.58,
-            shadowRadius: 16.0,
-
-            elevation: 24,
-            marginTop: insets.top,
-          }}
-        >
-          <View>
-            <Text>{userSelected?.id} 🎉</Text>
-          </View>
-        </BottomSheetModal>
+        <BottomSheet ref={bottomSheetRef} onIndexChange={handleBottomSheetIndexChange}>
+          <Text>{userSelected?.id} 🎉</Text>
+        </BottomSheet>
       </Flex>
     </BottomSheetModalProvider>
   );
 }
 
-function SheetHandle() {
-  const theme = useTheme();
-  return (
-    <Shadow
-      sides={{ top: true, start: false, bottom: false, end: false }}
-      corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
-      style={{ width: '100%', borderRadius: 18 }}
-      startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
-      endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
-      distance={5}
-    >
-      <Flex paddingY={12} align="center">
-        <View style={{ width: 30, height: 4, borderRadius: 4, backgroundColor: theme.colors.onSurface }} />
-      </Flex>
-    </Shadow>
-  );
-}
+// function SheetHandle() {
+//   const theme = useTheme();
+//   return (
+//     <Shadow
+//       sides={{ top: true, start: false, bottom: false, end: false }}
+//       corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
+//       style={{ width: '100%', borderRadius: 18 }}
+//       startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
+//       endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
+//       distance={5}
+//     >
+//       <Flex paddingY={12} align="center">
+//         <View style={{ width: 30, height: 4, borderRadius: 4, backgroundColor: theme.colors.onSurface }} />
+//       </Flex>
+//     </Shadow>
+//   );
+// }
