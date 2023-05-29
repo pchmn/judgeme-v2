@@ -3,10 +3,8 @@ import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { IconButton, useTheme } from 'react-native-paper';
 import Animated, {
-  Extrapolate,
   FadeInUp,
   FadeOutUp,
-  interpolate,
   runOnJS,
   useAnimatedStyle,
   useDerivedValue,
@@ -14,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Shadow } from 'react-native-shadow-2';
 
 import { useEffectOnce } from '../../core';
 
@@ -46,11 +45,11 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
     const topViewHeight = bottomSheetTop + 20;
 
     const snapPoints = useMemo(
-      () => [insets.top, -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT + bottomSheetTop],
+      () => [insets.top + 5, -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT + bottomSheetTop],
       [bottomSheetTop, insets.top]
     );
 
-    const translateY = useSharedValue(insets.top);
+    const translateY = useSharedValue(insets.top + 5);
     const index = useSharedValue(0);
     const active = useSharedValue(false);
 
@@ -153,14 +152,9 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
         }
       });
 
-    const rBottomSheetStyle = useAnimatedStyle(() => {
-      const borderRadius = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [10, 0], Extrapolate.CLAMP);
-
-      return {
-        borderRadius,
-        transform: [{ translateY: translateY.value }],
-      };
-    });
+    const rBottomSheetStyle = useAnimatedStyle(() => ({
+      transform: [{ translateY: translateY.value }],
+    }));
 
     const [showTopView, setShowTopView] = useState(false);
     useDerivedValue(() => {
@@ -193,23 +187,33 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
                 backgroundColor: theme.colors.surface,
                 position: 'absolute',
                 top: SCREEN_HEIGHT,
+                borderRadius: 10,
                 ...containerStyle,
               },
               rBottomSheetStyle,
             ]}
           >
-            <View
-              style={{
-                width: 25,
-                height: 4,
-                backgroundColor: theme.colors.onSurface,
-                alignSelf: 'center',
-                marginVertical: 15,
-                borderRadius: 2,
-                ...indicatorStyle,
-              }}
-            />
-            {children}
+            <Shadow
+              sides={{ top: true, start: false, bottom: false, end: false }}
+              corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
+              style={{ width: '100%', borderRadius: 10 }}
+              startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
+              endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
+              distance={5}
+            >
+              <View
+                style={{
+                  width: 25,
+                  height: 4,
+                  backgroundColor: theme.colors.onSurface,
+                  alignSelf: 'center',
+                  marginVertical: 15,
+                  borderRadius: 2,
+                  ...indicatorStyle,
+                }}
+              />
+              {children}
+            </Shadow>
           </Animated.View>
         </GestureDetector>
         {showTopView && (
