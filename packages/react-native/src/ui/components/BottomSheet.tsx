@@ -1,5 +1,5 @@
 import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
-import { Dimensions, View, ViewStyle } from 'react-native';
+import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { IconButton, useTheme } from 'react-native-paper';
 import Animated, {
@@ -14,6 +14,8 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useEffectOnce } from '../../core';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -166,6 +168,18 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       if (show !== showTopView) {
         runOnJS(setShowTopView)(show);
       }
+    });
+
+    useEffectOnce(() => {
+      const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+        if (active.value) {
+          snapToIndex(index.value - 1);
+          return true;
+        }
+        return false;
+      });
+
+      return () => subscription.remove();
     });
 
     return (
