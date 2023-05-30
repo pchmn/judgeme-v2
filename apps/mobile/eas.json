@@ -1,15 +1,11 @@
 {
-  "cli": {
-    "promptToConfigurePushNotifications": false
-  },
   "build": {
     "development": {
       "channel": "development",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "simulator": true,
-        "resourceClass": "m1-medium"
+        "simulator": true
       },
       "env": {
         "APP_ENV": "development"
@@ -22,8 +18,7 @@
         "buildType": "apk"
       },
       "ios": {
-        "simulator": true,
-        "resourceClass": "m1-medium"
+        "simulator": true
       },
       "env": {
         "APP_ENV": "preview"
@@ -34,9 +29,6 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      },
-      "ios": {
-        "resourceClass": "m1-medium"
       },
       "env": {
         "APP_ENV": "production"
