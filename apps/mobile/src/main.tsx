@@ -9,6 +9,7 @@ import { AndroidImportance, setNotificationChannelAsync } from 'expo-notificatio
 import { preventAutoHideAsync } from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as Sentry from 'sentry-expo';
 
 import App from './App';
@@ -56,7 +57,9 @@ export default function Main() {
   return (
     <QueryClientProvider client={queryClient}>
       <UiProvider>
-        <App />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <App />
+        </GestureHandlerRootView>
       </UiProvider>
     </QueryClientProvider>
   );

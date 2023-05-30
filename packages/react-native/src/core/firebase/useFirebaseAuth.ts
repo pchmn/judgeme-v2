@@ -21,3 +21,7 @@ export function useFirebaseAuthUser() {
 export function useSignInAnonymously() {
   return useMutation({ mutationFn: () => auth().signInAnonymously() });
 }
+
+export function useSignOut() {
+  return useMutation({ mutationFn: () => auth().signOut() });
+}

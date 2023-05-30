@@ -30,10 +30,8 @@ export function useCurrentPosition(storeLocation = true) {
       mutate({
         ref: userRef,
         data: {
-          location: {
-            geohash,
-            ...location,
-          },
+          geohash,
+          geopoint: new firestore.GeoPoint(location.latitude, location.longitude),
         },
       });
     },
@@ -43,7 +41,7 @@ export function useCurrentPosition(storeLocation = true) {
   useEffect(() => {
     const watchPosition = async () => {
       locationSubscription.current = await watchPositionAsync(
-        { accuracy: Accuracy.Balanced, timeInterval: 5000 },
+        { accuracy: Accuracy.Balanced, timeInterval: 30000 },
         (location) => {
           setCurrentPosition(location.coords);
           if (storeLocation) {
