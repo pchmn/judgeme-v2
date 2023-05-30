@@ -18,7 +18,7 @@ import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
 import { useNearUsers } from './useNearUsers';
 
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export function MapView() {
   const insets = useSafeAreaInsets();
@@ -204,21 +204,3 @@ export function MapView() {
     </BottomSheetModalProvider>
   );
 }
-
-// function SheetHandle() {
-//   const theme = useTheme();
-//   return (
-//     <Shadow
-//       sides={{ top: true, start: false, bottom: false, end: false }}
-//       corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
-//       style={{ width: '100%', borderRadius: 18 }}
-//       startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
-//       endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
-//       distance={5}
-//     >
-//       <Flex paddingY={12} align="center">
-//         <View style={{ width: 30, height: 4, borderRadius: 4, backgroundColor: theme.colors.onSurface }} />
-//       </Flex>
-//     </Shadow>
-//   );
-// }
