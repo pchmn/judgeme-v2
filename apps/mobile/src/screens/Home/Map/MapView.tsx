@@ -7,12 +7,13 @@ import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { FAB, Text, useTheme } from 'react-native-paper';
+import { FAB, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
+import { UserDetails } from '../UserDetails/UserDetails';
 import { darkMapStyle, lightMapStyle } from './mapStyle';
 import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
@@ -198,7 +199,7 @@ export function MapView() {
           onPress={() => animateToLocation(currentPosition)}
         />
         <BottomSheet ref={bottomSheetRef} onIndexChange={handleBottomSheetIndexChange}>
-          <Text>{userSelected?.id} 🎉</Text>
+          {userSelected && <UserDetails key={userSelected.id} user={userSelected} />}
         </BottomSheet>
       </Flex>
     </BottomSheetModalProvider>
