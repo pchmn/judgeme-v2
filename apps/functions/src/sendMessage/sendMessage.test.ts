@@ -31,6 +31,7 @@ describe('[sendMessage] Validation', () => {
   test('should throw an error if not authenticated', async () => {
     const data = {
       to: 'test',
+      message: 'love_you',
     };
     const context = {
       auth: undefined,
@@ -52,6 +53,13 @@ describe('[sendMessage] Function', () => {
     await firestore()
       .collection('users')
       .doc(user.uid)
+      .set({
+        geohash: 'u0xj',
+        geopoint: new firestore.GeoPoint(48.856614, 2.3522219),
+      });
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
       .collection('private')
       .doc('devices')
       .set({
@@ -60,6 +68,16 @@ describe('[sendMessage] Function', () => {
           os: 'Android',
           osVersion: '13.0',
           pushToken: 'push-token',
+          language: 'en',
+        },
+      });
+    await firestore()
+      .collection('messages')
+      .doc('love_you')
+      .set({
+        emoji: '❤️',
+        translations: {
+          en: 'I love you',
         },
       });
   });
@@ -73,6 +91,7 @@ describe('[sendMessage] Function', () => {
 
     const data = {
       to: user.uid,
+      message: 'love_you',
     };
 
     const context = {
@@ -93,6 +112,7 @@ describe('[sendMessage] Function', () => {
 
     const data = {
       to: user.uid,
+      message: 'love_you',
     };
 
     const context = {
