@@ -3,6 +3,7 @@ export interface DeviceInfo {
   os: string;
   osVersion: string;
   pushToken: string;
+  language: string;
 }
 
 export interface DevicesDocument {

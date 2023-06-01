@@ -5,6 +5,8 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
+import { getDeviceLocale } from '../i18n';
+
 export interface InstallationDevice {
   [installationId: string]: DeviceInfo;
 }
@@ -40,6 +42,7 @@ export async function getInstallationDevice(): Promise<InstallationDevice | unde
       os: `${Device.osName}`,
       osVersion: `${Device.osVersion}`,
       pushToken,
+      language: getDeviceLocale(),
     },
   };
 }

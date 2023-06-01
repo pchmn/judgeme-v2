@@ -25,7 +25,7 @@ i18next.use(initReactI18next).init({
   fallbackLng: 'en',
 });
 
-function getDeviceLocale() {
+export function getDeviceLocale() {
   const locale: string =
     Platform.OS === 'ios'
       ? NativeModules.SettingsManager.settings.AppleLocale || NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
