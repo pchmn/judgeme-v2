@@ -34,6 +34,9 @@ importers:
       firebase-functions:
         specifier: ^4.2.1
         version: 4.2.1(firebase-admin@11.4.1)
+      geofire-common:
+        specifier: ^6.0.0
+        version: 6.0.0
       zod:
         specifier: ^3.19.1
         version: 3.20.2
@@ -2755,7 +2758,6 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
-    dev: true
 
   /@expo/prebuild-config@6.0.0(expo-modules-autolinking@1.2.0):
     resolution: {integrity: sha512-UW0QKAoRelsalVMhAG1tmegwS+2tbefvUi6/0QiKPlMLg8GFDQ5ZnzsSmuljD0SzT5yGg8oSpKYhnrXJ6pRmIQ==}
@@ -6654,7 +6656,6 @@ packages:
       fast-glob: 3.2.12
       find-up: 5.0.0
       fs-extra: 9.1.0
-    dev: true
 
   /expo-modules-autolinking@1.2.0:
     resolution: {integrity: sha512-QOPh/iXykNDCAzUual1imSrn2aDakzCGUp2QmxVREr0llajXygroUWlT9sQXh1zKzbNp+a+i/xK375ZeBFiNJA==}
@@ -6717,7 +6718,7 @@ packages:
       expo: '*'
     dependencies:
       '@expo/configure-splash-screen': 0.6.0
-      '@expo/prebuild-config': 6.0.0(expo-modules-autolinking@1.2.0)
+      '@expo/prebuild-config': 6.0.0(expo-modules-autolinking@1.1.2)
       expo: 48.0.11(@babel/core@7.20.7)
     transitivePeerDependencies:
       - encoding
