@@ -1,7 +1,7 @@
 import React, { useCallback, useImperativeHandle, useMemo } from 'react';
 import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { shadow, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Animated, {
   interpolate,
   runOnJS,
@@ -15,6 +15,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useEffectOnce } from '../../core';
+import { shadow } from '../utils';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const SHADOW_DISTANCE = 3;
@@ -197,16 +198,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
                 borderBottomRightRadius: 0,
                 ...containerStyle,
               },
-              shadow(5) as {
-                shadowColor: string;
-                shadowOpacity: number;
-                shadowOffset: {
-                  width: number;
-                  height: number;
-                };
-                shadowRadius: number;
-              },
-              { elevation: 10 },
+              shadow(5),
               rBottomSheetStyle,
             ]}
           >
