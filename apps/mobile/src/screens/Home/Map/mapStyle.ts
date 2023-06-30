@@ -1,24 +1,27 @@
 import { Material3Scheme } from '@pchmn/expo-material3-theme/build/ExpoMaterial3Theme.types';
-import Color from 'color';
+import { colord, extend } from 'colord';
+import mixPlugin from 'colord/plugins/mix';
+
+extend([mixPlugin]);
 
 export const themedMapStyle = (scheme: Material3Scheme) => [
   {
     elementType: 'geometry',
     stylers: [
       {
-        color: Color(scheme.background).isDark()
-          ? Color(scheme.background).lighten(0.5).hex()
-          : Color(scheme.primary).mix(Color(scheme.background), 0.95).hex(),
+        color: colord(scheme.background).isDark()
+          ? colord(scheme.background).lighten(0.05).toHex()
+          : colord(scheme.primary).mix(colord(scheme.background), 0.95).toHex(),
       },
     ],
   },
   {
     elementType: 'labels.text.stroke',
-    stylers: [{ color: Color(scheme.tertiary).mix(Color(scheme.background), 0.9).hex() }],
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.9).toHex() }],
   },
   {
     elementType: 'labels.text.fill',
-    stylers: [{ color: Color(scheme.tertiary).mix(Color(scheme.background), 0.5).hex() }],
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.5).toHex() }],
   },
   {
     featureType: 'administrative.locality',
@@ -28,15 +31,15 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
   {
     featureType: 'administrative.locality',
     elementType: 'labels.text.stroke',
-    stylers: [{ color: Color(scheme.tertiary).mix(Color(scheme.background), 0.9).hex() }],
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.9).toHex() }],
   },
   {
     featureType: 'landscape.natural',
     stylers: [
       {
-        color: Color('#A8DAB5')
-          .mix(Color(scheme.background), Color(scheme.background).isDark() ? 0.9 : 0.75)
-          .hex(),
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.9 : 0.75)
+          .toHex(),
       },
     ],
   },
@@ -50,9 +53,9 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     elementType: 'geometry',
     stylers: [
       {
-        color: Color('#A8DAB5')
-          .mix(Color(scheme.background), Color(scheme.background).isDark() ? 0.8 : 0.6)
-          .hex(),
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.8 : 0.6)
+          .toHex(),
       },
     ],
   },
@@ -61,51 +64,42 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: Color('#A8DAB5')
-          .mix(Color(scheme.background), Color(scheme.background).isDark() ? 0.5 : 0.2)
-          .hex(),
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.5 : 0.2)
+          .toHex(),
       },
     ],
   },
   {
     featureType: 'poi.park',
     elementType: 'labels.text.stroke',
-    stylers: [{ color: Color('#A8DAB5').mix(Color(scheme.background), 0.9).hex() }],
+    stylers: [{ color: colord('#A8DAB5').mix(colord(scheme.background), 0.9).toHex() }],
   },
   {
     featureType: 'road',
     elementType: 'geometry',
     stylers: [
       {
-        color: Color(scheme.background).isDark()
-          ? scheme.secondaryContainer
-          : Color(scheme.secondaryContainer).darken(0.05).hex(),
+        color: colord(scheme.background).isDark()
+          ? colord(scheme.secondaryContainer).mix(colord(scheme.background), 0.4).toHex()
+          : colord(scheme.secondaryContainer).darken(0.05).toHex(),
       },
     ],
   },
   {
     featureType: 'road',
     elementType: 'geometry.stroke',
-    stylers: [{ color: scheme.secondaryContainer }],
+    stylers: [{ color: colord(scheme.secondaryContainer).darken(0.15).toHex() }],
   },
   {
     featureType: 'road',
     elementType: 'labels.text.fill',
     stylers: [{ color: scheme.secondary }],
   },
-  // {
-  //   featureType: 'road.local',
-  //   elementType: 'labels.text.stroke',
-  //   stylers: [
-  //     {
-  //       visibility: 'off',
-  //     },
-  //   ],
-  // },
   {
     featureType: 'road.highway',
     elementType: 'geometry',
-    stylers: [{ color: Color(scheme.tertiary).mix(Color(scheme.background), 0.3).hex() }],
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.3).toHex() }],
   },
   {
     featureType: 'road.highway',
@@ -136,14 +130,14 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     elementType: 'geometry',
     stylers: [
       {
-        color: Color('#9CC0F9').mix(Color(scheme.background), 0.75).hex(),
+        color: colord('#9CC0F9').mix(colord(scheme.background), 0.75).toHex(),
       },
     ],
   },
   {
     featureType: 'water',
     elementType: 'labels.text.fill',
-    stylers: [{ color: Color('#9CC0F9').mix(Color(scheme.background), 0.75).hex() }],
+    stylers: [{ color: colord('#9CC0F9').mix(colord(scheme.background), 0.75).toHex() }],
   },
   {
     featureType: 'water',

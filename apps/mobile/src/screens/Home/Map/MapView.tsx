@@ -8,13 +8,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB, useTheme } from 'react-native-paper';
+import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
 import { UserDetails } from '../UserDetails/UserDetails';
-import { darkMapStyle, lightMapStyle } from './mapStyle';
+import { themedMapStyle } from './mapStyle';
 import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
 import { useNearUsers } from './useNearUsers';
@@ -125,17 +126,16 @@ export function MapView() {
     },
     [nearUsers]
   );
-
   const handleBottomSheetIndexChange = useCallback(
-    async (index: number, position: number) => {
+    async (index: number, positionY: number) => {
       if (index === 1 && userSelected) {
         const currentCenter = SCREEN_HEIGHT / 2;
         const userPosition = await mapRef.current?.pointForCoordinate({
           latitude: userSelected.geopoint.latitude,
           longitude: userSelected.geopoint.longitude,
         });
-        if (userPosition && userPosition.y >= position - 10) {
-          const distance = (SCREEN_HEIGHT - position) / 2 - userPosition.y + insets.top;
+        if (userPosition && userPosition.y >= positionY - 20) {
+          const distance = positionY / 2 - userPosition.y;
 
           const coordinate = await mapRef.current?.coordinateForPoint({
             x: userPosition.x,
@@ -145,7 +145,7 @@ export function MapView() {
         }
       }
     },
-    [animateToLocation, insets.top, userSelected]
+    [animateToLocation, userSelected]
   );
 
   useEffect(() => {
@@ -155,6 +155,8 @@ export function MapView() {
     }
   }, [animateToLocation, currentPosition, initialRegion]);
 
+  const positionValue = useSharedValue(0);
+
   return (
     <BottomSheetModalProvider>
       <Flex flex={1}>
@@ -163,7 +165,8 @@ export function MapView() {
           ref={mapRef}
           provider={PROVIDER_GOOGLE}
           style={{ width: '100%', height: '100%' }}
-          customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
+          // customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
+          customMapStyle={themedMapStyle(theme.colors)}
           onRegionChange={setRegionOnMap}
           onRegionChangeComplete={onRegionChangeComplete}
           onMapLoaded={onMapLoaded}
@@ -185,8 +188,8 @@ export function MapView() {
                   longitude: geopoint.longitude,
                 }}
                 onPress={() => handleMarkerPressed(id)}
-                title="hello world"
-                tracksViewChanges={tracksViewChanges}
+                // tracksViewChanges={tracksViewChanges}
+                tracksViewChanges={true}
               >
                 <MarkerImage style={{ borderColor: 'red', borderWidth: 2 }} />
               </Marker>
@@ -198,8 +201,13 @@ export function MapView() {
           animated={false}
           onPress={() => animateToLocation(currentPosition)}
         />
-        <BottomSheet ref={bottomSheetRef} onIndexChange={handleBottomSheetIndexChange}>
-          {userSelected && <UserDetails key={userSelected.id} user={userSelected} />}
+        <BottomSheet
+          ref={bottomSheetRef}
+          onIndexChange={handleBottomSheetIndexChange}
+          positionValue={positionValue}
+          snapPoint={100}
+        >
+          {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
         </BottomSheet>
       </Flex>
     </BottomSheetModalProvider>
