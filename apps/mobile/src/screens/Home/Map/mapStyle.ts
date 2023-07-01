@@ -10,8 +10,8 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     stylers: [
       {
         color: colord(scheme.background).isDark()
-          ? colord(scheme.background).lighten(0.05).toHex()
-          : colord(scheme.primary).mix(colord(scheme.background), 0.95).toHex(),
+          ? colord(scheme.secondaryContainer).darken(0.075).mix(colord(scheme.background)).toHex()
+          : colord(scheme.secondaryContainer).lighten(0.03).toHex(),
       },
     ],
   },
@@ -80,16 +80,20 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     elementType: 'geometry',
     stylers: [
       {
-        color: colord(scheme.background).isDark()
-          ? colord(scheme.secondaryContainer).mix(colord(scheme.background), 0.4).toHex()
-          : colord(scheme.secondaryContainer).darken(0.05).toHex(),
+        color: colord(scheme.background).isDark() ? colord(scheme.background).lighten(0.2).toHex() : scheme.background,
       },
     ],
   },
   {
     featureType: 'road',
     elementType: 'geometry.stroke',
-    stylers: [{ color: colord(scheme.secondaryContainer).darken(0.15).toHex() }],
+    stylers: [
+      {
+        color: colord(scheme.background).isDark()
+          ? colord(scheme.secondaryContainer).darken(0.3).toHex()
+          : colord(scheme.secondaryContainer).darken(0.075).toHex(),
+      },
+    ],
   },
   {
     featureType: 'road',
