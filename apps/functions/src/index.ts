@@ -1,9 +1,12 @@
-import { FunctionName } from '@kuzpot/core';
-import { CloudFunction, region } from 'firebase-functions';
+import { FunctionName, FunctionParams } from '@kuzpot/core';
+import { setGlobalOptions } from 'firebase-functions/v2';
+import { CallableFunction, onCall } from 'firebase-functions/v2/https';
 
-const functions: Record<FunctionName, CloudFunction<unknown>> = {
-  sendMessage: region('europe-west1').https.onCall(async (data, context) => {
-    return await (await import('./sendMessage')).default(data, context);
+setGlobalOptions({ region: 'europe-west1' });
+
+const functions: Record<FunctionName, CallableFunction<FunctionParams[FunctionName], unknown>> = {
+  sendMessage: onCall<FunctionParams['sendMessage']>(async (req) => {
+    return await (await import('./sendMessage')).default(req);
   }),
 };
 

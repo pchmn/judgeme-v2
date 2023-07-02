@@ -1,29 +1,41 @@
 import { DevicesDocument, FunctionParams, FunctionValidation, Message, UserDocument } from '@kuzpot/core';
+import { Logtail } from '@logtail/node';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getMessaging, MulticastMessage } from 'firebase-admin/messaging';
-import { CallableContext, HttpsError } from 'firebase-functions/v1/https';
+import { HttpsError } from 'firebase-functions/v2/https';
+import { CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
 
 const db = getFirestore(initializeApp());
 const messaging = getMessaging();
 
-export async function sendMessage(data: FunctionParams['sendMessage'], context: CallableContext) {
+const logtail = new Logtail(process.env.BETTERSTACK_TOKEN || '');
+
+export async function sendMessage({ data, auth }: CallableRequest<FunctionParams['sendMessage']>) {
+  const startTime = Date.now();
   try {
     FunctionValidation['sendMessage'].parse(data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    logtail.error('[sendMessage] Invalid data', {
+      error: { ...error },
+      params: { ...data, from: auth?.token?.uid || 'unknown' },
+    });
     throw new HttpsError('invalid-argument', 'Invalid data', error.issues);
   }
 
-  const { to, message } = data;
-  const currentToken = context.auth?.token;
+  const { to, message: messageKey } = data;
+  const currentToken = auth?.token;
 
   if (!currentToken) {
+    logtail.error('[sendMessage] User must be authenticated', {
+      params: { ...data, from: 'unknown' },
+    });
     throw new HttpsError('unauthenticated', 'User must be authenticated');
   }
 
-  const messageDoc = (await db.collection('messages').doc(message).get()).data() as Message;
+  const message = (await db.collection('messages').doc(messageKey).get()).data() as Message;
 
   const sender = (await db.collection('users').doc(currentToken.uid).get()).data() as UserDocument;
 
@@ -33,14 +45,22 @@ export async function sendMessage(data: FunctionParams['sendMessage'], context: 
     await db.collection('users').doc(to).collection('private').doc('devices').get()
   ).data() as DevicesDocument;
 
+  if (!recipientDevice || Object.keys(recipientDevice).length === 0) {
+    logtail.error('[sendMessage] Recipient has no devices', {
+      params: { ...data, from: currentToken.uid },
+      recipientDevice: JSON.stringify(recipientDevice),
+    });
+    throw new HttpsError('not-found', 'Recipient has no devices');
+  }
+
   const distanceBetweenUsers = distanceBetween(
     [sender.geopoint.latitude, sender.geopoint.longitude],
     [recipient.geopoint.latitude, recipient.geopoint.longitude]
   );
 
-  const messageTitle = `${messageDoc.emoji} ${getMessageTranslation(
+  const messageTitle = `${message.emoji} ${getMessageTranslation(
     recipientDevice[Object.keys(recipientDevice)[0]].language,
-    messageDoc
+    message
   )}`;
   const messageBody = `à ${
     distanceBetweenUsers < 1 ? Math.round(distanceBetweenUsers * 1000) + 'm' : Math.round(distanceBetweenUsers) + 'km'
@@ -50,7 +70,7 @@ export async function sendMessage(data: FunctionParams['sendMessage'], context: 
 
   const pushMessage: MulticastMessage = {
     data: {
-      message,
+      message: messageKey,
       distanceBetweenUsers: distanceBetweenUsers.toString(),
     },
     notification: {
@@ -67,6 +87,29 @@ export async function sendMessage(data: FunctionParams['sendMessage'], context: 
   };
 
   const batchResponse = await messaging.sendMulticast(pushMessage);
+
+  await db
+    .collection('users')
+    .doc(currentToken.uid)
+    .collection('private')
+    .doc('history')
+    .collection('messagesSent')
+    .add({
+      to,
+      message: messageKey,
+    });
+
+  await db.collection('users').doc(to).collection('private').doc('history').collection('messagesReceived').add({
+    from: currentToken.uid,
+    message: messageKey,
+  });
+
+  logtail.info('[sendMessage] Message sent', {
+    params: { ...data, from: currentToken.uid },
+    success: batchResponse.successCount,
+    failure: batchResponse.failureCount,
+    executionTime: `${Date.now() - startTime}ms`,
+  });
 
   return { successCount: batchResponse.successCount, failureCount: batchResponse.failureCount };
 }
