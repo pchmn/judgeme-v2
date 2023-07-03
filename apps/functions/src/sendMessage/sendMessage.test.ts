@@ -3,14 +3,14 @@ import { UserRecord } from 'firebase-admin/auth';
 import { getMessaging } from 'firebase-admin/messaging';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 
-import { functions, testFunctions } from '../__test__/setup';
+import { functions, testFunctions, wrapCallableFunction } from '../__test__/setup';
 
-const wrapped = testFunctions.wrap(functions.sendMessage);
+const wrapped = wrapCallableFunction(functions.sendMessage);
 
 describe('[sendMessage] Validation', () => {
   test('should throw an error if no data', async () => {
     try {
-      await wrapped(undefined);
+      await wrapped({ data: undefined });
     } catch (error: any) {
       expect(error.message).toEqual('Invalid data');
     }
@@ -22,7 +22,7 @@ describe('[sendMessage] Validation', () => {
     };
 
     try {
-      await wrapped(data);
+      await wrapped({ data });
     } catch (error: any) {
       expect(error.message).toEqual('Invalid data');
     }
@@ -33,12 +33,9 @@ describe('[sendMessage] Validation', () => {
       to: 'test',
       message: 'love_you',
     };
-    const context = {
-      auth: undefined,
-    };
 
     try {
-      await wrapped(data, context);
+      await wrapped({ data, auth: undefined });
     } catch (error: any) {
       expect(error.message).toEqual('User must be authenticated');
     }
@@ -94,15 +91,13 @@ describe('[sendMessage] Function', () => {
       message: 'love_you',
     };
 
-    const context = {
-      auth: {
-        token: {
-          uid: user.uid,
-        },
+    const auth = {
+      token: {
+        uid: user.uid,
       },
     };
 
-    const result = await wrapped(data, context);
+    const result = await wrapped({ data, auth });
 
     expect(result).toEqual({ successCount: 1, failureCount: 0 });
   });
@@ -115,15 +110,13 @@ describe('[sendMessage] Function', () => {
       message: 'love_you',
     };
 
-    const context = {
-      auth: {
-        token: {
-          uid: user.uid,
-        },
+    const auth = {
+      token: {
+        uid: user.uid,
       },
     };
 
-    const result = await wrapped(data, context);
+    const result = await wrapped({ data, auth });
 
     expect(result).toEqual({ successCount: 0, failureCount: 1 });
   });
