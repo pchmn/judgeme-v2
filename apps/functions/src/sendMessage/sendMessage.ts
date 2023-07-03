@@ -6,12 +6,13 @@ import { getMessaging, MulticastMessage } from 'firebase-admin/messaging';
 import { HttpsError } from 'firebase-functions/v2/https';
 import { CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
-import i18n from 'src/i18n';
+
+import i18n from '../i18n';
 
 const db = getFirestore(initializeApp());
 const messaging = getMessaging();
 
-const logtail = new Logtail(process.env.BETTERSTACK_TOKEN || '');
+const logtail = new Logtail(process.env.BETTERSTACK_TOKEN || 'unknown');
 
 export async function sendMessage(req: CallableRequest<FunctionParams['sendMessage']>) {
   const startTime = Date.now();
