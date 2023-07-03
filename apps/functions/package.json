@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "dist/apps/functions/src/index.js",
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
