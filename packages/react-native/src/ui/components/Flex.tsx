@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, View, ViewStyle } from 'react-native';
 
 interface FlexProps {
   direction?: 'row' | 'column';
@@ -15,6 +15,7 @@ interface FlexProps {
   backgroundColor?: string;
   flex?: number;
   style?: ViewStyle;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 export function Flex({
@@ -26,6 +27,7 @@ export function Flex({
   paddingX,
   paddingY,
   style,
+  onLayout,
   ...otherProps
 }: PropsWithChildren<FlexProps>) {
   return (
@@ -41,6 +43,7 @@ export function Flex({
         ...style,
         ...otherProps,
       }}
+      onLayout={onLayout}
     >
       {children}
     </View>

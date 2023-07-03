@@ -91,7 +91,7 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
       {
         color: colord(scheme.background).isDark()
           ? colord(scheme.secondaryContainer).darken(0.3).toHex()
-          : colord(scheme.secondaryContainer).darken(0.075).toHex(),
+          : colord(scheme.secondaryContainer).darken(0.05).toHex(),
       },
     ],
   },
