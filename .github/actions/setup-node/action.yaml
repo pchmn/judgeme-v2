@@ -48,7 +48,7 @@ runs:
     - if: ${{ inputs.install == 'true' }}
       name: Install dependencies
       shell: bash
-      run: pnpm install --config.use-lockfile-v6=false
+      run: pnpm install
 
     - if: ${{ inputs.metro-cache == 'true' }}
       name: Restore Metro cache
