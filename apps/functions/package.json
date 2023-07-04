@@ -10,12 +10,12 @@
     "node": "18"
   },
   "scripts": {
-    "build": "tsup src/index.ts --target=node18 --minify --format=esm --treeshake",
-    "dev": "tsup src/index.ts --watch --target=node18 --format=esm --treeshake",
+    "build": "rm -rf ./dist && tsup src/index.ts --target=node18 --minify --format=esm",
+    "dev": "rm -rf ./dist &&  tsup src/index.ts --watch --target=node18 --format=esm",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config @firebase/functions-types @vitest/coverage-c8 @vitest/ui dotenv firebase-functions-test tsup typescript vite vitest",
+    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
