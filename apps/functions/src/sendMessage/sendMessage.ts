@@ -7,7 +7,7 @@ import { HttpsError } from 'firebase-functions/v2/https';
 import { CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
 
-import i18n from '../i18n';
+import { getLocaleWithouRegionCode, i18n } from '../i18n';
 
 const db = getFirestore(initializeApp());
 const messaging = getMessaging();
@@ -45,9 +45,9 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
     [recipient.geopoint.latitude, recipient.geopoint.longitude]
   );
 
-  const language = recipientDevice[Object.keys(recipientDevice)[0]].language as 'en' | 'fr';
-  const messageTitle = `${message.emoji} ${getMessageTranslation(language, message)}`;
-  const messageBody = i18n[language].from(distanceBetweenUsers);
+  const locale = recipientDevice[Object.keys(recipientDevice)[0]].language;
+  const messageTitle = `${message.emoji} ${getMessageTranslation(locale, message)}`;
+  const messageBody = i18n(locale).from(distanceBetweenUsers);
 
   const tokens = Object.values(recipientDevice).map(({ pushToken }) => pushToken);
 
@@ -122,13 +122,9 @@ function validateCallableRequest<T extends FunctionName>(
   return { data, currentToken: auth.token };
 }
 
-function getMessageTranslation(language: string, message: Message) {
-  let translation = message.translations[language];
-  if (!translation && language.includes('-')) {
-    translation = message.translations[language.split('-')[0]];
-  }
-  if (!translation) {
-    translation = message.translations['en'];
-  }
-  return translation;
+function getMessageTranslation(locale: string, message: Message) {
+  const language = getLocaleWithouRegionCode(locale);
+  const translation = message.translations[language];
+
+  return translation ? translation : message.translations['en'];
 }
