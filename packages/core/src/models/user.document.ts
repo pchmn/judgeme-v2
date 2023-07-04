@@ -26,8 +26,13 @@ export interface UserDocument {
     longitude: number;
   };
   statistics: {
-    count: {
+    receivedCount: {
       [key: string]: number;
+      total: number;
+    };
+    sentCount: {
+      [key: string]: number;
+      total: number;
     };
     averageReceivedDistance: number;
     averageSentDistance: number;

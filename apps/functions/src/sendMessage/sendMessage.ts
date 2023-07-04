@@ -1,8 +1,8 @@
 import { DevicesDocument, FunctionName, FunctionParams, FunctionValidation, Message, UserDocument } from '@kuzpot/core';
 import { Logtail } from '@logtail/node';
 import { initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { getMessaging, MulticastMessage } from 'firebase-admin/messaging';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
+import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 import { HttpsError } from 'firebase-functions/v2/https';
 import { CallableRequest } from 'firebase-functions/v2/https';
 import { distanceBetween } from 'geofire-common';
@@ -28,49 +28,29 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
 
   const recipient = (await db.collection('users').doc(to).get()).data() as UserDocument;
 
-  const recipientDevice = (
-    await db.collection('users').doc(to).collection('private').doc('devices').get()
-  ).data() as DevicesDocument;
-
-  if (!recipientDevice || Object.keys(recipientDevice).length === 0) {
-    logtail.error('[sendMessage] Recipient has no devices', {
-      params: { ...req.data, from: currentToken.uid },
-      recipientDevice: JSON.stringify(recipientDevice),
-    });
-    throw new HttpsError('not-found', 'Recipient has no devices');
-  }
-
   const distanceBetweenUsers = distanceBetween(
     [sender.geopoint.latitude, sender.geopoint.longitude],
     [recipient.geopoint.latitude, recipient.geopoint.longitude]
   );
 
-  const locale = recipientDevice[Object.keys(recipientDevice)[0]].language;
-  const messageTitle = `${message.emoji} ${getMessageTranslation(locale, message)}`;
-  const messageBody = i18n(locale).from(distanceBetweenUsers);
+  const batchResponse = await sendPushNotifications(to, {
+    message: { ...message, key: messageKey },
+    distanceBetweenUsers,
+  });
 
-  const tokens = Object.values(recipientDevice).map(({ pushToken }) => pushToken);
-
-  const pushMessage: MulticastMessage = {
-    data: {
-      message: messageKey,
-      distanceBetweenUsers: distanceBetweenUsers.toString(),
-    },
-    notification: {
-      title: messageTitle,
-      body: messageBody,
-    },
-    android: {
-      priority: 'high',
-      notification: {
-        channelId: 'Messages',
-      },
-    },
-    tokens,
-  };
-
-  const batchResponse = await messaging.sendMulticast(pushMessage);
-
+  // Update sender statistics
+  await db
+    .collection('users')
+    .doc(currentToken.uid)
+    .update({
+      [`statistics.sentCount.${messageKey}`]: FieldValue.increment(1),
+      'statistics.sentCount.total': FieldValue.increment(1),
+      'statistics.averageSentDistance': sender.statistics?.averageReceivedDistance
+        ? (sender.statistics.averageSentDistance * sender.statistics.sentCount.total + distanceBetweenUsers) /
+          (sender.statistics.sentCount.total + 1)
+        : distanceBetweenUsers,
+    });
+  // Update sender history
   await db
     .collection('users')
     .doc(currentToken.uid)
@@ -82,6 +62,19 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
       message: messageKey,
     });
 
+  // Update recipient statistics
+  await db
+    .collection('users')
+    .doc(to)
+    .update({
+      [`statistics.receivedCount.${messageKey}`]: FieldValue.increment(1),
+      'statistics.receivedCount.total': FieldValue.increment(1),
+      'statistics.averageReceivedDistance': sender.statistics?.averageReceivedDistance
+        ? (sender.statistics.averageReceivedDistance * sender.statistics.receivedCount.total + distanceBetweenUsers) /
+          (sender.statistics.receivedCount.total + 1)
+        : distanceBetweenUsers,
+    });
+  // Update recipient history
   await db.collection('users').doc(to).collection('private').doc('history').collection('messagesReceived').add({
     from: currentToken.uid,
     message: messageKey,
@@ -120,6 +113,44 @@ function validateCallableRequest<T extends FunctionName>(
   }
 
   return { data, currentToken: auth.token };
+}
+
+async function sendPushNotifications(
+  to: string,
+  { message, distanceBetweenUsers }: { message: Message & { key: string }; distanceBetweenUsers: number }
+) {
+  const pushMessages: TokenMessage[] = [];
+
+  const recipientDevices = (
+    await db.collection('users').doc(to).collection('private').doc('devices').get()
+  ).data() as DevicesDocument;
+
+  for (const installationId in recipientDevices) {
+    const locale = recipientDevices[installationId].language;
+    const title = `${message.emoji} ${getMessageTranslation(locale, message)}`;
+    const body = i18n(locale).from(distanceBetweenUsers);
+    const token = recipientDevices[installationId].pushToken;
+
+    pushMessages.push({
+      data: {
+        message: message.key,
+        distanceBetweenUsers: distanceBetweenUsers.toString(),
+      },
+      notification: {
+        title,
+        body,
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          channelId: 'Messages',
+        },
+      },
+      token,
+    });
+  }
+
+  return await messaging.sendAll(pushMessages);
 }
 
 function getMessageTranslation(locale: string, message: Message) {
