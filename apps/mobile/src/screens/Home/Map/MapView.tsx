@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { UserDocument } from '@kuzpot/core';
 import { BottomSheet, BottomSheetRefProps, Flex, GeoQueryOptions, useFirebaseAuthUser } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
@@ -158,58 +157,56 @@ export function MapView() {
   const positionValue = useSharedValue(0);
 
   return (
-    <BottomSheetModalProvider>
-      <Flex flex={1}>
-        <RNMapView
-          initialRegion={initialRegion}
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE}
-          style={{ width: '100%', height: '100%' }}
-          // customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
-          customMapStyle={themedMapStyle(theme.colors)}
-          onRegionChange={setRegionOnMap}
-          onRegionChangeComplete={onRegionChangeComplete}
-          onMapLoaded={onMapLoaded}
-          showsPointsOfInterest={false}
-          showsBuildings={false}
-          showsUserLocation
-          showsMyLocationButton={false}
-          moveOnMarkerPress={false}
-          showsCompass={false}
-          onPress={() => bottomSheetRef.current?.close()}
-        >
-          {nearUsers
-            ?.filter(({ id }) => id !== currentUser?.uid)
-            .map(({ id, geopoint }) => (
-              <Marker
-                key={id}
-                coordinate={{
-                  latitude: geopoint.latitude,
-                  longitude: geopoint.longitude,
-                }}
-                onPress={() => handleMarkerPressed(id)}
-                // tracksViewChanges={tracksViewChanges}
-                tracksViewChanges={true}
-              >
-                <MarkerImage style={{ borderColor: 'red', borderWidth: 2 }} />
-              </Marker>
-            ))}
-        </RNMapView>
-        <FAB
-          icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
-          style={{ position: 'absolute', bottom: 16, right: 16 }}
-          animated={false}
-          onPress={() => animateToLocation(currentPosition)}
-        />
-        <BottomSheet
-          ref={bottomSheetRef}
-          onIndexChange={handleBottomSheetIndexChange}
-          positionValue={positionValue}
-          snapPoint={100}
-        >
-          {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
-        </BottomSheet>
-      </Flex>
-    </BottomSheetModalProvider>
+    <Flex flex={1}>
+      <RNMapView
+        initialRegion={initialRegion}
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ width: '100%', height: '100%' }}
+        // customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
+        customMapStyle={themedMapStyle(theme.colors)}
+        onRegionChange={setRegionOnMap}
+        onRegionChangeComplete={onRegionChangeComplete}
+        onMapLoaded={onMapLoaded}
+        showsPointsOfInterest={false}
+        showsBuildings={false}
+        showsUserLocation
+        showsMyLocationButton={false}
+        moveOnMarkerPress={false}
+        showsCompass={false}
+        onPress={() => bottomSheetRef.current?.close()}
+      >
+        {nearUsers
+          ?.filter(({ id }) => id !== currentUser?.uid)
+          .map(({ id, geopoint }) => (
+            <Marker
+              key={id}
+              coordinate={{
+                latitude: geopoint.latitude,
+                longitude: geopoint.longitude,
+              }}
+              onPress={() => handleMarkerPressed(id)}
+              // tracksViewChanges={tracksViewChanges}
+              tracksViewChanges={true}
+            >
+              <MarkerImage />
+            </Marker>
+          ))}
+      </RNMapView>
+      <FAB
+        icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
+        style={{ position: 'absolute', bottom: 16, right: 16 }}
+        animated={false}
+        onPress={() => animateToLocation(currentPosition)}
+      />
+      <BottomSheet
+        ref={bottomSheetRef}
+        onIndexChange={handleBottomSheetIndexChange}
+        positionValue={positionValue}
+        snapPoint={100}
+      >
+        {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
+      </BottomSheet>
+    </Flex>
   );
 }

@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@expo/config-plugins": "6.0.1",
-    "@gorhom/bottom-sheet": "^4.4.5",
     "@kuzpot/core": "workspace:*",
     "@kuzpot/react-native": "workspace:*",
     "@pchmn/expo-material3-theme": "^1.0.1",
