@@ -37,6 +37,9 @@ importers:
       geofire-common:
         specifier: ^6.0.0
         version: 6.0.0
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
       zod:
         specifier: ^3.19.1
         version: 3.20.2
@@ -53,6 +56,9 @@ importers:
       '@kuzpot/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@types/source-map-support':
+        specifier: ^0.5.6
+        version: 0.5.6
       '@vitest/coverage-c8':
         specifier: ^0.28.4
         version: 0.28.4(@vitest/ui@0.28.4)
@@ -4353,6 +4359,12 @@ packages:
     dependencies:
       '@types/mime': 3.0.1
       '@types/node': 18.11.18
+
+  /@types/source-map-support@0.5.6:
+    resolution: {integrity: sha512-b2nJ9YyXmkhGaa2b8VLM0kJ04xxwNyijcq12/kDoomCt43qbHBeK2SLNJ9iJmETaAj+bKUT05PQUu3Q66GvLhQ==}
+    dependencies:
+      source-map: 0.6.1
+    dev: true
 
   /@types/stack-trace@0.0.29:
     resolution: {integrity: sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==}
