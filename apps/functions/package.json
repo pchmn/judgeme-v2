@@ -15,7 +15,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config",
+    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config @firebase/functions-types @vitest/coverage-c8 @vitest/ui dotenv firebase-functions-test tsup typescript vite vitest",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
