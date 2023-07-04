@@ -14,7 +14,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "remove:local-dependencies": "pnpm remove @kuzpot/core && pnpm remove -D @kuzpot/tsconfig @kuzpot/eslint-config",
+    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
