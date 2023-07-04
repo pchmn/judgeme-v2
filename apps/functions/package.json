@@ -4,13 +4,14 @@
   "private": true,
   "author": "pchmn",
   "license": "MIT",
+  "type": "module",
   "main": "dist/index.js",
   "engines": {
     "node": "18"
   },
   "scripts": {
-    "build": "tsup src/index.ts --target=node18 --minify",
-    "dev": "tsup src/index.ts --watch --target=node18",
+    "build": "tsup src/index.ts --target=node18 --minify --format=esm --treeshake",
+    "dev": "tsup src/index.ts --watch --target=node18 --format=esm --treeshake",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",

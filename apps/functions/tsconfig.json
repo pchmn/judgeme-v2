@@ -3,7 +3,6 @@
   "compilerOptions": {
     "isolatedModules": false,
     "baseUrl": ".",
-    "module": "commonjs",
   },
   "include": ["src"]
 }
