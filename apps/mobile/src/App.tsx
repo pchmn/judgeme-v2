@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { hideAsync } from 'expo-splash-screen';
 
-import { useAuth } from '@/core/auth';
+import { useAuth, useOnline } from '@/core/auth';
 import { linking } from '@/core/routes';
 import HomeScreen from '@/screens/Home';
 import OnboardScreen, { LocationPermissionView } from '@/screens/Onboard';
@@ -21,6 +21,8 @@ export default function App() {
   const { locationPermissions, isLoading: locationPermissionsLoading } = useLocationPermissions();
   const { isLoading: authLoading } = useAuth();
   const { initialRegion, isLoading: initialRegionLoading } = useInitialRegion();
+
+  useOnline();
 
   if (!authLoading && !locationPermissionsLoading && !initialRegionLoading) {
     hideAsync();

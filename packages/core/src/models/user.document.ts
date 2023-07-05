@@ -28,6 +28,7 @@ export interface UserDocument {
     latitude: number;
     longitude: number;
   };
+  status: 'online' | 'offline';
   messageStatistics: {
     receivedCount: {
       [key: string]: number;
