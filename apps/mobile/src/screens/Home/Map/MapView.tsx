@@ -117,11 +117,11 @@ export function MapView() {
 
   const handleMarkerPressed = useCallback(
     async (userId: string) => {
-      const user = nearUsers?.find(({ id }) => id === userId);
-      // console.log('user', user);
       setUserSelected(nearUsers?.find(({ id }) => id === userId));
 
-      bottomSheetRef.current?.open();
+      setTimeout(() => {
+        bottomSheetRef.current?.open();
+      });
     },
     [nearUsers]
   );
@@ -163,7 +163,6 @@ export function MapView() {
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={{ width: '100%', height: '100%' }}
-        // customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
         customMapStyle={themedMapStyle(theme.colors)}
         onRegionChange={setRegionOnMap}
         onRegionChangeComplete={onRegionChangeComplete}
@@ -175,6 +174,7 @@ export function MapView() {
         moveOnMarkerPress={false}
         showsCompass={false}
         onPress={() => bottomSheetRef.current?.close()}
+        onPoiClick={() => bottomSheetRef.current?.close()}
       >
         {nearUsers
           ?.filter(({ id }) => id !== currentUser?.uid)
@@ -186,8 +186,7 @@ export function MapView() {
                 longitude: geopoint.longitude,
               }}
               onPress={() => handleMarkerPressed(id)}
-              // tracksViewChanges={tracksViewChanges}
-              tracksViewChanges={true}
+              tracksViewChanges={tracksViewChanges}
             >
               <MarkerImage />
             </Marker>

@@ -46,9 +46,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
 
     const animatedRef = useAnimatedRef<Animated.View>();
 
-    const bottomSheetTop = insets.top + 30;
-    const topViewHeight = bottomSheetTop + 20;
-
     const snapPoints = useMemo(
       () => [insets.top, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
       [insets.top, snapPoint]
