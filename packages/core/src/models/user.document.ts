@@ -10,14 +10,17 @@ export interface DevicesDocument {
   [installationId: string]: DeviceInfo;
 }
 
-export interface MessageReceived {
-  from: string;
+interface MessageHistory {
   message: string;
+  distance: number;
 }
 
-export interface MessageSent {
+export interface MessageReceived extends MessageHistory {
+  from: string;
+}
+
+export interface MessageSent extends MessageHistory {
   to: string;
-  message: string;
 }
 export interface UserDocument {
   geohash: string;
@@ -25,15 +28,15 @@ export interface UserDocument {
     latitude: number;
     longitude: number;
   };
-  statistics: {
+  messageStatistics: {
     receivedCount: {
       [key: string]: number;
-      total: number;
     };
+    receivedTotalCount: number;
     sentCount: {
       [key: string]: number;
-      total: number;
     };
+    sentTotalCount: number;
     averageReceivedDistance: number;
     averageSentDistance: number;
   };

@@ -24,70 +24,64 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
 
   const message = (await db.collection('messages').doc(messageKey).get()).data() as Message;
 
-  const sender = (await db.collection('users').doc(currentToken.uid).get()).data() as UserDocument;
+  const senderRef = db.collection('users').doc(currentToken.uid);
+  const sender = (await senderRef.get()).data() as UserDocument;
 
-  const recipient = (await db.collection('users').doc(to).get()).data() as UserDocument;
+  const receiverRef = db.collection('users').doc(to);
+  const receiver = (await receiverRef.get()).data() as UserDocument;
 
-  const distanceBetweenUsers = distanceBetween(
+  const distance = distanceBetween(
     [sender.geopoint.latitude, sender.geopoint.longitude],
-    [recipient.geopoint.latitude, recipient.geopoint.longitude]
+    [receiver.geopoint.latitude, receiver.geopoint.longitude]
   );
 
-  const batchResponse = await sendPushNotifications(to, {
+  const pushNotificationsResponse = await sendPushNotifications(to, {
     message: { ...message, key: messageKey },
-    distanceBetweenUsers,
+    distance,
   });
 
+  const batch = db.batch();
   // Update sender statistics
-  await db
-    .collection('users')
-    .doc(currentToken.uid)
-    .update({
-      [`statistics.sentCount.${messageKey}`]: FieldValue.increment(1),
-      'statistics.sentCount.total': FieldValue.increment(1),
-      'statistics.averageSentDistance': sender.statistics?.averageReceivedDistance
-        ? (sender.statistics.averageSentDistance * sender.statistics.sentCount.total + distanceBetweenUsers) /
-          (sender.statistics.sentCount.total + 1)
-        : distanceBetweenUsers,
-    });
+  batch.update(senderRef, {
+    [`messageStatistics.sentCount.${messageKey}`]: FieldValue.increment(1),
+    'messageStatistics.sentTotalCount': FieldValue.increment(1),
+    'messageStatistics.averageSentDistance': sender.messageStatistics?.averageReceivedDistance
+      ? (sender.messageStatistics.averageSentDistance * sender.messageStatistics.sentTotalCount + distance) /
+        (sender.messageStatistics.sentTotalCount + 1)
+      : distance,
+  });
   // Update sender history
-  await db
-    .collection('users')
-    .doc(currentToken.uid)
-    .collection('private')
-    .doc('history')
-    .collection('messagesSent')
-    .add({
-      to,
-      message: messageKey,
-    });
-
+  batch.create(senderRef.collection('private').doc('history').collection('messagesSent').doc(), {
+    to,
+    message: messageKey,
+    distance,
+  });
   // Update recipient statistics
-  await db
-    .collection('users')
-    .doc(to)
-    .update({
-      [`statistics.receivedCount.${messageKey}`]: FieldValue.increment(1),
-      'statistics.receivedCount.total': FieldValue.increment(1),
-      'statistics.averageReceivedDistance': sender.statistics?.averageReceivedDistance
-        ? (sender.statistics.averageReceivedDistance * sender.statistics.receivedCount.total + distanceBetweenUsers) /
-          (sender.statistics.receivedCount.total + 1)
-        : distanceBetweenUsers,
-    });
+  batch.update(receiverRef, {
+    [`messageStatistics.receivedCount.${messageKey}`]: FieldValue.increment(1),
+    'messageStatistics.receivedTotalCount': FieldValue.increment(1),
+    'messageStatistics.averageReceivedDistance': sender.messageStatistics?.averageReceivedDistance
+      ? (sender.messageStatistics.averageReceivedDistance * sender.messageStatistics.receivedTotalCount + distance) /
+        (sender.messageStatistics.receivedTotalCount + 1)
+      : distance,
+  });
   // Update recipient history
-  await db.collection('users').doc(to).collection('private').doc('history').collection('messagesReceived').add({
+  batch.create(receiverRef.collection('private').doc('history').collection('messagesReceived').doc(), {
     from: currentToken.uid,
     message: messageKey,
+    distance,
   });
+
+  await batch.commit();
 
   logtail.info('[sendMessage] Message sent', {
     params: { ...req.data, from: currentToken.uid },
-    success: batchResponse.successCount,
-    failure: batchResponse.failureCount,
+    success: pushNotificationsResponse.successCount,
+    failure: pushNotificationsResponse.failureCount,
     executionTime: `${Date.now() - startTime}ms`,
   });
 
-  return { successCount: batchResponse.successCount, failureCount: batchResponse.failureCount };
+  return { successCount: pushNotificationsResponse.successCount, failureCount: pushNotificationsResponse.failureCount };
 }
 
 function validateCallableRequest<T extends FunctionName>(
@@ -117,7 +111,7 @@ function validateCallableRequest<T extends FunctionName>(
 
 async function sendPushNotifications(
   to: string,
-  { message, distanceBetweenUsers }: { message: Message & { key: string }; distanceBetweenUsers: number }
+  { message, distance }: { message: Message & { key: string }; distance: number }
 ) {
   const pushMessages: TokenMessage[] = [];
 
@@ -128,13 +122,13 @@ async function sendPushNotifications(
   for (const installationId in recipientDevices) {
     const locale = recipientDevices[installationId].language;
     const title = `${message.emoji} ${getMessageTranslation(locale, message)}`;
-    const body = i18n(locale).from(distanceBetweenUsers);
+    const body = i18n(locale).from(distance);
     const token = recipientDevices[installationId].pushToken;
 
     pushMessages.push({
       data: {
         message: message.key,
-        distanceBetweenUsers: distanceBetweenUsers.toString(),
+        distance: distance.toString(),
       },
       notification: {
         title,
