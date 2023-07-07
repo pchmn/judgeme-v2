@@ -3,7 +3,16 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
       allow read: if request.auth != null
-      allow write: if request.auth.uid == uid
+      allow create: if request.auth.uid == uid && createdAtIsValid()
+      allow update: if request.auth.uid == uid && updatedAtIsValid()
+
+      function updatedAtIsValid() {
+        return request.resource.data.updatedAt == request.time
+      }
+
+      function createdAtIsValid() {
+        return request.resource.data.createdAt == request.time
+      }
 
       match /private {
         allow read, write: if request.auth.uid == uid

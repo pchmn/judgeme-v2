@@ -42,35 +42,53 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
 
   const batch = db.batch();
   // Update sender statistics
-  batch.update(senderRef, {
-    [`messageStatistics.sentCount.${messageKey}`]: FieldValue.increment(1),
-    'messageStatistics.sentTotalCount': FieldValue.increment(1),
-    'messageStatistics.averageSentDistance': sender.messageStatistics?.averageReceivedDistance
-      ? (sender.messageStatistics.averageSentDistance * sender.messageStatistics.sentTotalCount + distance) /
-        (sender.messageStatistics.sentTotalCount + 1)
-      : distance,
-  });
+  batch.update(
+    senderRef,
+    dataWithTimestamp({
+      [`messageStatistics.sentCount.${messageKey}`]: FieldValue.increment(1),
+      'messageStatistics.sentTotalCount': FieldValue.increment(1),
+      'messageStatistics.averageSentDistance': sender.messageStatistics?.averageReceivedDistance
+        ? (sender.messageStatistics.averageSentDistance * sender.messageStatistics.sentTotalCount + distance) /
+          (sender.messageStatistics.sentTotalCount + 1)
+        : distance,
+    })
+  );
   // Update sender history
-  batch.create(senderRef.collection('private').doc('history').collection('messagesSent').doc(), {
-    to,
-    message: messageKey,
-    distance,
-  });
+  batch.create(
+    senderRef.collection('private').doc('history').collection('messagesSent').doc(),
+    dataWithTimestamp(
+      {
+        to,
+        message: messageKey,
+        distance,
+      },
+      true
+    )
+  );
   // Update recipient statistics
-  batch.update(receiverRef, {
-    [`messageStatistics.receivedCount.${messageKey}`]: FieldValue.increment(1),
-    'messageStatistics.receivedTotalCount': FieldValue.increment(1),
-    'messageStatistics.averageReceivedDistance': sender.messageStatistics?.averageReceivedDistance
-      ? (sender.messageStatistics.averageReceivedDistance * sender.messageStatistics.receivedTotalCount + distance) /
-        (sender.messageStatistics.receivedTotalCount + 1)
-      : distance,
-  });
+  batch.update(
+    receiverRef,
+    dataWithTimestamp({
+      [`messageStatistics.receivedCount.${messageKey}`]: FieldValue.increment(1),
+      'messageStatistics.receivedTotalCount': FieldValue.increment(1),
+      'messageStatistics.averageReceivedDistance': sender.messageStatistics?.averageReceivedDistance
+        ? (sender.messageStatistics.averageReceivedDistance * sender.messageStatistics.receivedTotalCount + distance) /
+          (sender.messageStatistics.receivedTotalCount + 1)
+        : distance,
+    })
+  );
   // Update recipient history
-  batch.create(receiverRef.collection('private').doc('history').collection('messagesReceived').doc(), {
-    from: currentToken.uid,
-    message: messageKey,
-    distance,
-  });
+  batch.create(
+    receiverRef.collection('private').doc('history').collection('messagesReceived').doc(),
+    dataWithTimestamp(
+      {
+        from: currentToken.uid,
+        message: messageKey,
+        distance,
+      },
+      true
+    )
+  );
 
   await batch.commit();
 
@@ -145,6 +163,17 @@ async function sendPushNotifications(
   }
 
   return await messaging.sendAll(pushMessages);
+}
+
+function dataWithTimestamp<T>(data: T, isCreation?: boolean) {
+  const dataWithTimestamp: T & { createdAt?: FieldValue; updatedAt: FieldValue } = {
+    ...data,
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+  if (isCreation) {
+    dataWithTimestamp.createdAt = FieldValue.serverTimestamp();
+  }
+  return dataWithTimestamp;
 }
 
 function getMessageTranslation(locale: string, message: Message) {
