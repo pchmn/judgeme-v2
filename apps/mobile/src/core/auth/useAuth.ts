@@ -29,6 +29,7 @@ export function useAuth() {
             averageSentDistance: 0,
           },
         },
+        options: { isCreation: true },
       });
     }
   };
