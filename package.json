@@ -30,7 +30,7 @@
     "@commitlint/prompt-cli": "^17.0.3",
     "husky": "^8.0.1",
     "lint-staged": "^11.2.3",
-    "turbo": "^1.7.0"
+    "turbo": "^1.10.7"
   },
   "pnpm": {
     "peerDependencyRules": {

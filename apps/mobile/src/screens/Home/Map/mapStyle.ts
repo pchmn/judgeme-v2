@@ -1,3 +1,227 @@
+import { Material3Scheme } from '@pchmn/expo-material3-theme/build/ExpoMaterial3Theme.types';
+import { colord, extend } from 'colord';
+import mixPlugin from 'colord/plugins/mix';
+
+extend([mixPlugin]);
+
+export const themedMapStyle = (scheme: Material3Scheme) => [
+  {
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: colord(scheme.background).isDark()
+          ? colord(scheme.secondaryContainer).darken(0.075).mix(colord(scheme.background)).toHex()
+          : colord(scheme.secondaryContainer).lighten(0.03).toHex(),
+      },
+    ],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.9).toHex() }],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.5).toHex() }],
+  },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: scheme.tertiary }],
+  },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.9).toHex() }],
+  },
+  {
+    featureType: 'landscape.natural',
+    stylers: [
+      {
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.9 : 0.75)
+          .toHex(),
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.8 : 0.6)
+          .toHex(),
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: colord('#A8DAB5')
+          .mix(colord(scheme.background), colord(scheme.background).isDark() ? 0.5 : 0.2)
+          .toHex(),
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: colord('#A8DAB5').mix(colord(scheme.background), 0.9).toHex() }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: colord(scheme.background).isDark() ? colord(scheme.background).lighten(0.2).toHex() : scheme.background,
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [
+      {
+        color: colord(scheme.background).isDark()
+          ? colord(scheme.secondaryContainer).darken(0.3).toHex()
+          : colord(scheme.secondaryContainer).darken(0.05).toHex(),
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: scheme.secondary }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: colord(scheme.tertiary).mix(colord(scheme.background), 0.3).toHex() }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#f3d19c' }],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [{ color: scheme.outlineVariant }],
+  },
+  {
+    featureType: 'transit.station',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: colord('#9CC0F9').mix(colord(scheme.background), 0.75).toHex(),
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: colord('#9CC0F9').mix(colord(scheme.background), 0.75).toHex() }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{ visibility: 'off' }],
+  },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.government',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.medical',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.place_of_worship',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.school',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.sports_complex',
+    elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+];
+
 export const darkMapStyle = [
   {
     elementType: 'geometry',

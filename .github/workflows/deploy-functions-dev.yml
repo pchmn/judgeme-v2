@@ -41,5 +41,14 @@ jobs:
         env:
           TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
 
+      - name: ♻️ Create env file
+        working-directory:  apps/functions
+        run: |
+          touch .env
+          echo BETTERSTACK_TOKEN=${{ secrets.BETTERSTACK_TOKEN_DEV }} >> .env
+          cat .env
+
       - name: 🚀 Deploy to kuzpot-dev
         run: pnpm deploy:functions
+
+      - run: rm apps/functions/.env

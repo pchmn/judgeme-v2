@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { UserDocument } from '@kuzpot/core';
 import { BottomSheet, BottomSheetRefProps, Flex, GeoQueryOptions, useFirebaseAuthUser } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
@@ -7,13 +6,15 @@ import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { FAB, Text, useTheme } from 'react-native-paper';
+import { FAB, useTheme } from 'react-native-paper';
+import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
-import { darkMapStyle, lightMapStyle } from './mapStyle';
+import { UserDetails } from '../UserDetails/UserDetails';
+import { themedMapStyle } from './mapStyle';
 import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
 import { useNearUsers } from './useNearUsers';
@@ -116,25 +117,24 @@ export function MapView() {
 
   const handleMarkerPressed = useCallback(
     async (userId: string) => {
-      const user = nearUsers?.find(({ id }) => id === userId);
-      // console.log('user', user);
       setUserSelected(nearUsers?.find(({ id }) => id === userId));
 
-      bottomSheetRef.current?.open();
+      setTimeout(() => {
+        bottomSheetRef.current?.open();
+      });
     },
     [nearUsers]
   );
-
   const handleBottomSheetIndexChange = useCallback(
-    async (index: number, position: number) => {
+    async (index: number, positionY: number) => {
       if (index === 1 && userSelected) {
         const currentCenter = SCREEN_HEIGHT / 2;
         const userPosition = await mapRef.current?.pointForCoordinate({
           latitude: userSelected.geopoint.latitude,
           longitude: userSelected.geopoint.longitude,
         });
-        if (userPosition && userPosition.y >= position - 10) {
-          const distance = (SCREEN_HEIGHT - position) / 2 - userPosition.y + insets.top;
+        if (userPosition && userPosition.y >= positionY - 20) {
+          const distance = positionY / 2 - userPosition.y;
 
           const coordinate = await mapRef.current?.coordinateForPoint({
             x: userPosition.x,
@@ -144,7 +144,7 @@ export function MapView() {
         }
       }
     },
-    [animateToLocation, insets.top, userSelected]
+    [animateToLocation, userSelected]
   );
 
   useEffect(() => {
@@ -154,53 +154,58 @@ export function MapView() {
     }
   }, [animateToLocation, currentPosition, initialRegion]);
 
+  const positionValue = useSharedValue(0);
+
   return (
-    <BottomSheetModalProvider>
-      <Flex flex={1}>
-        <RNMapView
-          initialRegion={initialRegion}
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE}
-          style={{ width: '100%', height: '100%' }}
-          customMapStyle={theme.dark ? darkMapStyle : lightMapStyle}
-          onRegionChange={setRegionOnMap}
-          onRegionChangeComplete={onRegionChangeComplete}
-          onMapLoaded={onMapLoaded}
-          showsPointsOfInterest={false}
-          showsBuildings={false}
-          showsUserLocation
-          showsMyLocationButton={false}
-          moveOnMarkerPress={false}
-          showsCompass={false}
-          onPress={() => bottomSheetRef.current?.close()}
-        >
-          {nearUsers
-            ?.filter(({ id }) => id !== currentUser?.uid)
-            .map(({ id, geopoint }) => (
-              <Marker
-                key={id}
-                coordinate={{
-                  latitude: geopoint.latitude,
-                  longitude: geopoint.longitude,
-                }}
-                onPress={() => handleMarkerPressed(id)}
-                title="hello world"
-                tracksViewChanges={tracksViewChanges}
-              >
-                <MarkerImage style={{ borderColor: 'red', borderWidth: 2 }} />
-              </Marker>
-            ))}
-        </RNMapView>
-        <FAB
-          icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
-          style={{ position: 'absolute', bottom: 16, right: 16 }}
-          animated={false}
-          onPress={() => animateToLocation(currentPosition)}
-        />
-        <BottomSheet ref={bottomSheetRef} onIndexChange={handleBottomSheetIndexChange}>
-          <Text>{userSelected?.id} 🎉</Text>
-        </BottomSheet>
-      </Flex>
-    </BottomSheetModalProvider>
+    <Flex flex={1}>
+      <RNMapView
+        initialRegion={initialRegion}
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ width: '100%', height: '100%' }}
+        customMapStyle={themedMapStyle(theme.colors)}
+        onRegionChange={setRegionOnMap}
+        onRegionChangeComplete={onRegionChangeComplete}
+        onMapLoaded={onMapLoaded}
+        showsPointsOfInterest={false}
+        showsBuildings={false}
+        showsUserLocation
+        showsMyLocationButton={false}
+        moveOnMarkerPress={false}
+        showsCompass={false}
+        onPress={() => bottomSheetRef.current?.close()}
+        onPoiClick={() => bottomSheetRef.current?.close()}
+      >
+        {nearUsers
+          ?.filter(({ id }) => id !== currentUser?.uid)
+          .map(({ id, geopoint }) => (
+            <Marker
+              key={id}
+              coordinate={{
+                latitude: geopoint.latitude,
+                longitude: geopoint.longitude,
+              }}
+              onPress={() => handleMarkerPressed(id)}
+              tracksViewChanges={tracksViewChanges}
+            >
+              <MarkerImage />
+            </Marker>
+          ))}
+      </RNMapView>
+      <FAB
+        icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
+        style={{ position: 'absolute', bottom: 16, right: 16 }}
+        animated={false}
+        onPress={() => animateToLocation(currentPosition)}
+      />
+      <BottomSheet
+        ref={bottomSheetRef}
+        onIndexChange={handleBottomSheetIndexChange}
+        positionValue={positionValue}
+        snapPoint={100}
+      >
+        {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
+      </BottomSheet>
+    </Flex>
   );
 }

@@ -1,29 +1,32 @@
-import React, { useCallback, useImperativeHandle, useMemo, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo } from 'react';
 import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { IconButton, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Animated, {
-  FadeInUp,
-  FadeOutUp,
+  interpolate,
   runOnJS,
+  SharedValue,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Shadow } from 'react-native-shadow-2';
 
 import { useEffectOnce } from '../../core';
+import { shadow } from '../utils';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+const SHADOW_DISTANCE = 3;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
   containerStyle?: ViewStyle;
   indicatorStyle?: ViewStyle;
-  onIndexChange?: (index: number, position: number) => void;
-  onPositionChange?: (position: number) => void;
+  onIndexChange?: (index: number, positionY: number) => void;
+  positionValue?: SharedValue<number>;
+  snapPoint?: number;
 };
 
 export type BottomSheetRefProps = {
@@ -36,17 +39,16 @@ export type BottomSheetRefProps = {
 
 // eslint-disable-next-line react/display-name
 export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
-  ({ children, containerStyle, indicatorStyle, onIndexChange, onPositionChange }, ref) => {
+  ({ children, containerStyle, indicatorStyle, onIndexChange, positionValue, snapPoint }, ref) => {
     const insets = useSafeAreaInsets();
 
     const theme = useTheme();
 
-    const bottomSheetTop = insets.top + 30;
-    const topViewHeight = bottomSheetTop + 20;
+    const animatedRef = useAnimatedRef<Animated.View>();
 
     const snapPoints = useMemo(
-      () => [insets.top + 5, -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT + bottomSheetTop],
-      [bottomSheetTop, insets.top]
+      () => [insets.top, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
+      [insets.top, snapPoint]
     );
 
     const translateY = useSharedValue(insets.top + 5);
@@ -67,11 +69,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
           index.value = newIndex;
         }
         translateY.value = withSpring(destination, { damping: 20, stiffness: 150, mass: 0.1 });
-        if (onPositionChange) {
-          runOnJS(onPositionChange)(translateY.value > 0 ? translateY.value : translateY.value + SCREEN_HEIGHT);
-        }
       },
-      [active, index, onPositionChange, snapPoints, translateY]
+      [active, index, snapPoints, translateY]
     );
 
     const snapToIndex = useCallback(
@@ -80,10 +79,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
         const toIndex = Math.max(0, Math.min(index, 2));
         snapToPosition(snapPoints[toIndex]);
         if (onIndexChange) {
-          runOnJS(onIndexChange)(
-            toIndex,
-            snapPoints[toIndex] > 0 ? snapPoints[toIndex] : snapPoints[toIndex] + SCREEN_HEIGHT
-          );
+          runOnJS(onIndexChange)(toIndex, SCREEN_HEIGHT + snapPoints[toIndex]);
         }
       },
       [snapToPosition, snapPoints, onIndexChange]
@@ -152,16 +148,22 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
         }
       });
 
-    const rBottomSheetStyle = useAnimatedStyle(() => ({
-      transform: [{ translateY: translateY.value }],
-    }));
-
-    const [showTopView, setShowTopView] = useState(false);
     useDerivedValue(() => {
-      const show = translateY.value < snapPoints[2] + 30;
-      if (show !== showTopView) {
-        runOnJS(setShowTopView)(show);
+      if (positionValue) {
+        const diff = Math.abs((translateY.value - snapPoints[0]) / (snapPoints[2] - snapPoints[0]));
+        positionValue.value = diff;
       }
+    });
+
+    const rBottomSheetStyle = useAnimatedStyle(() => {
+      const borderRadius = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [32, 0]);
+      const paddingTop = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [0, insets.top]);
+      return {
+        borderTopLeftRadius: borderRadius,
+        borderTopRightRadius: borderRadius,
+        paddingTop,
+        transform: [{ translateY: translateY.value }],
+      };
     });
 
     useEffectOnce(() => {
@@ -180,60 +182,76 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       <>
         <GestureDetector gesture={gesture}>
           <Animated.View
+            ref={animatedRef}
             style={[
               {
-                height: SCREEN_HEIGHT,
-                width: '100%',
-                backgroundColor: theme.colors.surface,
+                height: SCREEN_HEIGHT + insets.top,
+                width: SCREEN_WIDTH,
+                backgroundColor: theme.colors.background,
                 position: 'absolute',
                 top: SCREEN_HEIGHT,
-                borderRadius: 10,
+                borderRadius: 32,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
                 ...containerStyle,
               },
+              shadow(5),
               rBottomSheetStyle,
             ]}
           >
-            <Shadow
+            <View
+              style={{
+                width: 25,
+                height: 4,
+                backgroundColor: theme.colors.outline,
+                alignSelf: 'center',
+                marginVertical: 15,
+                borderRadius: 2,
+                ...indicatorStyle,
+              }}
+            />
+            {children}
+            {/* <DropShadow
+              style={
+                shadow(5) as {
+                  shadowColor: string;
+                  shadowOpacity: number;
+                  shadowOffset: {
+                    width: number;
+                    height: number;
+                  };
+                  shadowRadius: number;
+                }
+              }
+            >
+              {children}
+            </DropShadow> */}
+            {/* <AnimatedShadow
               sides={{ top: true, start: false, bottom: false, end: false }}
               corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
-              style={{ width: '100%', borderRadius: 10 }}
+              style={[{ width: '100%' }, shadowStyle]}
               startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
               endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
-              distance={5}
+              distance={SHADOW_DISTANCE}
             >
-              <View
-                style={{
-                  width: 25,
-                  height: 4,
-                  backgroundColor: theme.colors.onSurface,
-                  alignSelf: 'center',
-                  marginVertical: 15,
-                  borderRadius: 2,
-                  ...indicatorStyle,
-                }}
+              <Animated.View
+                style={[
+                  {
+                    width: 25,
+                    height: 4,
+                    backgroundColor: theme.colors.outline,
+                    alignSelf: 'center',
+                    marginVertical: 15,
+                    borderRadius: 2,
+                    ...indicatorStyle,
+                  },
+                  // style,
+                ]}
               />
               {children}
-            </Shadow>
+            </AnimatedShadow> */}
           </Animated.View>
         </GestureDetector>
-        {showTopView && (
-          <Animated.View
-            style={[
-              {
-                backgroundColor: theme.colors.surface,
-                position: 'absolute',
-                top: 0,
-                height: topViewHeight,
-                width: '100%',
-                justifyContent: 'flex-end',
-              },
-            ]}
-            entering={FadeInUp.damping(20).stiffness(150).mass(0.1).duration(100)}
-            exiting={FadeOutUp.damping(20).stiffness(150).mass(0.1).duration(100)}
-          >
-            <IconButton icon="chevron-down" size={30} onPress={() => snapToIndex(index.value - 1)} />
-          </Animated.View>
-        )}
       </>
     );
   }
