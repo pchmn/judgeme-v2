@@ -91,7 +91,6 @@ const config: ExpoConfig = {
         config: {
           organization: 'pchmn',
           project: process.env.APP_ENV === 'production' ? 'kuzpot' : 'kuzpot-dev',
-          authToken: process.env.SENTRY_AUTH_TOKEN,
         },
       },
     ],
