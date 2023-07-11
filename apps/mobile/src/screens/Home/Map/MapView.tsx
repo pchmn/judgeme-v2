@@ -15,7 +15,6 @@ import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FAB } from 'react-native-paper';
 import { useSharedValue } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
@@ -29,8 +28,6 @@ import { useNearUsers } from './useNearUsers';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export function MapView() {
-  const insets = useSafeAreaInsets();
-
   const {
     params: { initialRegion },
   } = useRoute<RouteParams<'Home'>>();
