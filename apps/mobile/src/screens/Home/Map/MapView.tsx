@@ -1,12 +1,19 @@
 import { UserDocument } from '@kuzpot/core';
-import { BottomSheet, BottomSheetRefProps, Flex, GeoQueryOptions, useFirebaseAuthUser } from '@kuzpot/react-native';
+import {
+  BottomSheet,
+  BottomSheetRefProps,
+  Flex,
+  GeoQueryOptions,
+  useAppTheme,
+  useFirebaseAuthUser,
+} from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { FAB, useTheme } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -28,7 +35,7 @@ export function MapView() {
     params: { initialRegion },
   } = useRoute<RouteParams<'Home'>>();
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const mapRef = useRef<RNMapView>(null);
   const isRegionFocused = useRef(false);

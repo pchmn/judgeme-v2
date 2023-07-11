@@ -1,6 +1,6 @@
-import { Flex } from '@kuzpot/react-native';
+import { Flex, useAppTheme } from '@kuzpot/react-native';
 import { View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function PageView({
@@ -18,7 +18,7 @@ export function PageView({
   onPress: () => void;
   onSkip?: () => void;
 }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
   return (

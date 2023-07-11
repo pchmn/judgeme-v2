@@ -1,8 +1,8 @@
-import { useTheme } from 'react-native-paper';
+import { useAppTheme } from '@kuzpot/react-native';
 import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 
 const NotificationsImage = ({ height = 250, width = 250, ...props }: SvgProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <Svg width={width} height={height} fill="none" viewBox="0 0 250 250" {...props}>
       <Circle

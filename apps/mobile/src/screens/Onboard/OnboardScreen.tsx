@@ -1,10 +1,9 @@
-import { Flex } from '@kuzpot/react-native';
+import { Flex, useAppTheme } from '@kuzpot/react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMemo, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';
 import { ExpandingDot } from 'react-native-animated-pagination-dots';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
-import { useTheme } from 'react-native-paper';
 
 import { useIsFirstLaunch } from '@/shared/hooks';
 
@@ -20,7 +19,7 @@ export function OnboardScreen() {
 
   const navigation = useNavigation();
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const pagerViewRef = useRef<PagerView>(null);
   const width = Dimensions.get('window').width;

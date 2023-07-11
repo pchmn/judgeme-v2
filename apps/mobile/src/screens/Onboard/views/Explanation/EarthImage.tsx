@@ -1,9 +1,9 @@
-import { useTheme } from 'react-native-paper';
+import { useAppTheme } from '@kuzpot/react-native';
 import Svg, { Circle, Defs, Ellipse, G, Path, Rect, SvgProps } from 'react-native-svg';
 /* SVGR has dropped some elements not supported by react-native-svg: filter */
 
 const EarthImage = ({ height = 250, width = 250, ...props }: SvgProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <Svg width={width} height={height} fill="none" viewBox="0 0 250 250" {...props}>
       <Circle
