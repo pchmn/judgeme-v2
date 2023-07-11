@@ -97,7 +97,7 @@ export function MapView() {
     [regionOnMap?.latitudeDelta, regionOnMap?.longitudeDelta]
   );
 
-  const onMapLoaded = () => {
+  const onMapReady = () => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
       isRegionFocused.current = true;
       animateToLocation(currentPosition);
@@ -173,7 +173,7 @@ export function MapView() {
         customMapStyle={themedMapStyle(theme.colors)}
         onRegionChange={setRegionOnMap}
         onRegionChangeComplete={onRegionChangeComplete}
-        onMapLoaded={onMapLoaded}
+        onMapReady={onMapReady}
         showsPointsOfInterest={false}
         showsBuildings={false}
         showsUserLocation
