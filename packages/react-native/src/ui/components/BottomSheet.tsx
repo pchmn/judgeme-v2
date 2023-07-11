@@ -1,7 +1,6 @@
 import React, { useCallback, useImperativeHandle, useMemo } from 'react';
 import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
 import Animated, {
   interpolate,
   runOnJS,
@@ -15,6 +14,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useEffectOnce } from '../../core';
+import { useAppTheme } from '../UiProvider';
 import { shadow } from '../utils';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -42,7 +42,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
   ({ children, containerStyle, indicatorStyle, onIndexChange, positionValue, snapPoint }, ref) => {
     const insets = useSafeAreaInsets();
 
-    const theme = useTheme();
+    const theme = useAppTheme();
 
     const animatedRef = useAnimatedRef<Animated.View>();
 
@@ -187,7 +187,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
               {
                 height: SCREEN_HEIGHT + insets.top,
                 width: SCREEN_WIDTH,
-                backgroundColor: theme.colors.background,
+                backgroundColor: theme.colors.surfaceContainerLow,
                 position: 'absolute',
                 top: SCREEN_HEIGHT,
                 borderRadius: 32,
