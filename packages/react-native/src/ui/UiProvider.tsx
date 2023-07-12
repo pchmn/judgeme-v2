@@ -12,6 +12,7 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   Provider as PaperProvider,
+  // eslint-disable-next-line no-restricted-imports
   useTheme,
 } from 'react-native-paper';
 import { MD3Theme, ThemeProp } from 'react-native-paper/lib/typescript/types';
