@@ -150,7 +150,9 @@ async function sendPushNotifications(
     await db.collection('users').doc(to).collection('private').doc('devices').get()
   ).data() as DevicesDocument;
 
-  for (const installationId in recipientDevices) {
+  for (const installationId of Object.keys(recipientDevices).filter(
+    (key) => !['createdAt', 'updatedAt'].includes(key)
+  )) {
     const locale = recipientDevices[installationId].language;
     const title = `${message.emoji} ${getMessageTranslation(locale, message)}`;
     const body = i18n(locale).from(distance);
