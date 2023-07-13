@@ -159,8 +159,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       const borderRadius = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [32, 0]);
       const paddingTop = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [0, insets.top]);
       return {
-        borderTopLeftRadius: borderRadius,
-        borderTopRightRadius: borderRadius,
+        borderRadius,
         paddingTop,
         transform: [{ translateY: translateY.value }],
       };
@@ -190,9 +189,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
                 backgroundColor: theme.colors.surfaceContainerLow,
                 position: 'absolute',
                 top: SCREEN_HEIGHT,
-                borderRadius: 32,
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
                 ...containerStyle,
               },
               shadow(5),
