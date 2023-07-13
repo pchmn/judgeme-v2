@@ -5,11 +5,32 @@ on:
     branches:
       - main
     paths:
-    - "apps/functions/**"
-    - ".github/workflows/deploy-functions-production.yml"
+      - "apps/functions/**"
+      - ".github/workflows/deploy-functions-production.yml"
+      - "firebase.json"
 
 jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      functions: ${{ steps.filter.outputs.functions }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          functions:
+            - "apps/functions/**"
+            - ".github/workflows/deploy-functions-production.yml"
+            - "firebase.json"
+
   deploy:
+    needs: changes
+    if: needs.changes.outputs.functions == 'true'
     name: Deploy Functions
     runs-on: ubuntu-latest
     steps:

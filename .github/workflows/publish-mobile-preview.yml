@@ -9,10 +9,30 @@ on:
       - ready_for_review
     paths:
       - "apps/mobile/**"
+      - "packages/react-native/**"
       - ".github/workflows/publish-mobile-preview.yml"
 
 jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      mobile: ${{ steps.filter.outputs.mobile }}
+    steps:
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          mobile:
+            - "apps/mobile/**"
+            - "packages/react-native/**"
+            - ".github/workflows/publish-mobile-preview.yml"
+
   publish:
+    needs: changes
+    if: needs.changes.outputs.mobile == 'true'
     name: Publish Mobile App Preview
     runs-on: ubuntu-latest
     steps:
