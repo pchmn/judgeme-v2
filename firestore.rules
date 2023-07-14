@@ -3,20 +3,26 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
       allow read: if request.auth != null
-      allow create: if request.auth.uid == uid && createdAtIsValid()
-      allow update: if request.auth.uid == uid && updatedAtIsValid()
+      allow create: if request.auth.uid == uid && createdAtIsValid() && validateCreatedFields()
+      allow update: if request.auth.uid == uid && updatedAtIsValid() && validateChangedFields()
 
       function updatedAtIsValid() {
         return request.resource.data.updatedAt == request.time
+      }
+
+      function validateChangedFields() {
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['geohash', 'geopoint', 'status', 'updatedAt'])
       }
 
       function createdAtIsValid() {
         return request.resource.data.createdAt == request.time
       }
 
-      match /private {
-        allow read, write: if request.auth.uid == uid
+      function validateCreatedFields() {
+        return request.resource.data.messageStatistics.averageReceivedDistance == 0 && request.resource.data.messageStatistics.averageSentDistance == 0 && request.resource.data.messageStatistics.receivedTotalCount == 0 && request.resource.data.messageStatistics.sentTotalCount == 0 && request.resource.data.messageStatistics.receivedCount.size() == 0 && request.resource.data.messageStatistics.sentCount.size() == 0
+      }
 
+      match /private {
         match /devices {
           allow read, write: if request.auth.uid == uid
         }
