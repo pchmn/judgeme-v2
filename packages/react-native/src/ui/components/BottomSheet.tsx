@@ -1,3 +1,4 @@
+import * as NavigationBar from 'expo-navigation-bar';
 import React, { useCallback, useImperativeHandle, useMemo } from 'react';
 import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -64,13 +65,18 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       (destination: number) => {
         'worklet';
         active.value = destination < snapPoints[0];
+        if (destination < snapPoints[0]) {
+          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainerLow);
+        } else {
+          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainer);
+        }
         const newIndex = snapPoints.findIndex((snapPoint) => snapPoint === destination);
         if (newIndex !== -1) {
           index.value = newIndex;
         }
         translateY.value = withSpring(destination, { damping: 20, stiffness: 150, mass: 0.1 });
       },
-      [active, index, snapPoints, translateY]
+      [active, index, snapPoints, theme.colors.surfaceContainer, theme.colors.surfaceContainerLow, translateY]
     );
 
     const snapToIndex = useCallback(

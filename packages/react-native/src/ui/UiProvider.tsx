@@ -68,7 +68,7 @@ export function UiProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(paperTheme.colors.background);
+    NavigationBar.setBackgroundColorAsync(paperTheme.colors.surfaceContainer);
     NavigationBar.setButtonStyleAsync(paperTheme.dark ? 'light' : 'dark');
   }, [paperTheme]);
 
