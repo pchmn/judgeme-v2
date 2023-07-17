@@ -16,24 +16,23 @@ jobs:
   changes:
     name: 📂 Check for changes
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
     outputs:
-      functions: ${{ steps.filter.outputs.functions }}
+      shouldRun: ${{ steps.filter.outputs.any_changed }}
     steps:
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          functions:
-            - "apps/functions/**"
-            - ".github/workflows/deploy-functions-dev.yml"
-            - "firebase.json"
+      - uses: actions/checkout@v3
+      - uses: tj-actions/changed-files@v37
+        id: filter
+        with:
+          since_last_remote_commit: true
+          files: |
+            apps/functions/**
+            .github/workflows/deploy-functions-dev.yml
+            firebase.json
 
   deploy:
-    needs: changes
-    if: needs.changes.outputs.functions == 'true'
     name: 🚀 Deploy Functions
+    needs: changes
+    if: needs.changes.outputs.shouldRun == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
