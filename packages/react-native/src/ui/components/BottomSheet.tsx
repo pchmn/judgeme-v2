@@ -19,7 +19,7 @@ import { useAppTheme } from '../UiProvider';
 import { shadow } from '../utils';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
-const SHADOW_DISTANCE = 3;
+const SHADOW_DISTANCE = 5;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
@@ -48,7 +48,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
     const animatedRef = useAnimatedRef<Animated.View>();
 
     const snapPoints = useMemo(
-      () => [insets.top, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
+      () => [insets.top + SHADOW_DISTANCE, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
       [insets.top, snapPoint]
     );
 
@@ -213,45 +213,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
               }}
             />
             {children}
-            {/* <DropShadow
-              style={
-                shadow(5) as {
-                  shadowColor: string;
-                  shadowOpacity: number;
-                  shadowOffset: {
-                    width: number;
-                    height: number;
-                  };
-                  shadowRadius: number;
-                }
-              }
-            >
-              {children}
-            </DropShadow> */}
-            {/* <AnimatedShadow
-              sides={{ top: true, start: false, bottom: false, end: false }}
-              corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
-              style={[{ width: '100%' }, shadowStyle]}
-              startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
-              endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
-              distance={SHADOW_DISTANCE}
-            >
-              <Animated.View
-                style={[
-                  {
-                    width: 25,
-                    height: 4,
-                    backgroundColor: theme.colors.outline,
-                    alignSelf: 'center',
-                    marginVertical: 15,
-                    borderRadius: 2,
-                    ...indicatorStyle,
-                  },
-                  // style,
-                ]}
-              />
-              {children}
-            </AnimatedShadow> */}
           </Animated.View>
         </GestureDetector>
       </>
