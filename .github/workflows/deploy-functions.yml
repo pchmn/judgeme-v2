@@ -1,0 +1,63 @@
+name: Deploy Firebase Functions
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        type: string
+
+jobs:
+  prepare:
+    name: 📦 Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      project: ${{ inputs.environment == 'production' && 'kuzpot-prod' || 'kuzpot-dev' }}
+      serviceAccountKey: ${{ inputs.environment == 'production' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+      betterStackToken: ${{ inputs.environment == 'production' && secrets.BETTERSTACK_TOKEN_PROD || secrets.BETTERSTACK_TOKEN_DEV }}
+    steps:
+      - run: echo "Deploying to ${{ inputs.environment == 'production' && 'kuzpot-prod' || 'kuzpot-dev' }} (${{ inputs.environment }})"
+
+  deploy:
+    name: 🚀 Deploy Functions to ${{ needs.prepare.outputs.project }}
+    needs: prepare
+    # if: needs.changes.outputs.shouldRun == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🏗 Setup node
+        uses: ./.github/actions/setup-node
+        with:
+          install: true
+          turbo-cache: true
+
+      - name: 🏗 Setup firebase CLI
+        uses: pchmn/firebase-cli-github-action@main
+        with:
+          packager: pnpm
+          serviceAccountKey: ${{ needs.prepare.outputs.serviceAccountKey }}
+          projectId: ${{ needs.prepare.outputs.project }}
+
+      - name: 🏗 Create service account key file for tests
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKeyTest.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS_TEST=$(echo ${{ runner.temp }}/serviceAccountKeyTest.json)" >> $GITHUB_ENV
+
+      - name: 🧪 Test functions
+        run: pnpm test:functions:coverage
+        env:
+          TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
+
+      - name: ♻️ Create env file
+        working-directory:  apps/functions
+        run: |
+          touch .env
+          echo BETTERSTACK_TOKEN=${{ needs.prepare.outputs.betterStackToken }} >> .env
+          cat .env
+
+      - name: 🚀 Deploy to ${{ needs.prepare.outputs.project }}
+        run: pnpm deploy:functions
+
+      - run: rm apps/functions/.env

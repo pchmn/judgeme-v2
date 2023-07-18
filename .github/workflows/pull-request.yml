@@ -1,0 +1,45 @@
+name: Handle PRs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+
+jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRunFunctions: ${{ steps.filter.outputs.functions_any_changed }}
+      shouldRunMobile: ${{ steps.filter.outputs.mobile_any_changed }}
+      shouldRunRules: ${{ steps.filter.outputs.rules_any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: tj-actions/changed-files@v37
+        id: filter
+        with:
+          since_last_remote_commit: true
+          files_yaml: |
+            functions:
+              - apps/functions/**
+              - .github/workflows/deploy-functions.yml
+              - firebase.json
+            mobile:
+              - apps/mobile/**
+              - packages/react-native/**
+              - .github/workflows/publish-mobile-preview.yml
+            rules:
+              - firestore.rules
+              - .github/workflows/deploy-firestore-rules-dev.yml
+
+  functions:
+    name: 🚀 Deploy functions
+    needs: changes
+    if: ${{ needs.changes.outputs.shouldRunFunctions == 'true' }}
+    uses: ./.github/workflows/deploy-functions.yml
+    with:
+      environment: 'development'
