@@ -1,7 +1,7 @@
+import * as NavigationBar from 'expo-navigation-bar';
 import React, { useCallback, useImperativeHandle, useMemo } from 'react';
 import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
 import Animated, {
   interpolate,
   runOnJS,
@@ -15,10 +15,11 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useEffectOnce } from '../../core';
+import { useAppTheme } from '../UiProvider';
 import { shadow } from '../utils';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
-const SHADOW_DISTANCE = 3;
+const SHADOW_DISTANCE = 5;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
@@ -42,12 +43,12 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
   ({ children, containerStyle, indicatorStyle, onIndexChange, positionValue, snapPoint }, ref) => {
     const insets = useSafeAreaInsets();
 
-    const theme = useTheme();
+    const theme = useAppTheme();
 
     const animatedRef = useAnimatedRef<Animated.View>();
 
     const snapPoints = useMemo(
-      () => [insets.top, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
+      () => [insets.top + SHADOW_DISTANCE, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
       [insets.top, snapPoint]
     );
 
@@ -64,13 +65,18 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       (destination: number) => {
         'worklet';
         active.value = destination < snapPoints[0];
+        if (destination < snapPoints[0]) {
+          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainerLow);
+        } else {
+          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainer);
+        }
         const newIndex = snapPoints.findIndex((snapPoint) => snapPoint === destination);
         if (newIndex !== -1) {
           index.value = newIndex;
         }
         translateY.value = withSpring(destination, { damping: 20, stiffness: 150, mass: 0.1 });
       },
-      [active, index, snapPoints, translateY]
+      [active, index, snapPoints, theme.colors.surfaceContainer, theme.colors.surfaceContainerLow, translateY]
     );
 
     const snapToIndex = useCallback(
@@ -159,8 +165,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       const borderRadius = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [32, 0]);
       const paddingTop = interpolate(translateY.value, [snapPoints[1], snapPoints[2]], [0, insets.top]);
       return {
-        borderTopLeftRadius: borderRadius,
-        borderTopRightRadius: borderRadius,
+        borderRadius,
         paddingTop,
         transform: [{ translateY: translateY.value }],
       };
@@ -187,12 +192,9 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
               {
                 height: SCREEN_HEIGHT + insets.top,
                 width: SCREEN_WIDTH,
-                backgroundColor: theme.colors.background,
+                backgroundColor: theme.colors.surfaceContainerLow,
                 position: 'absolute',
                 top: SCREEN_HEIGHT,
-                borderRadius: 32,
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
                 ...containerStyle,
               },
               shadow(5),
@@ -211,45 +213,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
               }}
             />
             {children}
-            {/* <DropShadow
-              style={
-                shadow(5) as {
-                  shadowColor: string;
-                  shadowOpacity: number;
-                  shadowOffset: {
-                    width: number;
-                    height: number;
-                  };
-                  shadowRadius: number;
-                }
-              }
-            >
-              {children}
-            </DropShadow> */}
-            {/* <AnimatedShadow
-              sides={{ top: true, start: false, bottom: false, end: false }}
-              corners={{ topEnd: true, topStart: true, bottomEnd: false, bottomStart: false }}
-              style={[{ width: '100%' }, shadowStyle]}
-              startColor={theme.dark ? 'rgba(0, 0, 0, 0.5)' : undefined}
-              endColor={theme.dark ? 'rgba(0, 0, 0, 0)' : undefined}
-              distance={SHADOW_DISTANCE}
-            >
-              <Animated.View
-                style={[
-                  {
-                    width: 25,
-                    height: 4,
-                    backgroundColor: theme.colors.outline,
-                    alignSelf: 'center',
-                    marginVertical: 15,
-                    borderRadius: 2,
-                    ...indicatorStyle,
-                  },
-                  // style,
-                ]}
-              />
-              {children}
-            </AnimatedShadow> */}
           </Animated.View>
         </GestureDetector>
       </>

@@ -99,7 +99,10 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
     executionTime: `${Date.now() - startTime}ms`,
   });
 
-  return { successCount: pushNotificationsResponse.successCount, failureCount: pushNotificationsResponse.failureCount };
+  return {
+    successCount: pushNotificationsResponse.successCount,
+    failureCount: pushNotificationsResponse.failureCount,
+  };
 }
 
 function validateCallableRequest<T extends FunctionName>(
@@ -137,11 +140,27 @@ async function sendPushNotifications(
     await db.collection('users').doc(to).collection('private').doc('devices').get()
   ).data() as DevicesDocument;
 
-  for (const installationId in recipientDevices) {
+  if (!recipientDevices) {
+    logtail.error('[sendMessage] No devices found', {
+      params: { user: to },
+    });
+    throw new HttpsError('not-found', 'No devices found');
+  }
+
+  for (const installationId of Object.keys(recipientDevices).filter(
+    (key) => !['createdAt', 'updatedAt'].includes(key)
+  )) {
     const locale = recipientDevices[installationId].language;
     const title = `${message.emoji} ${getMessageTranslation(locale, message)}`;
     const body = i18n(locale).from(distance);
     const token = recipientDevices[installationId].pushToken;
+
+    if (!token) {
+      logtail.warn('[sendMessage] No token found', {
+        params: { user: to, installationId },
+      });
+      continue;
+    }
 
     pushMessages.push({
       data: {
@@ -162,7 +181,13 @@ async function sendPushNotifications(
     });
   }
 
-  return await messaging.sendAll(pushMessages);
+  return messaging.sendAll(pushMessages).catch((error) => {
+    logtail.error('[sendMessage] Error sending push notifications', {
+      error: { ...error },
+      params: { to, message: message.key },
+    });
+    throw error;
+  });
 }
 
 function dataWithTimestamp<T>(data: T, isCreation?: boolean) {

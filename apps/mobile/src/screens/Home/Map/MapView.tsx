@@ -1,14 +1,20 @@
 import { UserDocument } from '@kuzpot/core';
-import { BottomSheet, BottomSheetRefProps, Flex, GeoQueryOptions, useFirebaseAuthUser } from '@kuzpot/react-native';
+import {
+  BottomSheet,
+  BottomSheetRefProps,
+  Flex,
+  GeoQueryOptions,
+  useAppTheme,
+  useFirebaseAuthUser,
+} from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { FAB, useTheme } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { useSharedValue } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
@@ -22,13 +28,11 @@ import { useNearUsers } from './useNearUsers';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export function MapView() {
-  const insets = useSafeAreaInsets();
-
   const {
     params: { initialRegion },
   } = useRoute<RouteParams<'Home'>>();
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const mapRef = useRef<RNMapView>(null);
   const isRegionFocused = useRef(false);
@@ -90,7 +94,7 @@ export function MapView() {
     [regionOnMap?.latitudeDelta, regionOnMap?.longitudeDelta]
   );
 
-  const onMapLoaded = () => {
+  const onMapReady = () => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
       isRegionFocused.current = true;
       animateToLocation(currentPosition);
@@ -166,7 +170,7 @@ export function MapView() {
         customMapStyle={themedMapStyle(theme.colors)}
         onRegionChange={setRegionOnMap}
         onRegionChangeComplete={onRegionChangeComplete}
-        onMapLoaded={onMapLoaded}
+        onMapReady={onMapReady}
         showsPointsOfInterest={false}
         showsBuildings={false}
         showsUserLocation

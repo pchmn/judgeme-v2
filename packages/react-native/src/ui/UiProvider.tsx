@@ -1,14 +1,21 @@
-import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
+import { Material3Scheme, useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
   Theme,
 } from '@react-navigation/native';
 import * as NavigationBar from 'expo-navigation-bar';
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
-import { adaptNavigationTheme, MD3DarkTheme, MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
-import { ThemeProp } from 'react-native-paper/lib/typescript/types';
+import {
+  adaptNavigationTheme,
+  MD3DarkTheme,
+  MD3LightTheme,
+  Provider as PaperProvider,
+  // eslint-disable-next-line no-restricted-imports
+  useTheme,
+} from 'react-native-paper';
+import { MD3Theme, ThemeProp } from 'react-native-paper/lib/typescript/types';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -36,7 +43,7 @@ export function useUiProviderContext() {
   return ctx;
 }
 
-export function UiProvider({ children }: PropsWithChildren<UiProviderProps>) {
+export function UiProvider({ children }: { children: React.ReactNode }) {
   const { theme } = useMaterial3Theme({ fallbackSourceColor: '#FFD9DA' });
 
   const colorScheme = useColorScheme();
@@ -61,7 +68,7 @@ export function UiProvider({ children }: PropsWithChildren<UiProviderProps>) {
   );
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync(paperTheme.colors.background);
+    NavigationBar.setBackgroundColorAsync(paperTheme.colors.surfaceContainer);
     NavigationBar.setButtonStyleAsync(paperTheme.dark ? 'light' : 'dark');
   }, [paperTheme]);
 
@@ -78,3 +85,5 @@ export function UiProvider({ children }: PropsWithChildren<UiProviderProps>) {
     </UiProviderContext.Provider>
   );
 }
+
+export const useAppTheme = useTheme<MD3Theme & { colors: Material3Scheme }>;

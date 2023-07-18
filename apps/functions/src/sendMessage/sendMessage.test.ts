@@ -1,7 +1,9 @@
 import { firestore } from 'firebase-admin';
 import { UserRecord } from 'firebase-admin/auth';
+import { Timestamp } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 import { distanceBetween } from 'geofire-common';
+import { i18n } from 'src/i18n';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { functions, testFunctions, wrapCallableFunction } from '../__test__/setup';
@@ -48,6 +50,7 @@ describe('[sendMessage] Function', () => {
   let senderUser: UserRecord;
   let data: unknown;
   let auth: unknown;
+  let distance: number;
 
   beforeAll(async () => {
     receiverUser = testFunctions.auth.makeUserRecord({ uid: 'receiver-user' });
@@ -96,6 +99,8 @@ describe('[sendMessage] Function', () => {
         },
       });
 
+    distance = distanceBetween([48.856614, 2.3522219], [48.10750068718423, -1.712865897767093]);
+
     data = {
       to: receiverUser.uid,
       message: 'love_you',
@@ -111,17 +116,8 @@ describe('[sendMessage] Function', () => {
   });
 
   afterAll(async () => {
-    await firestore().collection('users').doc(receiverUser.uid).delete();
-    await firestore().collection('users').doc(senderUser.uid).delete();
-    await firestore().collection('messages').doc('love_you').delete();
-  });
-
-  it('should send a message', async () => {
-    vi.spyOn(getMessaging(), 'sendAll').mockResolvedValue({ successCount: 1, failureCount: 0, responses: [] });
-
-    const result = await wrapped({ data, auth });
-
-    expect(result).toEqual({ successCount: 1, failureCount: 0 });
+    await firestore().recursiveDelete(firestore().collection('users'));
+    await firestore().recursiveDelete(firestore().collection('messages'));
   });
 
   it('should fail to send message', async () => {
@@ -132,6 +128,39 @@ describe('[sendMessage] Function', () => {
     expect(result).toEqual({ successCount: 0, failureCount: 1 });
   });
 
+  it('should send a message', async () => {
+    vi.spyOn(getMessaging(), 'sendAll').mockResolvedValue({ successCount: 1, failureCount: 0, responses: [] });
+
+    const result = await wrapped({ data, auth });
+
+    expect(result).toEqual({ successCount: 1, failureCount: 0 });
+  });
+
+  it('should use en translation', async () => {
+    const sendAllSpy = vi
+      .spyOn(getMessaging(), 'sendAll')
+      .mockResolvedValue({ successCount: 1, failureCount: 0, responses: [] });
+
+    await wrapped({ data, auth });
+
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.title).toEqual('❤️ I love you');
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('en').from(distance));
+  });
+
+  it('should use fr translation', async () => {
+    const sendAllSpy = vi
+      .spyOn(getMessaging(), 'sendAll')
+      .mockResolvedValue({ successCount: 1, failureCount: 0, responses: [] });
+
+    await firestore().collection('users').doc(receiverUser.uid).collection('private').doc('devices').update({
+      'installation-id.language': 'fr',
+    });
+    await wrapped({ data, auth });
+
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.title).toEqual("❤️ Je t'aime");
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('fr').from(distance));
+  });
+
   it('should update statistics', async () => {
     const receiverDocBefore = (await firestore().collection('users').doc(receiverUser.uid).get()).data();
     const senderDocBefore = (await firestore().collection('users').doc(senderUser.uid).get()).data();
@@ -140,8 +169,6 @@ describe('[sendMessage] Function', () => {
 
     const receiverDocAfter = (await firestore().collection('users').doc(receiverUser.uid).get()).data();
     const senderDocAfter = (await firestore().collection('users').doc(senderUser.uid).get()).data();
-
-    const distance = distanceBetween([48.856614, 2.3522219], [48.10750068718423, -1.712865897767093]);
 
     expect(receiverDocAfter?.messageStatistics).toEqual({
       averageReceivedDistance: distance,
@@ -175,18 +202,26 @@ describe('[sendMessage] Function', () => {
       .get();
     const senderHistoryAfter = await senderRef.collection('private').doc('history').collection('messagesSent').get();
 
-    const distance = distanceBetween([48.856614, 2.3522219], [48.10750068718423, -1.712865897767093]);
     expect(receiverHistoryAfter.size).toEqual(receiverHistoryBefore.size + 1);
-    expect(receiverHistoryAfter.docs[receiverHistoryAfter.size - 1].data()).toEqual({
-      from: senderUser.uid,
-      message: 'love_you',
-      distance,
-    });
+    expect(receiverHistoryAfter.docs[receiverHistoryAfter.size - 1].data()).toEqual(
+      expect.objectContaining({
+        from: senderUser.uid,
+        message: 'love_you',
+        distance,
+      })
+    );
+    expect(receiverHistoryAfter.docs[receiverHistoryAfter.size - 1].data().createdAt).toBeInstanceOf(Timestamp);
+    expect(receiverHistoryAfter.docs[receiverHistoryAfter.size - 1].data().updatedAt).toBeInstanceOf(Timestamp);
+
     expect(senderHistoryAfter.size).toEqual(senderHistoryBefore.size + 1);
-    expect(senderHistoryAfter.docs[senderHistoryAfter.size - 1].data()).toEqual({
-      to: receiverUser.uid,
-      message: 'love_you',
-      distance,
-    });
+    expect(senderHistoryAfter.docs[senderHistoryAfter.size - 1].data()).toEqual(
+      expect.objectContaining({
+        to: receiverUser.uid,
+        message: 'love_you',
+        distance,
+      })
+    );
+    expect(senderHistoryAfter.docs[senderHistoryAfter.size - 1].data().createdAt).toBeInstanceOf(Timestamp);
+    expect(senderHistoryAfter.docs[senderHistoryAfter.size - 1].data().updatedAt).toBeInstanceOf(Timestamp);
   });
 });

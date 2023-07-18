@@ -13,7 +13,7 @@
     "@kuzpot/eslint-config": "workspace:*",
     "@kuzpot/tsconfig": "workspace:*",
     "eslint": "^8.21.0",
-    "typescript": "^4.9.4",
+    "typescript": "^5.1.6",
     "zod": "^3.19.1"
   }
 }

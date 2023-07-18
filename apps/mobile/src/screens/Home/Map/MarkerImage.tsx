@@ -1,8 +1,8 @@
-import { useTheme } from 'react-native-paper';
+import { useAppTheme } from '@kuzpot/react-native';
 import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 
 export const MarkerImage = (props: SvgProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <Svg width={37} height={50} fill="none" viewBox="0 0 112 153" {...props}>
       <Path

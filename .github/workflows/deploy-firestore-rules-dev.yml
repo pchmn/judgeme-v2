@@ -12,8 +12,25 @@ on:
       - ".github/workflows/deploy-firestore-rules-dev.yml"
 
 jobs:
+  changes:
+    name: 📂 Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      shouldRun: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: tj-actions/changed-files@v37
+        id: filter
+        with:
+          since_last_remote_commit: true
+          files: |
+            firestore.rules
+            .github/workflows/deploy-firestore-rules-dev.yml
+
   deploy:
     name: Deploy Rules
+    needs: changes
+    if: needs.changes.outputs.shouldRun == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

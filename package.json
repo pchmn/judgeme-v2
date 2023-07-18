@@ -22,7 +22,9 @@
     "deploy:rules": "firebase deploy --only firestore:rules",
     "prepare": "husky install && rm -rf .git/hooks || true && ln -s ../.husky .git/hooks || true",
     "lint": "eslint --cache --fix .",
-    "clean": "npkill"
+    "clean": "npkill",
+    "list-mismatches": "syncpack list-mismatches --types dev,prod,peer",
+    "fix-mismatches": "syncpack fix-mismatches --types dev,prod,peer"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
@@ -30,6 +32,7 @@
     "@commitlint/prompt-cli": "^17.0.3",
     "husky": "^8.0.1",
     "lint-staged": "^11.2.3",
+    "syncpack": "^10.7.3",
     "turbo": "^1.10.7"
   },
   "pnpm": {

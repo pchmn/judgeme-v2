@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-    - "apps/functions/**"
-    - ".github/workflows/deploy-functions-production.yml"
+      - "apps/functions/**"
+      - ".github/workflows/deploy-functions-production.yml"
+      - "firebase.json"
 
 jobs:
   deploy:

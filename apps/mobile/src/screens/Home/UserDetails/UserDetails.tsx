@@ -1,10 +1,10 @@
 import { Message, UserDocument } from '@kuzpot/core';
-import { Flex, useFirestoreQuery } from '@kuzpot/react-native';
+import { Flex, useAppTheme, useFirestoreQuery } from '@kuzpot/react-native';
 import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';
 import { useState } from 'react';
-import { Button, RadioButton, Surface, Text, TouchableRipple, useTheme } from 'react-native-paper';
+import { Button, RadioButton, Surface, Text, TouchableRipple } from 'react-native-paper';
 import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated';
 
 import { IconCheck } from '@/shared/components';
@@ -20,7 +20,7 @@ export function UserDetails({
 
   // console.log('position', position, insets, navbarHeight);
 
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [value, setValue] = useState('');
 
   const sendMessage = async () => {

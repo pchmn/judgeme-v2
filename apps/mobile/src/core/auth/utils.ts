@@ -34,14 +34,19 @@ async function checkNotificationsPermission() {
 }
 
 export async function getInstallationDevice(): Promise<InstallationDevice | undefined> {
-  const pushToken = await messaging().getToken();
   const installationId = await installations().getId();
+  let pushToken: string | undefined;
+  try {
+    pushToken = await messaging().getToken();
+  } catch (err) {
+    console.error('Error getting pushToken', err);
+  }
   return {
     [installationId]: {
       name: `${Device.manufacturer} ${Device.modelName}`,
       os: `${Device.osName}`,
       osVersion: `${Device.osVersion}`,
-      pushToken,
+      pushToken: pushToken || '',
       language: getDeviceLocale(),
     },
   };

@@ -5,7 +5,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "simulator": true
+        "enterpriseProvisioning": "adhoc"
       },
       "env": {
         "APP_ENV": "development"

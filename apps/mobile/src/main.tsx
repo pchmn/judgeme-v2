@@ -17,7 +17,15 @@ import App from './App';
 Sentry.init({
   dsn: 'https://2f1bdcf4041c4a1f8aae0f6950e15224@o4504771591274496.ingest.sentry.io/4504774174703616',
   enableInExpoDevelopment: true,
-  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  debug: __DEV__,
+  // Fix error trace looping: https://github.com/getsentry/sentry-react-native/issues/2721#issuecomment-1380546718
+  integrations: [
+    new Sentry.Native.ReactNativeTracing({
+      shouldCreateSpanForRequest: (url) => {
+        return !__DEV__ || !url.startsWith(`http://192.168.1.10:8081/logs`);
+      },
+    }),
+  ],
 });
 
 preventAutoHideAsync();

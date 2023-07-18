@@ -16,5 +16,19 @@ module.exports = {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
       extends: ['plugin:testing-library/react']
     }
-  ]
+  ],
+  rules: {
+    'no-restricted-imports': [
+      'warn',
+      {
+        paths: [
+          {
+            name: 'react-native-paper',
+            importNames: ['useTheme'],
+            message: 'Use `useAppTheme` from `@kuzpot/react-native` instead.',
+          },
+        ],
+      },
+    ],
+  },
 };

@@ -10,8 +10,8 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     stylers: [
       {
         color: colord(scheme.background).isDark()
-          ? colord(scheme.secondaryContainer).darken(0.075).mix(colord(scheme.background)).toHex()
-          : colord(scheme.secondaryContainer).lighten(0.03).toHex(),
+          ? colord(scheme.surfaceContainerHigh).darken(0.01).toHex()
+          : colord(scheme.surfaceContainerHighest).toHex(),
       },
     ],
   },
@@ -90,8 +90,8 @@ export const themedMapStyle = (scheme: Material3Scheme) => [
     stylers: [
       {
         color: colord(scheme.background).isDark()
-          ? colord(scheme.secondaryContainer).darken(0.3).toHex()
-          : colord(scheme.secondaryContainer).darken(0.05).toHex(),
+          ? colord(scheme.surfaceContainerHigh).darken(0.3).toHex()
+          : colord(scheme.surfaceContainerHighest).darken(0.1).toHex(),
       },
     ],
   },
