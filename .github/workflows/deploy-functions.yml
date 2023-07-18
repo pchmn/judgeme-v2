@@ -16,6 +16,8 @@ jobs:
       project: ${{ inputs.environment == 'production' && 'kuzpot-prod' || 'kuzpot-dev' }}
       serviceAccountKey: ${{ inputs.environment == 'production' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
       betterStackToken: ${{ inputs.environment == 'production' && secrets.BETTERSTACK_TOKEN_PROD || secrets.BETTERSTACK_TOKEN_DEV }}
+    steps:
+      - run: echo "Deploying to ${{ inputs.environment == 'production' && 'kuzpot-prod' || 'kuzpot-dev' }} (${{ inputs.environment }})"
 
   deploy:
     name: 🚀 Deploy Functions to ${{ needs.prepare.outputs.project }}
