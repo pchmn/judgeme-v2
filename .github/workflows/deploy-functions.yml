@@ -1,38 +1,26 @@
-name: Deploy Firebase Functions to Dev
+name: Deploy Firebase Functions
 
 on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-    paths:
-      - "apps/functions/**"
-      - ".github/workflows/deploy-functions-dev.yml"
-      - "firebase.json"
+  workflow_call:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        type: string
 
 jobs:
-  changes:
-    name: 📂 Check for changes
+  prepare:
+    name: 📦 Prepare
     runs-on: ubuntu-latest
     outputs:
-      shouldRun: ${{ steps.filter.outputs.any_changed }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: tj-actions/changed-files@v37
-        id: filter
-        with:
-          since_last_remote_commit: true
-          files: |
-            apps/functions/**
-            .github/workflows/deploy-functions-dev.yml
-            firebase.json
+      project: ${{ inputs.environment == 'production' && 'kuzpot-prod' || 'kuzpot-dev' }}
+      serviceAccountKey: ${{ inputs.environment == 'production' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+      betterStackToken: ${{ inputs.environment == 'production' && secrets.BETTERSTACK_TOKEN_PROD || secrets.BETTERSTACK_TOKEN_DEV }}
 
   deploy:
-    name: 🚀 Deploy Functions
-    needs: changes
-    if: needs.changes.outputs.shouldRun == 'true'
+    name: 🚀 Deploy Functions to ${{ needs.prepare.outputs.project }}
+    needs: prepare
+    # if: needs.changes.outputs.shouldRun == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -47,8 +35,8 @@ jobs:
         uses: pchmn/firebase-cli-github-action@main
         with:
           packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
-          projectId: kuzpot-dev
+          serviceAccountKey: ${{ needs.prepare.outputs.serviceAccountKey }}
+          projectId: ${{ needs.prepare.outputs.project }}
 
       - name: 🏗 Create service account key file for tests
         run: |
@@ -64,10 +52,10 @@ jobs:
         working-directory:  apps/functions
         run: |
           touch .env
-          echo BETTERSTACK_TOKEN=${{ secrets.BETTERSTACK_TOKEN_DEV }} >> .env
+          echo BETTERSTACK_TOKEN=${{ needs.prepare.outputs.betterStackToken }} >> .env
           cat .env
 
-      - name: 🚀 Deploy to kuzpot-dev
+      - name: 🚀 Deploy to ${{ needs.prepare.outputs.project }}
         run: pnpm deploy:functions
 
       - run: rm apps/functions/.env
