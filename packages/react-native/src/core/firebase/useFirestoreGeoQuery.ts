@@ -1,9 +1,9 @@
+import { Document } from '@kuzpot/core';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { QueryKey } from '@tanstack/react-query';
 import { geohashQueryBounds } from 'geofire-common';
 import { useCallback, useMemo } from 'react';
 
-import { DataWithId } from './types';
 import { useFirestoreData } from './useFirestoreData';
 import { getDataFromSnapshot } from './utils';
 
@@ -32,7 +32,7 @@ export function useFirestoreGeoQuery<T extends FirebaseFirestoreTypes.DocumentDa
   });
 }
 
-let initialData: DataWithId<any>[] = [];
+let initialData: Document<any>[] = [];
 
 function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
   queryKey: QueryKey,
@@ -40,9 +40,9 @@ function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
   options?: { enabled?: boolean }
 ) {
   const subscribeFn = useCallback(
-    (onData: (data: DataWithId<T>[]) => void, onError?: (error: Error) => void) => {
+    (onData: (data: Document<T>[]) => void, onError?: (error: Error) => void) => {
       const unsubscribes: (() => void)[] = [];
-      const data: Record<string, DataWithId<T>[]> = {};
+      const data: Record<string, Document<T>[]> = {};
       onData(initialData);
 
       for (const key in queries) {
@@ -78,5 +78,5 @@ function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
       .flat();
   };
 
-  return useFirestoreData<DataWithId<T>[]>(queryKey, fetchFn, subscribeFn, { ...options, initialData });
+  return useFirestoreData<Document<T>[]>(queryKey, fetchFn, subscribeFn, { ...options, initialData });
 }

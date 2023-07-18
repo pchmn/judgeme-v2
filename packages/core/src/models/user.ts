@@ -6,7 +6,7 @@ export interface DeviceInfo {
   language: string;
 }
 
-export interface DevicesDocument {
+export interface Devices {
   [installationId: string]: DeviceInfo;
 }
 
@@ -22,7 +22,7 @@ export interface MessageReceived extends MessageHistory {
 export interface MessageSent extends MessageHistory {
   to: string;
 }
-export interface UserDocument {
+export interface User {
   geohash: string;
   geopoint: {
     latitude: number;

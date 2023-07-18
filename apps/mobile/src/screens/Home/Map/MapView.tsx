@@ -1,4 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
+import { Document, User } from '@kuzpot/core';
 import {
   BottomSheet,
   BottomSheetRefProps,
@@ -7,7 +7,6 @@ import {
   useAppTheme,
   useFirebaseAuthUser,
 } from '@kuzpot/react-native';
-import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -38,7 +37,7 @@ export function MapView() {
   const isRegionFocused = useRef(false);
 
   const bottomSheetRef = useRef<BottomSheetRefProps>(null);
-  const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
+  const [userSelected, setUserSelected] = useState<Document<User>>();
 
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();

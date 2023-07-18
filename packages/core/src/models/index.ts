@@ -1,2 +1,3 @@
 export * from './message';
-export * from './user.document';
+export * from './types';
+export * from './user';

@@ -1,4 +1,4 @@
-import { DevicesDocument } from '@kuzpot/core';
+import { Devices } from '@kuzpot/core';
 import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStorage } from '@kuzpot/react-native';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
@@ -19,7 +19,7 @@ export function useRegisterDevice() {
 
   const { data: currentUser } = useFirebaseAuthUser();
 
-  const { mutate } = useFirestoreSetDoc<DevicesDocument>();
+  const { mutate } = useFirestoreSetDoc<Devices>();
 
   const register = useCallback(
     async (uid: string) => {

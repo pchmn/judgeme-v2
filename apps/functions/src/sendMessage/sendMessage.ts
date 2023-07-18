@@ -1,4 +1,4 @@
-import { DevicesDocument, FunctionName, FunctionParams, FunctionValidation, Message, UserDocument } from '@kuzpot/core';
+import { Devices, FunctionName, FunctionParams, FunctionValidation, Message, User } from '@kuzpot/core';
 import { Logtail } from '@logtail/node';
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
@@ -25,10 +25,10 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
   const message = (await db.collection('messages').doc(messageKey).get()).data() as Message;
 
   const senderRef = db.collection('users').doc(currentToken.uid);
-  const sender = (await senderRef.get()).data() as UserDocument;
+  const sender = (await senderRef.get()).data() as User;
 
   const receiverRef = db.collection('users').doc(to);
-  const receiver = (await receiverRef.get()).data() as UserDocument;
+  const receiver = (await receiverRef.get()).data() as User;
 
   const distance = distanceBetween(
     [sender.geopoint.latitude, sender.geopoint.longitude],
@@ -138,7 +138,7 @@ async function sendPushNotifications(
 
   const recipientDevices = (
     await db.collection('users').doc(to).collection('private').doc('devices').get()
-  ).data() as DevicesDocument;
+  ).data() as Devices;
 
   if (!recipientDevices) {
     logtail.error('[sendMessage] No devices found', {

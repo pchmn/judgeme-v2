@@ -1,6 +1,5 @@
-import { Message, UserDocument } from '@kuzpot/core';
+import { Document, Message, User } from '@kuzpot/core';
 import { Flex, useAppTheme, useFirestoreQuery } from '@kuzpot/react-native';
-import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';
 import { useState } from 'react';
@@ -9,16 +8,11 @@ import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle } fro
 
 import { IconCheck } from '@/shared/components';
 
-export function UserDetails({
-  user,
-  positionValue,
-}: {
-  user: DataWithId<UserDocument>;
-  positionValue: SharedValue<number>;
-}) {
+export function UserDetails({ user, positionValue }: { user: Document<User>; positionValue: SharedValue<number> }) {
   const { data: messages } = useFirestoreQuery<Message>(['messages'], firestore().collection('messages'));
 
   // console.log('position', position, insets, navbarHeight);
+  console.log('user', user.updatedAt?.toISOString());
 
   const theme = useAppTheme();
   const [value, setValue] = useState('');

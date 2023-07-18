@@ -1,8 +1,8 @@
+import { Document } from '@kuzpot/core';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { QueryKey } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { DataWithId } from './types';
 import { useFirestoreData } from './useFirestoreData';
 import { getDataFromSnapshot } from './utils';
 
@@ -12,7 +12,7 @@ export function useFirestoreQuery<T extends FirebaseFirestoreTypes.DocumentData>
   options?: { enabled?: boolean }
 ) {
   const subscribeFn = useCallback(
-    (onData: (data: DataWithId<T>[]) => void, onError?: (error: Error) => void) => {
+    (onData: (data: Document<T>[]) => void, onError?: (error: Error) => void) => {
       const unsubscribe = query.onSnapshot(
         (snapshot) => {
           onData(snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false })));
@@ -32,7 +32,7 @@ export function useFirestoreQuery<T extends FirebaseFirestoreTypes.DocumentData>
     return snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false }));
   }, [query]);
 
-  return useFirestoreData<DataWithId<T>[]>(queryKey, fetchFn, subscribeFn, {
+  return useFirestoreData<Document<T>[]>(queryKey, fetchFn, subscribeFn, {
     ...options,
     initialData: [],
   });
