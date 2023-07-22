@@ -49,7 +49,19 @@ function useFirestoreQueries<T extends FirebaseFirestoreTypes.DocumentData>(
         unsubscribes.push(
           queries[key].onSnapshot(
             (snapshot) => {
-              data[key] = snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false }));
+              const docs = snapshot.docs.map((doc) => getDataFromSnapshot({ snapshot: doc, nullable: false }));
+              const oldDocs = data[key] || [];
+              const updatedDocs = [];
+              for (const doc of docs) {
+                const oldDoc = oldDocs.find((oldDoc) => oldDoc.id === doc.id);
+                if (oldDoc) {
+                  Object.assign(oldDoc, doc);
+                  updatedDocs.push(oldDoc);
+                } else {
+                  updatedDocs.push(doc);
+                }
+              }
+              data[key] = updatedDocs;
 
               if (Object.keys(data).length === Object.keys(queries).length) {
                 // Emit data when all queries are done
