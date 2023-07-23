@@ -1,11 +1,19 @@
-import { Devices, FunctionName, FunctionParams, FunctionValidation, Message, User } from '@kuzpot/core';
+import {
+  Devices,
+  distanceBetween,
+  formatDistance,
+  FunctionName,
+  FunctionParams,
+  FunctionValidation,
+  Message,
+  User,
+} from '@kuzpot/core';
 import { Logtail } from '@logtail/node';
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 import { HttpsError } from 'firebase-functions/v2/https';
 import { CallableRequest } from 'firebase-functions/v2/https';
-import { distanceBetween } from 'geofire-common';
 
 import { getLocaleWithouRegionCode, i18n } from '../i18n';
 
@@ -30,10 +38,7 @@ export async function sendMessage(req: CallableRequest<FunctionParams['sendMessa
   const receiverRef = db.collection('users').doc(to);
   const receiver = (await receiverRef.get()).data() as User;
 
-  const distance = distanceBetween(
-    [sender.geopoint.latitude, sender.geopoint.longitude],
-    [receiver.geopoint.latitude, receiver.geopoint.longitude]
-  );
+  const distance = distanceBetween(sender.geopoint, receiver.geopoint);
 
   const pushNotificationsResponse = await sendPushNotifications(to, {
     message: { ...message, key: messageKey },
@@ -152,7 +157,7 @@ async function sendPushNotifications(
   )) {
     const locale = recipientDevices[installationId].language;
     const title = `${message.emoji} ${getMessageTranslation(locale, message)}`;
-    const body = i18n(locale).from(distance);
+    const body = i18n(locale).from(formatDistance(distance));
     const token = recipientDevices[installationId].pushToken;
 
     if (!token) {
@@ -165,7 +170,7 @@ async function sendPushNotifications(
     pushMessages.push({
       data: {
         message: message.key,
-        distance: distance.toString(),
+        distance: formatDistance(distance),
       },
       notification: {
         title,
