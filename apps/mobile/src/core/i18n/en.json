@@ -32,5 +32,18 @@
         "description": "If you want to receive notifications, you need to grant Kuzpot the permission to send them.\nYou can change this permission in the app settings."
       }
     }
+  },
+  "homeScreen": {
+    "userDetails": {
+      "distance": "{{distance}} away",
+      "online": "Online",
+      "offline": "Offline",
+      "receivedCount_zero": "0 received",
+      "receivedCount_other": "{{count}} received (~{{averageDistance}})",
+      "sentCount_zero": "0 sent",
+      "sentCount_other": "{{count}} sent (~{{averageDistance}})",
+      "messagesReceived": "Messages received",
+      "chooseMessage": "Choose a message"
+    }
   }
 }
