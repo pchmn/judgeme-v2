@@ -1,9 +1,9 @@
 const translations = {
   en: {
-    from: (distance: string) => `From ${distance} away`,
+    from: (distance: string) => `from ${distance} away`,
   },
   fr: {
-    from: (distance: string) => `À ${distance}`,
+    from: (distance: string) => `à ${distance}`,
   },
 };
 
