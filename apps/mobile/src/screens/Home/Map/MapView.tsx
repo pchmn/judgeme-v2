@@ -1,4 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
+import { Document, User } from '@kuzpot/core';
 import {
   BottomSheet,
   BottomSheetRefProps,
@@ -7,7 +7,6 @@ import {
   useAppTheme,
   useFirebaseAuthUser,
 } from '@kuzpot/react-native';
-import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -38,7 +37,8 @@ export function MapView() {
   const isRegionFocused = useRef(false);
 
   const bottomSheetRef = useRef<BottomSheetRefProps>(null);
-  const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
+  const [userSelected, setUserSelected] = useState<Document<User>>();
+  const [userDetailsHeight, setUserDetailsHeight] = useState(0);
 
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
@@ -69,17 +69,6 @@ export function MapView() {
 
   const animateToLocation = useCallback(
     async (location?: { latitude: number; longitude: number }, duration?: number) => {
-      // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
-      //   to: currentUser?.uid,
-      // });
-      // if (Platform.OS === 'ios') {
-      //   signOut(undefined, {
-      //     onSuccess: () => {
-      //       console.log('signOut success');
-      //     },
-      //   });
-      // }
-
       if (location) {
         mapRef.current?.animateToRegion(
           {
@@ -206,9 +195,17 @@ export function MapView() {
         ref={bottomSheetRef}
         onIndexChange={handleBottomSheetIndexChange}
         positionValue={positionValue}
-        snapPoint={100}
+        snapPoint={userDetailsHeight}
       >
-        {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
+        {(userSelected || (nearUsers && nearUsers.length > 0)) && (
+          <UserDetails
+            key={userSelected?.id || nearUsers![0].id}
+            user={userSelected || nearUsers![0]}
+            currentPosition={currentPosition}
+            positionValue={positionValue}
+            onLayout={({ nativeEvent: { layout } }) => setUserDetailsHeight(layout.height)}
+          />
+        )}
       </BottomSheet>
     </Flex>
   );

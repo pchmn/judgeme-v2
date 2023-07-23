@@ -1,10 +1,10 @@
-import { Flex, useToggle } from '@kuzpot/react-native';
+import { Flex, Text, useToggle } from '@kuzpot/react-native';
 import { openSettings } from 'expo-linking';
 import { LocationPermissionResponse } from 'expo-location';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dimensions } from 'react-native';
-import { ActivityIndicator, Button, Dialog, Portal, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Dialog, Portal } from 'react-native-paper';
 
 import { useLocationPermissions } from '@/shared/hooks';
 

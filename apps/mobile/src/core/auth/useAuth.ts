@@ -1,4 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
+import { User } from '@kuzpot/core';
 import { useEffectOnce, useFirestoreSetDoc, useSignInAnonymously } from '@kuzpot/react-native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -9,7 +9,7 @@ import { useRegisterDevice } from './useRegisterDevice';
 
 export function useAuth() {
   const { mutate: signInAnonymously } = useSignInAnonymously();
-  const { mutate } = useFirestoreSetDoc<UserDocument>();
+  const { mutate } = useFirestoreSetDoc<User>();
   const { register } = useRegisterDevice();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +17,7 @@ export function useAuth() {
   const initUserData = (user: FirebaseAuthTypes.UserCredential) => {
     if (user.additionalUserInfo?.isNewUser) {
       mutate({
-        ref: firestore().collection<UserDocument>('users').doc(user.user.uid),
+        ref: firestore().collection<User>('users').doc(user.user.uid),
         data: {
           status: 'online',
           messageStatistics: {

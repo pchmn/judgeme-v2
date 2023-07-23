@@ -1,19 +1,30 @@
 import { PropsWithChildren } from 'react';
-import { LayoutChangeEvent, View, ViewStyle } from 'react-native';
+import {
+  AnimatableNumericValue,
+  DimensionValue,
+  FlexAlignType,
+  LayoutChangeEvent,
+  View,
+  ViewStyle,
+} from 'react-native';
+
+import { Spacing, spacingValue } from './spacing';
 
 interface FlexProps {
-  direction?: 'row' | 'column';
-  align?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
-  justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+  direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
+  align?: FlexAlignType;
+  justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
-  gap?: number;
-  height?: number | string;
-  width?: number | string;
-  padding?: number;
-  paddingY?: number;
-  paddingX?: number;
+  gap?: number | Spacing;
+  height?: DimensionValue;
+  width?: DimensionValue;
+  padding?: DimensionValue | Spacing;
+  paddingY?: DimensionValue | Spacing;
+  paddingX?: DimensionValue | Spacing;
   backgroundColor?: string;
   flex?: number;
+  borderRadius?: AnimatableNumericValue;
+  position?: 'absolute' | 'relative';
   style?: ViewStyle;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
@@ -24,6 +35,8 @@ export function Flex({
   align,
   justify,
   wrap,
+  gap,
+  padding,
   paddingX,
   paddingY,
   style,
@@ -38,8 +51,10 @@ export function Flex({
         alignItems: align,
         justifyContent: justify,
         flexWrap: wrap,
-        paddingHorizontal: paddingX,
-        paddingVertical: paddingY,
+        padding: spacingValue(padding),
+        paddingHorizontal: spacingValue(paddingX),
+        paddingVertical: spacingValue(paddingY),
+        gap: spacingValue(gap),
         ...style,
         ...otherProps,
       }}

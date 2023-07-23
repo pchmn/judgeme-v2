@@ -315,6 +315,9 @@ importers:
 
   packages/react-native:
     devDependencies:
+      '@kuzpot/core':
+        specifier: workspace:*
+        version: link:../core
       '@kuzpot/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

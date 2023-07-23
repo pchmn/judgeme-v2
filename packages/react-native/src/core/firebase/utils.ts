@@ -1,6 +1,5 @@
+import { Document } from '@kuzpot/core';
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
-
-import { DataWithId } from './types';
 
 type Data<T, Nullable> = Nullable extends true ? T | null : T;
 
@@ -15,5 +14,7 @@ export function getDataFromSnapshot<
     throw new Error('Document does not exist');
   }
 
-  return (data ? { ...data, id: snapshot.id } : data) as Data<DataWithId<T>, Nullable>;
+  return (
+    data ? { ...data, id: snapshot.id, createdAt: data.createdAt?.toDate(), updatedAt: data.updatedAt?.toDate() } : data
+  ) as Data<Document<T>, Nullable>;
 }
