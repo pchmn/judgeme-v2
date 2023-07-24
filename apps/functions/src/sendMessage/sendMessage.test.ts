@@ -1,8 +1,8 @@
+import { distanceBetween, formatDistance } from '@kuzpot/core';
 import { firestore } from 'firebase-admin';
 import { UserRecord } from 'firebase-admin/auth';
 import { Timestamp } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
-import { distanceBetween } from 'geofire-common';
 import { i18n } from 'src/i18n';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
@@ -99,7 +99,10 @@ describe('[sendMessage] Function', () => {
         },
       });
 
-    distance = distanceBetween([48.856614, 2.3522219], [48.10750068718423, -1.712865897767093]);
+    distance = distanceBetween(
+      new firestore.GeoPoint(48.856614, 2.3522219),
+      new firestore.GeoPoint(48.10750068718423, -1.712865897767093)
+    );
 
     data = {
       to: receiverUser.uid,
@@ -144,7 +147,7 @@ describe('[sendMessage] Function', () => {
     await wrapped({ data, auth });
 
     expect(sendAllSpy.mock.calls[0][0][0].notification?.title).toEqual('❤️ I love you');
-    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('en').from(distance));
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('en').from(formatDistance(distance)));
   });
 
   it('should use fr translation', async () => {
@@ -158,7 +161,7 @@ describe('[sendMessage] Function', () => {
     await wrapped({ data, auth });
 
     expect(sendAllSpy.mock.calls[0][0][0].notification?.title).toEqual("❤️ Je t'aime");
-    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('fr').from(distance));
+    expect(sendAllSpy.mock.calls[0][0][0].notification?.body).toEqual(i18n('fr').from(formatDistance(distance)));
   });
 
   it('should update statistics', async () => {

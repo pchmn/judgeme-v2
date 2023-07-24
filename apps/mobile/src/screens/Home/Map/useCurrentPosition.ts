@@ -1,4 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
+import { User } from '@kuzpot/core';
 import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kuzpot/react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
@@ -16,11 +16,8 @@ export function useCurrentPosition(storeLocation = true) {
   const locationSubscription = useRef<LocationSubscription>();
 
   const { data: currentUser } = useFirebaseAuthUser();
-  const { mutate } = useFirestoreSetDoc<UserDocument>();
-  const userRef = useMemo(
-    () => firestore().collection<UserDocument>('users').doc(currentUser?.uid),
-    [currentUser?.uid]
-  );
+  const { mutate } = useFirestoreSetDoc<User>();
+  const userRef = useMemo(() => firestore().collection<User>('users').doc(currentUser?.uid), [currentUser?.uid]);
 
   const storeCurrentPosition = useCallback(
     (location: LocationObjectCoords) => {

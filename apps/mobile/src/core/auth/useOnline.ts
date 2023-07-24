@@ -1,4 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
+import { User } from '@kuzpot/core';
 import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kuzpot/react-native';
 import firestore from '@react-native-firebase/firestore';
 import { useEffect } from 'react';
@@ -8,12 +8,12 @@ let didInit = false;
 
 export function useOnline() {
   const { data: currentUser } = useFirebaseAuthUser();
-  const { mutate } = useFirestoreSetDoc<UserDocument>();
+  const { mutate } = useFirestoreSetDoc<User>();
 
   useEffect(() => {
     const setOnlineStatus = (status: 'online' | 'offline') => {
       mutate({
-        ref: firestore().collection<UserDocument>('users').doc(currentUser?.uid),
+        ref: firestore().collection<User>('users').doc(currentUser?.uid),
         data: {
           status,
         },

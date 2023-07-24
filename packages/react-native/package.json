@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "peerDependencies": {
+    "@kuzpot/core": "workspace:*",
     "@pchmn/expo-material3-theme": "^1.3.1",
     "@react-navigation/native": "^6.1.1",
     "@tanstack/react-query": "^4.22.0",
@@ -19,6 +20,7 @@
     "react-native-shadow-2": "^7.0.7"
   },
   "devDependencies": {
+    "@kuzpot/core": "workspace:*",
     "@kuzpot/eslint-config": "workspace:*",
     "@kuzpot/tsconfig": "workspace:*",
     "@pchmn/expo-material3-theme": "^1.3.1",
