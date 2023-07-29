@@ -1,3 +1,6 @@
+import { Installation } from './installation';
+import { BaseModel } from './types';
+
 export interface DeviceInfo {
   name: string;
   os: string;
@@ -23,11 +26,21 @@ export interface MessageSent extends MessageHistory {
   to: string;
 }
 
-export interface GeoPoint {
+export interface LatLng {
   latitude: number;
   longitude: number;
 }
-export interface User {
+
+export class GeoPoint {
+  type = 'Point';
+  coordinates: [number, number];
+
+  constructor(coordinates: LatLng) {
+    this.coordinates = [coordinates.longitude, coordinates.latitude];
+  }
+}
+
+export interface Kuzer extends BaseModel {
   geohash: string;
   geopoint: GeoPoint;
   name: string;
@@ -44,4 +57,5 @@ export interface User {
     averageReceivedDistance: number;
     averageSentDistance: number;
   };
+  installations?: Installation[];
 }
