@@ -35,6 +35,7 @@ export async function initSecureStorage() {
       encryptionKey,
     });
   }
+  return storage;
 }
 
 export function isSecureStorageInitialized() {
