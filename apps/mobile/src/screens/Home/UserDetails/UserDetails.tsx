@@ -1,4 +1,4 @@
-import { Document, formatDistance, formatDistanceBetween, Message, User } from '@kuzpot/core';
+import { Document, formatDistance, formatDistanceBetween, Kuzer, Message } from '@kuzpot/core';
 import { Flex, Text, useAppTheme, useFirestoreQuery } from '@kuzpot/react-native';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/functions';
@@ -10,7 +10,7 @@ import { LayoutChangeEvent } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { IconButton, Menu, TouchableRipple } from 'react-native-paper';
 // import { Text } from 'react-native-paper';
-import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { SharedValue } from 'react-native-reanimated';
 
 import { InboxIcon } from './InboxIcon';
 import { SendIcon } from './SendIcon';
@@ -21,17 +21,15 @@ export function UserDetails({
   currentPosition,
   onLayout,
 }: {
-  user: Document<User>;
+  user: Kuzer;
   positionValue: SharedValue<number>;
   currentPosition?: LocationObjectCoords;
   onLayout?: (event: LayoutChangeEvent) => void;
 }) {
+  const [kuzer, setKuzer] = useState<Kuzer>(user);
   const { data: messages } = useFirestoreQuery<Message>(['messages'], firestore().collection('messages'));
 
   const { t } = useTranslation();
-
-  // console.log('position', position, insets, navbarHeight);
-  // console.log('user', user);
 
   const theme = useAppTheme();
   const [messageSelected, setMessageSelected] = useState<Document<Message>>();
@@ -44,14 +42,6 @@ export function UserDetails({
     console.log('result', result);
   };
 
-  const textStyle = useAnimatedStyle(() => {
-    const scale = interpolate(positionValue.value, [0, 1], [0.2, 0.9], Extrapolate.CLAMP);
-
-    return {
-      transform: [{ scale }],
-    };
-  });
-
   const [visible, setVisible] = useState(false);
 
   const openMenu = () => setVisible(true);
@@ -63,24 +53,24 @@ export function UserDetails({
       <Flex gap="xs">
         <Flex direction="row" align="baseline" gap="lg">
           <Flex direction="row" align="baseline" gap="sm">
-            <Text variant="titleMedium">{user.name}</Text>
+            <Text variant="titleMedium">{kuzer.name}</Text>
             {currentPosition && (
               <Text variant="bodySmall" color={theme.colors.outline}>
                 {t('homeScreen.userDetails.distance', {
-                  distance: formatDistanceBetween(currentPosition, user.geopoint),
+                  distance: formatDistanceBetween(currentPosition, kuzer.geopoint.coordinates),
                 })}
               </Text>
             )}
           </Flex>
           <Flex
-            backgroundColor={user.status === 'online' ? '#26A69A66' : colord(theme.colors.error).alpha(0.4).toHex()}
+            backgroundColor={kuzer.status === 'online' ? '#26A69A66' : colord(theme.colors.error).alpha(0.4).toHex()}
             align="center"
             justify="center"
             paddingX="xs"
             borderRadius={5}
           >
             <Text variant="bodySmall" color="#fff" fontSize={8} style={{ textTransform: 'uppercase' }}>
-              {user.status === 'online' ? t('homeScreen.userDetails.online') : t('homeScreen.userDetails.offline')}
+              {kuzer.status === 'online' ? t('homeScreen.userDetails.online') : t('homeScreen.userDetails.offline')}
             </Text>
           </Flex>
         </Flex>
@@ -89,8 +79,8 @@ export function UserDetails({
             <InboxIcon height={16} width={16} color={theme.colors.outline} />
             <Text variant="bodyMedium" color={theme.colors.outline}>
               {t('homeScreen.userDetails.receivedCount', {
-                count: user.messageStatistics.receivedTotalCount,
-                averageDistance: formatDistance(user.messageStatistics.averageReceivedDistance),
+                count: kuzer.messageStatistics.receivedTotalCount,
+                averageDistance: formatDistance(kuzer.messageStatistics.averageReceivedDistance),
               })}
             </Text>
           </Flex>
@@ -101,8 +91,8 @@ export function UserDetails({
             <SendIcon height={16} width={16} color={theme.colors.outline} />
             <Text variant="bodyMedium" color={theme.colors.outline}>
               {t('homeScreen.userDetails.sentCount', {
-                count: user.messageStatistics.sentTotalCount,
-                averageDistance: formatDistance(user.messageStatistics.averageSentDistance),
+                count: kuzer.messageStatistics.sentTotalCount,
+                averageDistance: formatDistance(kuzer.messageStatistics.averageSentDistance),
               })}
             </Text>
           </Flex>
@@ -115,7 +105,7 @@ export function UserDetails({
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex direction="row" gap="md">
-            {orderMessageStatistics(user.messageStatistics, messages)?.map(({ emoji, id }) => (
+            {orderMessageStatistics(kuzer.messageStatistics, messages)?.map(({ emoji, id }) => (
               <Flex
                 key={id}
                 direction="row"
@@ -126,7 +116,7 @@ export function UserDetails({
                 borderRadius={14}
               >
                 <Text variant="bodyLarge">{emoji}</Text>
-                <Text variant="bodyLarge">{user.messageStatistics.receivedCount[id] || 0}</Text>
+                <Text variant="bodyLarge">{kuzer.messageStatistics.receivedCount[id] || 0}</Text>
               </Flex>
             ))}
           </Flex>
@@ -252,7 +242,7 @@ export function UserDetails({
   );
 }
 
-function orderMessageStatistics(messageStatistics: User['messageStatistics'], messages?: Document<Message>[]) {
+function orderMessageStatistics(messageStatistics: Kuzer['messageStatistics'], messages?: Document<Message>[]) {
   return messages
     ?.map(({ id, emoji }) => ({
       id,

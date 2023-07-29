@@ -1,6 +1,7 @@
-import { DeviceInfo } from '@kuzpot/core';
+import { DeviceInfo, Installation } from '@kuzpot/core';
 import installations from '@react-native-firebase/installations';
 import messaging from '@react-native-firebase/messaging';
+import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
@@ -33,7 +34,7 @@ async function checkNotificationsPermission() {
   }
 }
 
-export async function getInstallationDevice(): Promise<InstallationDevice | undefined> {
+export async function getDeviceInstallation(): Promise<Partial<Installation>> {
   const installationId = await installations().getId();
   let pushToken: string | undefined;
   try {
@@ -42,12 +43,29 @@ export async function getInstallationDevice(): Promise<InstallationDevice | unde
     console.error('Error getting pushToken', err);
   }
   return {
-    [installationId]: {
-      name: `${Device.manufacturer} ${Device.modelName}`,
-      os: `${Device.osName}`,
-      osVersion: `${Device.osVersion}`,
-      pushToken: pushToken || '',
-      language: getDeviceLocale(),
-    },
+    id: installationId,
+    deviceName: `${Device.manufacturer} ${Device.modelName}`,
+    osName: Device.osName || undefined,
+    osVersion: Device.osVersion || undefined,
+    pushToken: pushToken || '',
+    appVersion: Application.nativeApplicationVersion || undefined,
+    appIdentifier: Application.applicationId || undefined,
+    deviceType: getDeviceType(Device.deviceType),
+    deviceLocale: getDeviceLocale(),
   };
+}
+
+function getDeviceType(expoDeviceType: Device.DeviceType | null) {
+  switch (expoDeviceType) {
+    case Device.DeviceType.PHONE:
+      return 'phone';
+    case Device.DeviceType.TABLET:
+      return 'tablet';
+    case Device.DeviceType.DESKTOP:
+      return 'desktop';
+    case Device.DeviceType.TV:
+      return 'tv';
+    default:
+      return undefined;
+  }
 }

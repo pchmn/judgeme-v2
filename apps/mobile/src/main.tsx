@@ -1,9 +1,8 @@
 import '@/core/i18n';
 
 import { initSecureStorage, isSecureStorageInitialized, UiProvider } from '@kuzpot/react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/functions';
+import { NhostClient, NhostProvider, NhostReactClientConstructorParams } from '@nhost/react';
+import { NhostApolloProvider } from '@nhost/react-apollo';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AndroidImportance, setNotificationChannelAsync } from 'expo-notifications';
 import { preventAutoHideAsync } from 'expo-splash-screen';
@@ -16,7 +15,7 @@ import App from './App';
 
 Sentry.init({
   dsn: 'https://2f1bdcf4041c4a1f8aae0f6950e15224@o4504771591274496.ingest.sentry.io/4504774174703616',
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: false,
   debug: __DEV__,
   // Fix error trace looping: https://github.com/getsentry/sentry-react-native/issues/2721#issuecomment-1380546718
   integrations: [
@@ -32,11 +31,21 @@ preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
+let nhostParams: NhostReactClientConstructorParams;
 if (__DEV__) {
-  firestore().useEmulator('192.168.1.10', 8080);
-  auth().useEmulator('http://192.168.1.10:9099');
-  firebase.app().functions('europe-west1').useEmulator('192.168.1.10', 5001);
+  nhostParams = {
+    authUrl: 'http://192.168.1.10:5050/auth',
+    graphqlUrl: 'http://192.168.1.10:5050/graphql',
+    storageUrl: 'http://192.168.1.10:5050/storage',
+    functionsUrl: 'http://192.168.1.10:5050/functions',
+  };
+} else {
+  nhostParams = {
+    region: process.env.EXPO_PUBLIC_NHOST_REGION,
+    subdomain: process.env.EXPO_PUBLIC_NHOST_SUBDOMAIN,
+  };
 }
+let nhost: NhostClient;
 
 if (Platform.OS === 'android') {
   setNotificationChannelAsync('Messages', {
@@ -53,7 +62,18 @@ export default function Main() {
   useEffect(() => {
     if (!isSecureStorageInitialized()) {
       initSecureStorage()
-        .then(() => setIsReady(true))
+        .then((storage) => {
+          nhost = new NhostClient({
+            ...nhostParams,
+            clientStorage: {
+              setItem: storage.set.bind(storage),
+              getItem: storage.getString.bind(storage),
+              removeItem: storage.delete.bind(storage),
+            },
+            clientStorageType: 'react-native',
+          });
+          setIsReady(true);
+        })
         .catch((err) => console.log('err', err));
     }
   }, []);
@@ -64,11 +84,15 @@ export default function Main() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UiProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <App />
-        </GestureHandlerRootView>
-      </UiProvider>
+      <NhostProvider nhost={nhost}>
+        <NhostApolloProvider nhost={nhost}>
+          <UiProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <App />
+            </GestureHandlerRootView>
+          </UiProvider>
+        </NhostApolloProvider>
+      </NhostProvider>
     </QueryClientProvider>
   );
 }

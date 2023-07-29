@@ -1,6 +1,6 @@
-import { User } from '@kuzpot/core';
-import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kuzpot/react-native';
-import firestore from '@react-native-firebase/firestore';
+import { GeoPoint, Kuzer, UPDATE_KUZER_MUTATION } from '@kuzpot/core';
+import { useUpdateMutation } from '@kuzpot/react-native';
+import { useUserData } from '@nhost/react';
 import {
   Accuracy,
   getLastKnownPositionAsync,
@@ -9,30 +9,26 @@ import {
   watchPositionAsync,
 } from 'expo-location';
 import { geohashForLocation } from 'geofire-common';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useCurrentPosition(storeLocation = true) {
   const [currentPosition, setCurrentPosition] = useState<LocationObjectCoords>();
   const locationSubscription = useRef<LocationSubscription>();
 
-  const { data: currentUser } = useFirebaseAuthUser();
-  const { mutate } = useFirestoreSetDoc<User>();
-  const userRef = useMemo(() => firestore().collection<User>('users').doc(currentUser?.uid), [currentUser?.uid]);
+  const userData = useUserData();
+  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER_MUTATION);
 
   const storeCurrentPosition = useCallback(
     (location: LocationObjectCoords) => {
       setCurrentPosition(location);
 
       const geohash = geohashForLocation([location.latitude, location.longitude]);
-      mutate({
-        ref: userRef,
-        data: {
-          geohash,
-          geopoint: new firestore.GeoPoint(location.latitude, location.longitude),
-        },
+      mutateUser(userData?.id, {
+        geohash,
+        geopoint: new GeoPoint(location),
       });
     },
-    [mutate, userRef]
+    [mutateUser, userData]
   );
 
   useEffect(() => {

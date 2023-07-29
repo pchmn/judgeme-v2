@@ -1,38 +1,35 @@
-import { User } from '@kuzpot/core';
-import { useFirebaseAuthUser, useFirestoreSetDoc } from '@kuzpot/react-native';
-import firestore from '@react-native-firebase/firestore';
+import { Kuzer, UPDATE_KUZER_MUTATION } from '@kuzpot/core';
+import { useUpdateMutation } from '@kuzpot/react-native';
+import { useUserData } from '@nhost/react';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
 let didInit = false;
 
 export function useOnline() {
-  const { data: currentUser } = useFirebaseAuthUser();
-  const { mutate } = useFirestoreSetDoc<User>();
+  const userData = useUserData();
+  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER_MUTATION);
 
   useEffect(() => {
+    if (!userData?.id) {
+      return;
+    }
+
     const setOnlineStatus = (status: 'online' | 'offline') => {
-      mutate({
-        ref: firestore().collection<User>('users').doc(currentUser?.uid),
-        data: {
-          status,
-        },
-      });
+      mutateUser(userData.id, { status });
     };
 
-    if (!didInit && currentUser?.uid) {
+    if (!didInit) {
       didInit = true;
       setOnlineStatus('online');
     }
 
     const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (currentUser?.uid) {
-        setOnlineStatus(nextAppState === 'active' ? 'online' : 'offline');
-      }
+      setOnlineStatus(nextAppState === 'active' ? 'online' : 'offline');
     });
 
     return () => {
       subscription.remove();
     };
-  }, [currentUser?.uid, mutate]);
+  }, [mutateUser, userData?.id]);
 }

@@ -1,59 +1,53 @@
-import { User } from '@kuzpot/core';
-import { useEffectOnce, useFirestoreSetDoc, useSignInAnonymously } from '@kuzpot/react-native';
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { useState } from 'react';
-import { ToastAndroid } from 'react-native';
+import { INSERT_KUZER_MUTATION, Kuzer } from '@kuzpot/core';
+import { useInsertMutation } from '@kuzpot/react-native';
+import { useAuthenticationStatus, useSignInAnonymous, useUserData } from '@nhost/react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useRegisterDevice } from './useRegisterDevice';
 
+let isInit = false;
+
 export function useAuth() {
-  const { mutate: signInAnonymously } = useSignInAnonymously();
-  const { mutate } = useFirestoreSetDoc<User>();
   const { register } = useRegisterDevice();
+
+  const { isAuthenticated, isLoading: authLoading } = useAuthenticationStatus();
+  const { signInAnonymous } = useSignInAnonymous();
+  const [mutateUser] = useInsertMutation<Kuzer>(INSERT_KUZER_MUTATION);
+  const userData = useUserData();
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const initUserData = (user: FirebaseAuthTypes.UserCredential) => {
-    if (user.additionalUserInfo?.isNewUser) {
-      mutate({
-        ref: firestore().collection<User>('users').doc(user.user.uid),
-        data: {
-          status: 'online',
-          messageStatistics: {
-            receivedCount: {},
-            receivedTotalCount: 0,
-            sentCount: {},
-            sentTotalCount: 0,
-            averageReceivedDistance: 0,
-            averageSentDistance: 0,
-          },
-        },
-        options: { isCreation: true },
+  const initUser = useCallback(
+    async (userId: string) => {
+      await mutateUser({
+        id: userId,
+        status: 'online',
       });
-    }
-  };
+    },
+    [mutateUser]
+  );
 
-  useEffectOnce(() => {
-    signInAnonymously(undefined, {
-      onSuccess: async (user) => {
-        initUserData(user);
-        try {
-          await register(user.user.uid);
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated && !isInit) {
+      signInAnonymous()
+        .then((user) => {
           setIsLoading(false);
-        } catch (err) {
+          if (user.user) {
+            initUser(user.user.id);
+            register(user.user.id);
+          }
+        })
+        .catch((err) => {
+          console.error('nhost err', err);
           setIsLoading(false);
-          console.error('err', err);
-          ToastAndroid.show('An error occurred', ToastAndroid.LONG);
-        }
-        // ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
-      },
-      onError: () => {
-        setIsLoading(false);
-        ToastAndroid.show('An error occurred', ToastAndroid.LONG);
-      },
-    });
-  });
+        });
+      isInit = true;
+    } else if (!isInit && !authLoading && isAuthenticated && userData?.id) {
+      isInit = true;
+      setIsLoading(false);
+      register(userData?.id);
+    }
+  }, [authLoading, initUser, isAuthenticated, signInAnonymous, userData?.id, register]);
 
   return { isLoading };
 }
