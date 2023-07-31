@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  kuzpot
+
+  Sample SAM Template for kuzpot
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  SendMessageFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/send-message
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          NHOST_JWT_SECRET: secret
+          NHOST_ADMIN_SECRET: secret
+          NHOST_AUTH_URL: url
+          NHOST_GRAPHQL_URL: url
+          NHOST_STORAGE_URL: url
+          NHOST_FUNCTIONS_URL: url
+          FIREBASE_SERVICE_ACCOUNT_KEY: url
+      Events:
+        SendMessage:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Auth:
+            Authorizer: 'NONE'
+          Properties:
+            Path: /send-message
+            Method: post
