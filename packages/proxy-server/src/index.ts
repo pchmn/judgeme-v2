@@ -4,12 +4,12 @@ import { createProxyServer } from 'http-proxy';
 const proxy = createProxyServer({ changeOrigin: true });
 
 const nHostUrls = {
-  wsGraphql: 'wss://local.hasura.nhost.run',
-  graphql: 'https://local.graphql.nhost.run',
-  auth: 'https://local.auth.nhost.run',
-  storage: 'https://local.storage.nhost.run',
-  functions: 'http://127.0.0.1:3000',
-  mailhog: 'https://local.mailhog.nhost.run',
+  wsGraphql: 'wss://local.hasura.nhost.run/v1',
+  graphql: 'https://local.graphql.nhost.run/v1',
+  auth: 'https://local.auth.nhost.run/v1',
+  storage: 'https://local.storage.nhost.run/v1',
+  functions: 'https://local.functions.nhost.run/v1',
+  mailhog: 'https://local.mailhog.nhost.run/v1',
   // Access to dashboards
   hasura: 'https://local.hasura.nhost.run',
   dashboard: 'https://local.dashboard.nhost.run',
@@ -17,7 +17,7 @@ const nHostUrls = {
 
 // Http proxy
 const server = createServer((req, res) => {
-  const nhostService = req.url?.split('/')[2];
+  const nhostService = req.url?.split('/')[1];
 
   if (!nhostService) {
     res.writeHead(404);
