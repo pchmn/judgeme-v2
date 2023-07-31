@@ -34,10 +34,7 @@ const queryClient = new QueryClient();
 let nhostParams: NhostReactClientConstructorParams;
 if (__DEV__) {
   nhostParams = {
-    authUrl: 'http://192.168.1.10:5050/auth',
-    graphqlUrl: 'http://192.168.1.10:5050/graphql',
-    storageUrl: 'http://192.168.1.10:5050/storage',
-    functionsUrl: 'http://192.168.1.10:5050/functions',
+    backendUrl: 'http://192.168.1.10:5050',
   };
 } else {
   nhostParams = {
