@@ -1,0 +1,3 @@
+table:
+  name: nearby_users
+  schema: public

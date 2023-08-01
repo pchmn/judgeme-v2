@@ -1,0 +1,23 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- CREATE OR REPLACE FUNCTION updatedAt() RETURNS trigger AS
+-- $$
+-- BEGIN
+--   NEW."updatedAt" := now();
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE 'plpgsql';
+--
+-- DO $$
+-- DECLARE
+--     t text;
+-- BEGIN
+--     FOR t IN
+--         SELECT table_name FROM information_schema.columns WHERE column_name = 'updatedAt'
+--     LOOP
+--         EXECUTE format('CREATE TRIGGER updatedAt
+--                     BEFORE UPDATE ON %I
+--                     FOR EACH ROW EXECUTE PROCEDURE updatedAt()', t,t);
+--     END loop;
+-- END;
+-- $$ language 'plpgsql';

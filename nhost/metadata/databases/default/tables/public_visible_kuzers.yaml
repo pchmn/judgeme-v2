@@ -1,0 +1,16 @@
+table:
+  name: visible_kuzers
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - name
+        - status
+        - messageStatistics
+        - geopoint
+        - createdAt
+        - updatedAt
+        - lastOnline
+      filter: {}

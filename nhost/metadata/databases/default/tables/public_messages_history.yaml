@@ -1,0 +1,54 @@
+table:
+  name: messages_history
+  schema: public
+configuration:
+  column_config:
+    from_kuzer_id:
+      custom_name: fromId
+    message_id:
+      custom_name: messageId
+    to_kuzer_id:
+      custom_name: toId
+  custom_column_names:
+    from_kuzer_id: fromId
+    message_id: messageId
+    to_kuzer_id: toId
+  custom_root_fields: {}
+object_relationships:
+  - name: from
+    using:
+      manual_configuration:
+        column_mapping:
+          from_kuzer_id: id
+        insertion_order: null
+        remote_table:
+          name: kuzers
+          schema: public
+  - name: message
+    using:
+      foreign_key_constraint_on: message_id
+  - name: to
+    using:
+      manual_configuration:
+        column_mapping:
+          to_kuzer_id: id
+        insertion_order: null
+        remote_table:
+          name: kuzers
+          schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - message_id
+        - distance
+        - sentAt
+        - createdAt
+        - updatedAt
+      filter:
+        _or:
+          - from_kuzer_id:
+              _eq: X-Hasura-User-Id
+          - to_kuzer_id:
+              _eq: X-Hasura-User-Id

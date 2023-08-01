@@ -1,0 +1,3 @@
+table:
+  name: kuzer_nearby_kuzers
+  schema: public

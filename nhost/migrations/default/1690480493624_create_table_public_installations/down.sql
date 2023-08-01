@@ -1,0 +1,5 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- CREATE TABLE public.installations (id uuid NOT NULL, "deviceName" varchar, "osName" varchar, "osVersion" varchar, "pushToken" varchar NOT NULL, "isActive" bool DEFAULT 'true' NOT NULL, kuzer_id uuid NOT NULL, "appVersion" varchar NOT NULL, "appIdentifier" varchar NOT NULL, "deviceType" varchar NOT NULL, "deviceLocale" varchar NOT NULL, "createdAt" timestamptz DEFAULT now() NOT NULL, "updatedAt" timestamptz DEFAULT now() NOT NULL, PRIMARY KEY ("id", "kuzer_id"), FOREIGN KEY (kuzer_id) REFERENCES public.kuzers (id) ON UPDATE RESTRICT ON DELETE RESTRICT);
+--
+-- CREATE INDEX installations_kuzer_id_index ON installations (kuzer_id);

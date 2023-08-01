@@ -1,0 +1,52 @@
+table:
+  name: nearby_kuzers
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - name
+        - status
+        - messageStatistics
+        - geopoint
+        - createdAt
+        - updatedAt
+        - lastOnline
+      filter: {}
+  - role: me
+    permission:
+      columns:
+        - id
+        - name
+        - status
+        - messageStatistics
+        - geopoint
+        - createdAt
+        - updatedAt
+        - lastOnline
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - id
+        - name
+        - status
+        - messageStatistics
+        - geopoint
+        - createdAt
+        - updatedAt
+        - lastOnline
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - id
+        - name
+        - status
+        - messageStatistics
+        - geopoint
+        - createdAt
+        - updatedAt
+        - lastOnline
+      filter: {}

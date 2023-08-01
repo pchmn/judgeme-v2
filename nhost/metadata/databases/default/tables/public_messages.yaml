@@ -1,0 +1,12 @@
+table:
+  name: messages
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - slug
+        - emoji
+        - translations
+      filter: {}
