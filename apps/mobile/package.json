@@ -80,6 +80,7 @@
     "babel-preset-expo": "~9.5.0",
     "dotenv": "^16.0.3",
     "expo-build-properties": "~0.8.3",
+    "tslib": "^2.6.1",
     "typescript": "^5.1.6"
   },
   "expo": {
