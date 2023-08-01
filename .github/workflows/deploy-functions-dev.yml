@@ -1,4 +1,4 @@
-name: Deploy Firebase Functions to Dev
+name: Deploy Lambda Functions to Dev
 
 on:
   pull_request:
