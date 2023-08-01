@@ -9,8 +9,8 @@ on:
       - ready_for_review
     paths:
       - "apps/functions/**"
+      - "packages/core/**"
       - ".github/workflows/deploy-functions-dev.yml"
-      - "firebase.json"
 
 jobs:
   changes:
@@ -26,7 +26,9 @@ jobs:
           since_last_remote_commit: true
           files: |
             apps/functions/**
+            packages/core/**
             .github/workflows/deploy-functions-dev.yml
+            pnpm-lock.yaml
 
   deploy:
     name: 🚀 Deploy Functions
