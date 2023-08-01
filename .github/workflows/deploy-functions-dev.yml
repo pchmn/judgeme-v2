@@ -54,7 +54,7 @@ jobs:
 
       - name: 🚀 Deploy functions to kuzpot-dev
         working-directory:  apps/functions
-        run: pnpm run deploy --config-env dev
+        run: pnpm deploy:dev
 
       # - name: 🏗 Setup firebase CLI
       #   uses: pchmn/firebase-cli-github-action@main
