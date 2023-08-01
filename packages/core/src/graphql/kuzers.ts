@@ -1,6 +1,6 @@
 export const INSERT_KUZER_MUTATION = `
-  mutation insert_kuzers_one($id: uuid!, $status: String!) {
-    insert_kuzers_one(object: { id: $id, status: $status }) {
+  mutation insert_kuzers_one($data: kuzers_insert_input!) {
+    insert_kuzers_one(object: $data, on_conflict: { constraint: kuzers_pkey, update_columns: [status] }) {
       id
       status
     }
@@ -15,9 +15,9 @@ export const UPDATE_KUZER_MUTATION = `
   }
 `;
 
-export const SEARCH_NEARBY_KUZERS = `
- subscription search_nearby_kuzers($minLat: float8!, $minLong: float8!, $maxLat: float8!, $maxLong: float8!) {
-  search_nearby_kuzers(args: {min_lat: $minLat, min_long: $minLong, max_lat: $maxLat, max_long: $maxLong}) {
+export const SEARCH_VISIBLE_KUZERS = `
+ subscription search_visible_kuzers($minLat: float8!, $minLong: float8!, $maxLat: float8!, $maxLong: float8!) {
+  search_visible_kuzers(args: {min_lat: $minLat, min_long: $minLong, max_lat: $maxLat, max_long: $maxLong}) {
     id
     name
     geopoint
@@ -30,13 +30,17 @@ export const SEARCH_NEARBY_KUZERS = `
  }
 `;
 
-export const QUERY_KUZERS = `
- query kuzers {
-  kuzers {
+export const SELECT_KUZER_BY_ID = `
+ query kuzers_by_pk($id: uuid!) {
+  kuzers_by_pk(id: $id) {
     id
     geopoint
     status
     messageStatistics
+    installations {
+      pushToken
+      deviceLocale
+    }
     createdAt
     updatedAt
   }

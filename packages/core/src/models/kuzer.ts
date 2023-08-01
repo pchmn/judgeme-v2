@@ -26,9 +26,14 @@ export interface MessageSent extends MessageHistory {
   to: string;
 }
 
-export interface LatLng {
+export class LatLng {
   latitude: number;
   longitude: number;
+
+  constructor(coordinates: [number, number]) {
+    this.longitude = coordinates[0];
+    this.latitude = coordinates[1];
+  }
 }
 
 export class GeoPoint {
@@ -39,7 +44,6 @@ export class GeoPoint {
     this.coordinates = [coordinates.longitude, coordinates.latitude];
   }
 }
-
 export interface Kuzer extends BaseModel {
   geohash: string;
   geopoint: GeoPoint;

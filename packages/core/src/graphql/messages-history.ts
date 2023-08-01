@@ -33,3 +33,11 @@ export const SELECT_MESSAGES_SENT = `
     }
   }
 `;
+
+export const INSERT_MESSAGE_HISTORY = `
+  mutation insert_messages_history_one($data: messages_history_insert_input!) {
+    insert_messages_history_one(object: $data) {
+      id
+    }
+  }
+`;
