@@ -10,10 +10,19 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  Environment:
+    Type: String
+    Default: local
+  Stage:
+    Type: String
+    Default: local
+
 Resources:
   SendMessageFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      FunctionName: !Sub kuzpot-${Environment}-send-message
       CodeUri: dist/send-message
       Handler: index.handler
       Runtime: nodejs18.x
@@ -36,3 +45,9 @@ Resources:
           Properties:
             Path: /send-message
             Method: post
+            RestApiId: !Ref ApiDeployment
+
+  ApiDeployment:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Sub ${Stage}

@@ -16,8 +16,10 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "predeploy": "pnpm remove -D @kuzpot/core @kuzpot/tsconfig @kuzpot/eslint-config",
-    "deploy": "firebase deploy --only functions",
+    "predeploy": "pnpm build",
+    "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
+    "deploy:dev": "pnpm run deploy --config-env dev",
+    "deploy:prod": "pnpm run deploy --config-env prod",
     "logs": "firebase functions:log"
   },
   "dependencies": {
