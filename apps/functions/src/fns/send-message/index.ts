@@ -18,8 +18,6 @@ import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 import { getLocaleWithouRegionCode, i18n } from '../../i18n/i18n.js';
 import { validateRequest } from '../../utils/validateRequest.js';
 
-console.log(`\n${JSON.stringify(process.env, null, 2)}\n`);
-
 const app = initializeApp({
   credential: credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY || '')),
 });
@@ -78,7 +76,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
 
   const newSenderStatistics = { ...sender.kuzers_by_pk.messageStatistics };
   newSenderStatistics.sentCount[message.messages_by_pk.id] =
-    newSenderStatistics.sentCount[message.messages_by_pk.id] || 0 + 1;
+    (newSenderStatistics.sentCount[message.messages_by_pk.id] ?? 0) + 1;
   newSenderStatistics.sentTotalCount = newSenderStatistics.sentTotalCount + 1;
   newSenderStatistics.averageSentDistance =
     (newSenderStatistics.averageSentDistance * newSenderStatistics.sentTotalCount + distance) /
@@ -92,7 +90,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
 
   const newReceiverStatistics = { ...receiver.kuzers_by_pk.messageStatistics };
   newReceiverStatistics.receivedCount[message.messages_by_pk.id] =
-    newReceiverStatistics.receivedCount[message.messages_by_pk.id] || 0 + 1;
+    (newReceiverStatistics.receivedCount[message.messages_by_pk.id] ?? 0) + 1;
   newReceiverStatistics.receivedTotalCount = newReceiverStatistics.receivedTotalCount + 1;
   newReceiverStatistics.averageReceivedDistance =
     (newReceiverStatistics.averageReceivedDistance * newReceiverStatistics.receivedTotalCount + distance) /

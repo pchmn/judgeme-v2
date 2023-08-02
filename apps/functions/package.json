@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "pnpm clean && esbuild src/fns/*/index.ts --bundle --minify --platform=node --target=node18 --outdir=dist --outbase=src/fns --sourcemap",
-    "dev": "pnpm build --watch=forever | sam local start-api -n env.json 2>&1 | tr \"\\r\" \"\\n\"",
+    "dev": "pnpm build --watch=forever | dotenv sam local start-api",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
