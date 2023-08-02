@@ -9,10 +9,10 @@
       "dependsOn": ["^build"]
     },
     "@kuzpot/functions#deploy:dev": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["@kuzpot/functions#build"]
     },
     "@kuzpot/functions#deploy:prod": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["@kuzpot/functions#build"]
     }
   }
 }
