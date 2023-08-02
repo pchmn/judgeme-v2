@@ -52,8 +52,8 @@ select_permissions:
         - status
         - createdAt
         - updatedAt
-        - name
         - lastOnline
+        - name
       filter: {}
 update_permissions:
   - role: anonymous
