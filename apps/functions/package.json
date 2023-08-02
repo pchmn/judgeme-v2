@@ -12,11 +12,10 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build": "pnpm clean && esbuild src/fns/*/index.ts --bundle --minify --platform=node --target=node18 --outdir=dist --outbase=src/fns --sourcemap",
-    "dev": "pnpm build --watch | sam local start-api -n env.json 2>&1 | tr \"\\r\" \"\\n\"",
+    "dev": "pnpm build --watch=forever | sam local start-api -n env.json 2>&1 | tr \"\\r\" \"\\n\"",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "predeploy": "pnpm build",
     "deploy": "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset",
     "deploy:dev": "pnpm run deploy --config-env dev",
     "deploy:prod": "pnpm run deploy --config-env prod",

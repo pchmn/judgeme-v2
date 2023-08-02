@@ -13,27 +13,8 @@ on:
       - ".github/workflows/deploy-functions-dev.yml"
 
 jobs:
-  changes:
-    name: 📂 Check for changes
-    runs-on: ubuntu-latest
-    outputs:
-      shouldRun: ${{ steps.filter.outputs.any_changed }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: tj-actions/changed-files@v37
-        id: filter
-        with:
-          since_last_remote_commit: true
-          files: |
-            apps/functions/**
-            packages/core/**
-            .github/workflows/deploy-functions-dev.yml
-            pnpm-lock.yaml
-
   deploy:
     name: 🚀 Deploy Functions
-    needs: changes
-    if: needs.changes.outputs.shouldRun == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -54,9 +35,8 @@ jobs:
         with:
           use-installer: true
 
-      - name: 🚀 Deploy functions to kuzpot-dev
-        working-directory:  apps/functions
-        run: pnpm deploy:dev
+      - name: 🚀 Deploy Functions to kuzpot-dev
+        run: pnpm deploy:functions:dev
 
       # - name: 🏗 Setup firebase CLI
       #   uses: pchmn/firebase-cli-github-action@main

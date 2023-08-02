@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "expo start",
     "dev:client": "expo start --dev-client",
     "prebuild": "expo prebuild",
     "prebuild:clean": "pnpm run prebuild --clean",
