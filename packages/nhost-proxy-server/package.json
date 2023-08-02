@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "dev": "esr src/index.ts",
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node18.0 --outfile=dist/index.js"
   },
   "keywords": [],
@@ -15,7 +15,7 @@
     "@kuzpot/tsconfig": "workspace:*",
     "@types/http-proxy": "^1.17.11",
     "@types/node": "^20.4.4",
-    "ts-node": "^10.9.1",
+    "esbuild-runner": "^2.2.2",
     "typescript": "^5.1.6"
   },
   "dependencies": {

@@ -38,4 +38,4 @@ server.on('upgrade', (req, socket, head) => {
 });
 
 server.listen(5050);
-console.log('listening on port 5050');
+console.log(`nhost-proxy-server listening on port 5050`);
