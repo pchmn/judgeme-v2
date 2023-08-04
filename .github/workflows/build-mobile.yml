@@ -44,10 +44,10 @@ jobs:
       - name: 🏗 Set nhost urls
         working-directory: apps/mobile
         run: |
-          sed -i 's/<NHOST_AUTH_URL_DEV>/${{ secrets.NHOST_AUTH_URL_DEV }}/g' eas.json
-          sed -i 's/<NHOST_GRAPHQL_URL_DEV>/${{ secrets.NHOST_GRAPHQL_URL_DEV }}/g' eas.json
-          sed -i 's/<NHOST_STORAGE_URL_DEV>/${{ secrets.NHOST_STORAGE_URL_DEV }}/g' eas.json
-          sed -i 's/<NHOST_FUNCTIONS_URL_DEV>/${{ secrets.NHOST_FUNCTIONS_URL_DEV }}/g' eas.json
+          sed -i 's@<NHOST_AUTH_URL_DEV>@${{ secrets.NHOST_AUTH_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_GRAPHQL_URL_DEV>@${{ secrets.NHOST_GRAPHQL_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_STORAGE_URL_DEV>@${{ secrets.NHOST_STORAGE_URL_DEV }}@g' eas.json
+          sed -i 's@<NHOST_FUNCTIONS_URL_DEV>@${{ secrets.NHOST_FUNCTIONS_URL_DEV }}@g' eas.json
 
       - name: 🔨 EAS build
         working-directory: apps/mobile
