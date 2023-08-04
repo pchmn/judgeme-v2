@@ -14,8 +14,8 @@ import * as Sentry from 'sentry-expo';
 import App from './App';
 
 Sentry.init({
-  dsn: 'https://2f1bdcf4041c4a1f8aae0f6950e15224@o4504771591274496.ingest.sentry.io/4504774174703616',
-  enableInExpoDevelopment: false,
+  dsn: 'https://0368298f84c04a78ac460d9ea7cd4c2c@o4504771591274496.ingest.sentry.io/4505024782008320',
+  enableInExpoDevelopment: true,
   debug: __DEV__,
   // Fix error trace looping: https://github.com/getsentry/sentry-react-native/issues/2721#issuecomment-1380546718
   integrations: [
@@ -38,6 +38,8 @@ const nhostParams = {
   functionsUrl: process.env.EXPO_PUBLIC_NHOST_FUNCTIONS_URL,
 };
 let nhost: NhostClient;
+
+Sentry.Native.captureMessage(`NHOST params: ${JSON.stringify(nhostParams, null, 2)}`);
 
 if (Platform.OS === 'android') {
   setNotificationChannelAsync('Messages', {
@@ -65,8 +67,10 @@ export default function Main() {
             clientStorageType: 'react-native',
           });
           setIsReady(true);
+
+          Sentry.Native.captureMessage('Secure storage initialized');
         })
-        .catch((err) => console.log('err', err));
+        .catch((err) => Sentry.Native.captureException(err));
     }
   }, []);
 
