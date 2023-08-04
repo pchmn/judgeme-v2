@@ -1,4 +1,4 @@
-export const SELECT_MESSAGES = `
+export const SUBSCRIBE_MESSAGES = `
   subscription messages {
     messages {
       emoji

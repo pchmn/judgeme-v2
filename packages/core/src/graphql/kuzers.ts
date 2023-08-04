@@ -1,4 +1,4 @@
-export const INSERT_KUZER_MUTATION = `
+export const INSERT_KUZER = `
   mutation insert_kuzers_one($data: kuzers_insert_input!) {
     insert_kuzers_one(object: $data, on_conflict: { constraint: kuzers_pkey, update_columns: [status] }) {
       id
@@ -7,7 +7,7 @@ export const INSERT_KUZER_MUTATION = `
   }
 `;
 
-export const UPDATE_KUZER_MUTATION = `
+export const UPDATE_KUZER = `
   mutation update_kuzers_by_pk($id: uuid!, $data: kuzers_set_input!) {
     update_kuzers_by_pk(pk_columns: { id: $id }, _set: $data) {
       id
@@ -45,4 +45,19 @@ export const SELECT_KUZER_BY_ID = `
     updatedAt
   }
  }
+`;
+
+export const SUBSCRIBE_KUZER_BY_ID = `
+  subscription kuzers_by_pk($id: uuid!) {
+    kuzers_by_pk(id: $id) {
+      id
+      geopoint
+      status
+      messageStatistics
+      createdAt
+      updatedAt
+      lastOnline
+      name
+    }
+  }
 `;
