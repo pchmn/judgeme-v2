@@ -1,4 +1,4 @@
-import { INSERT_KUZER_MUTATION, Kuzer } from '@kuzpot/core';
+import { INSERT_KUZER, Kuzer } from '@kuzpot/core';
 import { useInsertMutation } from '@kuzpot/react-native';
 import { useAuthenticationStatus, useSignInAnonymous, useUserData } from '@nhost/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -12,29 +12,33 @@ export function useAuth() {
 
   const { isAuthenticated, isLoading: authLoading } = useAuthenticationStatus();
   const { signInAnonymous } = useSignInAnonymous();
-  const [mutateUser] = useInsertMutation<Kuzer>(INSERT_KUZER_MUTATION);
+  const [mutateUser] = useInsertMutation<Kuzer>(INSERT_KUZER);
   const userData = useUserData();
 
   const [isLoading, setIsLoading] = useState(true);
 
   const initUser = useCallback(
     async (userId: string) => {
-      await mutateUser({
-        id: userId,
-        status: 'online',
-      });
+      try {
+        await mutateUser({
+          id: userId,
+          status: 'online',
+        });
+        await register(userId);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+      }
     },
-    [mutateUser]
+    [mutateUser, register]
   );
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated && !isInit) {
       signInAnonymous()
         .then((user) => {
-          setIsLoading(false);
           if (user.user) {
             initUser(user.user.id);
-            register(user.user.id);
           }
         })
         .catch((err) => {
@@ -43,9 +47,8 @@ export function useAuth() {
         });
       isInit = true;
     } else if (!isInit && !authLoading && isAuthenticated && userData?.id) {
+      initUser(userData.id);
       isInit = true;
-      setIsLoading(false);
-      register(userData?.id);
     }
   }, [authLoading, initUser, isAuthenticated, signInAnonymous, userData?.id, register]);
 

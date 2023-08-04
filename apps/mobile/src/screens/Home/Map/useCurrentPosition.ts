@@ -1,4 +1,4 @@
-import { GeoPoint, Kuzer, UPDATE_KUZER_MUTATION } from '@kuzpot/core';
+import { GeoPoint, Kuzer, UPDATE_KUZER } from '@kuzpot/core';
 import { useUpdateMutation } from '@kuzpot/react-native';
 import { useUserData } from '@nhost/react';
 import {
@@ -16,7 +16,7 @@ export function useCurrentPosition(storeLocation = true) {
   const locationSubscription = useRef<LocationSubscription>();
 
   const userData = useUserData();
-  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER_MUTATION);
+  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER);
 
   const storeCurrentPosition = useCallback(
     (location: LocationObjectCoords) => {

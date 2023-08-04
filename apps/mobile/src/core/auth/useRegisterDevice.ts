@@ -1,4 +1,4 @@
-import { Installation, UPSERT_INSTALLATION_MUTATION } from '@kuzpot/core';
+import { Installation, UPSERT_INSTALLATION } from '@kuzpot/core';
 import { useEffectOnce, useInsertMutation } from '@kuzpot/react-native';
 import { useUserData } from '@nhost/react';
 import messaging from '@react-native-firebase/messaging';
@@ -15,7 +15,7 @@ function areStoredDataOutdated(storedData: InstallationDevice | undefined, actua
 
 export function useRegisterDevice() {
   const userData = useUserData();
-  const [upsert] = useInsertMutation<Installation>(UPSERT_INSTALLATION_MUTATION);
+  const [upsert] = useInsertMutation<Installation>(UPSERT_INSTALLATION);
 
   const register = useCallback(
     async (userId: string) => {

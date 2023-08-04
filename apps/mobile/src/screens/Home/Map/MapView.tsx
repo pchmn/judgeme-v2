@@ -10,11 +10,11 @@ import { useSharedValue } from 'react-native-reanimated';
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
-import { UserDetails } from '../UserDetails/UserDetails';
+import { KuzerDetails } from '../UserDetails/KuzerDetails';
 import { themedMapStyle } from './mapStyle';
 import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
-import { useNearbyKuzers } from './useNearbyKuzers';
+import { GeoQueryOptions, useNearbyKuzers } from './useNearbyKuzers';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -33,12 +33,7 @@ export function MapView() {
 
   const [tracksViewChanges, setTracksViewChanges] = useState(false);
 
-  const [mapBoundaries, setMapBoundaries] = useState<{
-    minLat: number;
-    minLong: number;
-    maxLat: number;
-    maxLong: number;
-  }>({
+  const [mapBoundaries, setMapBoundaries] = useState<GeoQueryOptions>({
     minLat: 0,
     minLong: 0,
     maxLat: 0,
@@ -46,15 +41,13 @@ export function MapView() {
   });
   const { data: kuzers, loading, error } = useNearbyKuzers(mapBoundaries);
   const [kuzerSelectedId, setKuzerSelectedId] = useState<string>();
-  const kuzerSelected = useMemo(() => {
-    if (kuzerSelectedId) {
-      return kuzers?.find(({ id }) => id === kuzerSelectedId);
-    }
-    return kuzers ? kuzers[0] : undefined;
-  }, [kuzers, kuzerSelectedId]);
 
   const bottomSheetRef = useRef<BottomSheetRefProps>(null);
   const [userDetailsHeight, setUserDetailsHeight] = useState(0);
+
+  if (!!kuzers?.length && !kuzerSelectedId && !userDetailsHeight) {
+    setKuzerSelectedId(kuzers[0].id);
+  }
 
   useEffect(() => {
     setTracksViewChanges(true);
@@ -125,25 +118,33 @@ export function MapView() {
 
   const handleBottomSheetIndexChange = useCallback(
     async (index: number, positionY: number) => {
-      if (index === 1 && kuzerSelected) {
-        const currentCenter = SCREEN_HEIGHT / 2;
-        const userPosition = await mapRef.current?.pointForCoordinate({
-          latitude: kuzerSelected.geopoint.coordinates[1],
-          longitude: kuzerSelected.geopoint.coordinates[0],
-        });
-        if (userPosition && userPosition.y >= positionY - 20) {
-          const distance = positionY / 2 - userPosition.y;
-
-          const coordinate = await mapRef.current?.coordinateForPoint({
-            x: userPosition.x,
-            y: currentCenter - distance,
+      if (index === 1 && kuzerSelectedId) {
+        const kuzerSelected = kuzers?.find(({ id }) => id === kuzerSelectedId);
+        if (kuzerSelected) {
+          const currentCenter = SCREEN_HEIGHT / 2;
+          const userPosition = await mapRef.current?.pointForCoordinate({
+            latitude: kuzerSelected.geopoint.coordinates[1],
+            longitude: kuzerSelected.geopoint.coordinates[0],
           });
-          animateToLocation(coordinate, 500);
+          if (userPosition && userPosition.y >= positionY - 20) {
+            const distance = positionY / 2 - userPosition.y;
+
+            const coordinate = await mapRef.current?.coordinateForPoint({
+              x: userPosition.x,
+              y: currentCenter - distance,
+            });
+            animateToLocation(coordinate, 500);
+          }
         }
       }
     },
-    [animateToLocation, kuzerSelected]
+    [animateToLocation, kuzerSelectedId, kuzers]
   );
+
+  const handleCloseBottomSheet = () => {
+    bottomSheetRef.current?.close();
+    setKuzerSelectedId(undefined);
+  };
 
   useEffect(() => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
@@ -171,8 +172,8 @@ export function MapView() {
         showsMyLocationButton={false}
         moveOnMarkerPress={false}
         showsCompass={false}
-        onPress={() => bottomSheetRef.current?.close()}
-        onPoiClick={() => bottomSheetRef.current?.close()}
+        onPress={handleCloseBottomSheet}
+        onPoiClick={handleCloseBottomSheet}
       >
         {kuzers?.map(({ id, geopoint }) => {
           return (
@@ -182,7 +183,10 @@ export function MapView() {
                 latitude: geopoint.coordinates[1],
                 longitude: geopoint.coordinates[0],
               }}
-              onPress={() => handleMarkerPressed(id)}
+              onPress={(event) => {
+                event.stopPropagation();
+                handleMarkerPressed(id);
+              }}
               tracksViewChanges={tracksViewChanges}
             >
               <MarkerImage />
@@ -202,13 +206,18 @@ export function MapView() {
         positionValue={positionValue}
         snapPoint={userDetailsHeight}
       >
-        {kuzerSelected && (
-          <UserDetails
-            key={kuzerSelected.id}
-            user={kuzerSelected}
+        {kuzerSelectedId && (
+          <KuzerDetails
+            key={kuzerSelectedId}
+            id={kuzerSelectedId}
             currentPosition={currentPosition}
             positionValue={positionValue}
-            onLayout={({ nativeEvent: { layout } }) => setUserDetailsHeight(layout.height)}
+            onLayout={({ nativeEvent: { layout } }) => {
+              if (userDetailsHeight === 0) {
+                setUserDetailsHeight(layout.height);
+                setKuzerSelectedId(undefined);
+              }
+            }}
           />
         )}
       </BottomSheet>

@@ -1,4 +1,4 @@
-import { Kuzer, UPDATE_KUZER_MUTATION } from '@kuzpot/core';
+import { Kuzer, UPDATE_KUZER } from '@kuzpot/core';
 import { useUpdateMutation } from '@kuzpot/react-native';
 import { useUserData } from '@nhost/react';
 import { useEffect } from 'react';
@@ -8,7 +8,7 @@ let didInit = false;
 
 export function useOnline() {
   const userData = useUserData();
-  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER_MUTATION);
+  const [mutateUser] = useUpdateMutation<Kuzer>(UPDATE_KUZER);
 
   useEffect(() => {
     if (!userData?.id) {

@@ -39,20 +39,21 @@ export async function getDeviceInstallation(): Promise<Partial<Installation>> {
   let pushToken: string | undefined;
   try {
     pushToken = await messaging().getToken();
+    return {
+      id: installationId,
+      deviceName: `${Device.manufacturer} ${Device.modelName}`,
+      osName: Device.osName || undefined,
+      osVersion: Device.osVersion || undefined,
+      pushToken: pushToken,
+      appVersion: Application.nativeApplicationVersion || undefined,
+      appIdentifier: Application.applicationId || undefined,
+      deviceType: getDeviceType(Device.deviceType),
+      deviceLocale: getDeviceLocale(),
+    };
   } catch (err) {
     console.error('Error getting pushToken', err);
+    throw err;
   }
-  return {
-    id: installationId,
-    deviceName: `${Device.manufacturer} ${Device.modelName}`,
-    osName: Device.osName || undefined,
-    osVersion: Device.osVersion || undefined,
-    pushToken: pushToken || '',
-    appVersion: Application.nativeApplicationVersion || undefined,
-    appIdentifier: Application.applicationId || undefined,
-    deviceType: getDeviceType(Device.deviceType),
-    deviceLocale: getDeviceLocale(),
-  };
 }
 
 function getDeviceType(expoDeviceType: Device.DeviceType | null) {
