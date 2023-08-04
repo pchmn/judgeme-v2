@@ -32,6 +32,11 @@ module.exports = {
             importNames: ['Text'],
             message: 'Use `Text` from `@kuzpot/react-native` instead.',
           },
+          {
+            name: '@apollo/client',
+            importNames: ['useSubscription'],
+            message: 'Use `useSubscription` from `@kuzpot/react-native` instead.',
+          },
         ],
       },
     ],
