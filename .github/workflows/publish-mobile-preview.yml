@@ -53,6 +53,14 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: 🏗 Set nhost urls
+        working-directory: apps/mobile
+        run: |
+          sed -i 's/<NHOST_AUTH_URL_DEV>/${{ secrets.NHOST_AUTH_URL_DEV }}/g' eas.json
+          sed -i 's/<NHOST_GRAPHQL_URL_DEV>/${{ secrets.NHOST_GRAPHQL_URL_DEV }}/g' eas.json
+          sed -i 's/<NHOST_STORAGE_URL_DEV>/${{ secrets.NHOST_STORAGE_URL_DEV }}/g' eas.json
+          sed -i 's/<NHOST_FUNCTIONS_URL_DEV>/${{ secrets.NHOST_FUNCTIONS_URL_DEV }}/g' eas.json
+
       - name: 💬 Get eas update message
         id: update-message
         run: echo "value=$(git show -s --format=%s)" >> $GITHUB_OUTPUT

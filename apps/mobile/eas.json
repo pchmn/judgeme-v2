@@ -8,7 +8,11 @@
         "enterpriseProvisioning": "adhoc"
       },
       "env": {
-        "APP_ENV": "development"
+        "APP_ENV": "development",
+        "EXPO_PUBLIC_NHOST_AUTH_URL": "<NHOST_AUTH_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_GRAPHQL_URL": "<NHOST_GRAPHQL_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_STORAGE_URL": "<NHOST_STORAGE_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_FUNCTIONS_URL": "<NHOST_FUNCTIONS_URL_DEV>"
       }
     },
     "preview": {
@@ -21,7 +25,11 @@
         "simulator": true
       },
       "env": {
-        "APP_ENV": "preview"
+        "APP_ENV": "preview",
+        "EXPO_PUBLIC_NHOST_AUTH_URL": "<NHOST_AUTH_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_GRAPHQL_URL": "<NHOST_GRAPHQL_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_STORAGE_URL": "<NHOST_STORAGE_URL_DEV>",
+        "EXPO_PUBLIC_NHOST_FUNCTIONS_URL": "<NHOST_FUNCTIONS_URL_DEV>"
       }
     },
     "production": {
@@ -31,7 +39,11 @@
         "buildType": "apk"
       },
       "env": {
-        "APP_ENV": "production"
+        "APP_ENV": "production",
+        "EXPO_PUBLIC_NHOST_AUTH_URL": "<NHOST_AUTH_URL_PROD>",
+        "EXPO_PUBLIC_NHOST_GRAPHQL_URL": "<NHOST_GRAPHQL_URL_PROD>",
+        "EXPO_PUBLIC_NHOST_STORAGE_URL": "<NHOST_STORAGE_URL_PROD>",
+        "EXPO_PUBLIC_NHOST_FUNCTIONS_URL": "<NHOST_FUNCTIONS_URL_PROD>"
       }
     }
   }

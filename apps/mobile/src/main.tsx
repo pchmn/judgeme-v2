@@ -1,7 +1,7 @@
 import '@/core/i18n';
 
 import { initSecureStorage, isSecureStorageInitialized, UiProvider } from '@kuzpot/react-native';
-import { NhostClient, NhostProvider, NhostReactClientConstructorParams } from '@nhost/react';
+import { NhostClient, NhostProvider } from '@nhost/react';
 import { NhostApolloProvider } from '@nhost/react-apollo';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AndroidImportance, setNotificationChannelAsync } from 'expo-notifications';
@@ -31,20 +31,12 @@ preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-let nhostParams: NhostReactClientConstructorParams;
-if (__DEV__) {
-  nhostParams = {
-    authUrl: 'http://192.168.1.10:5050/auth',
-    graphqlUrl: 'http://192.168.1.10:5050/graphql',
-    storageUrl: 'http://192.168.1.10:5050/storage',
-    functionsUrl: 'http://192.168.1.10:5050/functions',
-  };
-} else {
-  nhostParams = {
-    region: process.env.EXPO_PUBLIC_NHOST_REGION,
-    subdomain: process.env.EXPO_PUBLIC_NHOST_SUBDOMAIN,
-  };
-}
+const nhostParams = {
+  authUrl: process.env.EXPO_PUBLIC_NHOST_AUTH_URL,
+  graphqlUrl: process.env.EXPO_PUBLIC_NHOST_GRAPHQL_URL,
+  storageUrl: process.env.EXPO_PUBLIC_NHOST_STORAGE_URL,
+  functionsUrl: process.env.EXPO_PUBLIC_NHOST_FUNCTIONS_URL,
+};
 let nhost: NhostClient;
 
 if (Platform.OS === 'android') {
