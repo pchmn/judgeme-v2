@@ -30,6 +30,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
+          APP_ENV: local
           NHOST_JWT_SECRET: secret
           NHOST_ADMIN_SECRET: secret
           NHOST_AUTH_URL: url

@@ -16,6 +16,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 
 import { getLocaleWithouRegionCode, i18n } from '../../i18n/i18n.js';
+import { logger } from '../../utils/logger.js';
 import { validateRequest } from '../../utils/validateRequest.js';
 
 const app = initializeApp({
@@ -64,7 +65,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     distance,
   });
 
-  await nhost.graphql.request(INSERT_MESSAGE_HISTORY, {
+  const insertMessageRes = await nhost.graphql.request(INSERT_MESSAGE_HISTORY, {
     data: {
       fromId: currentToken.userId,
       toId: body.to,
@@ -73,6 +74,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       sentAt,
     },
   });
+  logger.log('insertMessageRes', JSON.stringify(insertMessageRes, null, 2));
 
   const newSenderStatistics = { ...sender.kuzers_by_pk.messageStatistics };
   newSenderStatistics.sentCount[message.messages_by_pk.id] =
@@ -81,12 +83,13 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
   newSenderStatistics.averageSentDistance =
     (newSenderStatistics.averageSentDistance * newSenderStatistics.sentTotalCount + distance) /
     (newSenderStatistics.sentTotalCount + 1);
-  await nhost.graphql.request(UPDATE_KUZER, {
+  const updateSenderRes = await nhost.graphql.request(UPDATE_KUZER, {
     id: currentToken.userId,
     data: {
       messageStatistics: newSenderStatistics,
     },
   });
+  logger.log('updateSenderRes', JSON.stringify(updateSenderRes, null, 2));
 
   const newReceiverStatistics = { ...receiver.kuzers_by_pk.messageStatistics };
   newReceiverStatistics.receivedCount[message.messages_by_pk.id] =
@@ -95,12 +98,13 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
   newReceiverStatistics.averageReceivedDistance =
     (newReceiverStatistics.averageReceivedDistance * newReceiverStatistics.receivedTotalCount + distance) /
     (newReceiverStatistics.receivedTotalCount + 1);
-  await nhost.graphql.request(UPDATE_KUZER, {
+  const updateReceiverRes = await nhost.graphql.request(UPDATE_KUZER, {
     id: receiver.kuzers_by_pk.id,
     data: {
       messageStatistics: newReceiverStatistics,
     },
   });
+  logger.log('updateReceiverRes', JSON.stringify(updateReceiverRes, null, 2));
 
   return {
     statusCode: 200,
