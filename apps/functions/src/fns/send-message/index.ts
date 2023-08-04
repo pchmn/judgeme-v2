@@ -16,7 +16,6 @@ import { initializeApp } from 'firebase-admin/app';
 import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 
 import { getLocaleWithouRegionCode, i18n } from '../../i18n/i18n.js';
-import { logger } from '../../utils/logger.js';
 import { validateRequest } from '../../utils/validateRequest.js';
 
 const app = initializeApp({
@@ -74,7 +73,10 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       sentAt,
     },
   });
-  logger.log('insertMessageRes', JSON.stringify(insertMessageRes, null, 2));
+  if (insertMessageRes.error) {
+    throw insertMessageRes.error;
+  }
+  console.log('insertMessageRes', JSON.stringify(insertMessageRes, null, 2));
 
   const newSenderStatistics = { ...sender.kuzers_by_pk.messageStatistics };
   newSenderStatistics.sentCount[message.messages_by_pk.id] =
@@ -89,7 +91,10 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       messageStatistics: newSenderStatistics,
     },
   });
-  logger.log('updateSenderRes', JSON.stringify(updateSenderRes, null, 2));
+  if (updateSenderRes.error) {
+    throw updateSenderRes.error;
+  }
+  console.log('updateSenderRes', JSON.stringify(updateSenderRes, null, 2));
 
   const newReceiverStatistics = { ...receiver.kuzers_by_pk.messageStatistics };
   newReceiverStatistics.receivedCount[message.messages_by_pk.id] =
@@ -104,7 +109,10 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
       messageStatistics: newReceiverStatistics,
     },
   });
-  logger.log('updateReceiverRes', JSON.stringify(updateReceiverRes, null, 2));
+  if (updateReceiverRes.error) {
+    throw updateReceiverRes.error;
+  }
+  console.log('updateReceiverRes', JSON.stringify(updateReceiverRes, null, 2));
 
   return {
     statusCode: 200,
