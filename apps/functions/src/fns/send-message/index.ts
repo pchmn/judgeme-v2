@@ -33,6 +33,7 @@ const nhost = new NhostClient({
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
   const { currentToken, body } = validateRequest('sendMessage', event, context);
+  console.log('PARAMS\n', JSON.stringify({ currentToken, body }, null, 2));
 
   const { data: sender } = await nhost.graphql.request<{ kuzers_by_pk: Kuzer }>(SELECT_KUZER_BY_ID, {
     id: currentToken.userId,
@@ -63,6 +64,8 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     message: message.messages_by_pk,
     distance,
   });
+
+  console.log('pushNotificationsResponse\n', JSON.stringify(pushNotificationsResponse, null, 2));
 
   const insertMessageRes = await nhost.graphql.request(INSERT_MESSAGE_HISTORY, {
     data: {
