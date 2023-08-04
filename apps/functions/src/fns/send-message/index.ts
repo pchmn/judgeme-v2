@@ -7,7 +7,7 @@ import {
   Message,
   SELECT_KUZER_BY_ID,
   SELECT_MESSAGE_BY_ID,
-  UPDATE_KUZER_MUTATION,
+  UPDATE_KUZER,
 } from '@kuzpot/core';
 import { NhostClient } from '@nhost/nhost-js';
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
@@ -81,7 +81,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
   newSenderStatistics.averageSentDistance =
     (newSenderStatistics.averageSentDistance * newSenderStatistics.sentTotalCount + distance) /
     (newSenderStatistics.sentTotalCount + 1);
-  await nhost.graphql.request(UPDATE_KUZER_MUTATION, {
+  await nhost.graphql.request(UPDATE_KUZER, {
     id: currentToken.userId,
     data: {
       messageStatistics: newSenderStatistics,
@@ -95,7 +95,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
   newReceiverStatistics.averageReceivedDistance =
     (newReceiverStatistics.averageReceivedDistance * newReceiverStatistics.receivedTotalCount + distance) /
     (newReceiverStatistics.receivedTotalCount + 1);
-  await nhost.graphql.request(UPDATE_KUZER_MUTATION, {
+  await nhost.graphql.request(UPDATE_KUZER, {
     id: receiver.kuzers_by_pk.id,
     data: {
       messageStatistics: newReceiverStatistics,
