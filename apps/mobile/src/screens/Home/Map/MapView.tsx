@@ -39,12 +39,14 @@ export function MapView() {
     maxLat: 0,
     maxLong: 0,
   });
-  const { data: kuzers, loading, error } = useNearbyKuzers(mapBoundaries);
+  const { data: kuzers } = useNearbyKuzers(mapBoundaries);
   const [kuzerSelectedId, setKuzerSelectedId] = useState<string>();
 
   const bottomSheetRef = useRef<BottomSheetRefProps>(null);
   const [userDetailsHeight, setUserDetailsHeight] = useState(0);
 
+  // To get the desired height of the bottom sheet, we use a little trick.
+  // At start we set a random user id, and then we wait for the onLayout event on KuzerDetails.
   if (!!kuzers?.length && !kuzerSelectedId && !userDetailsHeight) {
     setKuzerSelectedId(kuzers[0].id);
   }
@@ -213,6 +215,9 @@ export function MapView() {
             currentPosition={currentPosition}
             positionValue={positionValue}
             onLayout={({ nativeEvent: { layout } }) => {
+              // To get the desired height of the bottom sheet, we use a little trick.
+              // At start we set a random user id, and then we wait for the onLayout event.
+              // So when it is fired, we have the height of the bottom sheet and we can reset the user id.
               if (userDetailsHeight === 0) {
                 setUserDetailsHeight(layout.height);
                 setKuzerSelectedId(undefined);

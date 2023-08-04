@@ -15,7 +15,7 @@ import App from './App';
 
 Sentry.init({
   dsn: 'https://0368298f84c04a78ac460d9ea7cd4c2c@o4504771591274496.ingest.sentry.io/4505024782008320',
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: false,
   debug: __DEV__,
   // Fix error trace looping: https://github.com/getsentry/sentry-react-native/issues/2721#issuecomment-1380546718
   integrations: [

@@ -21,6 +21,7 @@ import { SharedValue } from 'react-native-reanimated';
 import { InboxIcon } from './InboxIcon';
 import { SendIcon } from './SendIcon';
 
+let isFirstOnLayout = true;
 export function KuzerDetails({
   id,
   positionValue,
@@ -60,7 +61,12 @@ export function KuzerDetails({
       gap="lg"
       position="relative"
       onLayout={(event) => {
-        !loading && onLayout && onLayout(event);
+        // Skip first onLayout event (which is triggered by the skeleton)
+        if (isFirstOnLayout) {
+          isFirstOnLayout = false;
+          return;
+        }
+        onLayout?.(event);
       }}
     >
       <KuzerInfos loading={loading} kuzer={kuzer} currentPosition={currentPosition} />
