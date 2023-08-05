@@ -9,6 +9,7 @@ import {
   SELECT_MESSAGE_BY_ID,
   UPDATE_KUZER,
 } from '@kuzpot/core';
+import { Logtail } from '@logtail/node';
 import { NhostClient } from '@nhost/nhost-js';
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import { credential } from 'firebase-admin';
@@ -16,6 +17,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { getMessaging, TokenMessage } from 'firebase-admin/messaging';
 
 import { getLocaleWithouRegionCode, i18n } from '../../i18n/i18n.js';
+import { logger } from '../../utils/logger.js';
 import { validateRequest } from '../../utils/validateRequest.js';
 
 const app = initializeApp({
@@ -31,9 +33,13 @@ const nhost = new NhostClient({
   adminSecret: process.env.NHOST_ADMIN_SECRET,
 });
 
+const logtail = new Logtail(process.env.BETTERSTACK_TOKEN || 'unknown');
+
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
+  const startTime = Date.now();
+
   const { currentToken, body } = validateRequest('sendMessage', event, context);
-  console.log('PARAMS\n', JSON.stringify({ currentToken, body }, null, 2));
+  logger.info('PARAMS\n', JSON.stringify({ from: currentToken.userId, body }, null, 2));
 
   const { data: sender } = await nhost.graphql.request<{ kuzers_by_pk: Kuzer }>(SELECT_KUZER_BY_ID, {
     id: currentToken.userId,
@@ -65,8 +71,6 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     distance,
   });
 
-  console.log('pushNotificationsResponse\n', JSON.stringify(pushNotificationsResponse, null, 2));
-
   const insertMessageRes = await nhost.graphql.request(INSERT_MESSAGE_HISTORY, {
     data: {
       fromId: currentToken.userId,
@@ -77,9 +81,19 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     },
   });
   if (insertMessageRes.error) {
+    logtail.error('[send-message] Error creating history message', {
+      error: JSON.stringify(insertMessageRes.error, null, 2),
+      params: {
+        from: currentToken.userId,
+        ...body,
+        awsLogs: {
+          logStream: context.logStreamName,
+          requestId: context.awsRequestId,
+        },
+      },
+    });
     throw insertMessageRes.error;
   }
-  console.log('insertMessageRes', JSON.stringify(insertMessageRes, null, 2));
 
   const newSenderStatistics = { ...sender.kuzers_by_pk.messageStatistics };
   newSenderStatistics.sentCount[message.messages_by_pk.id] =
@@ -95,9 +109,21 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     },
   });
   if (updateSenderRes.error) {
+    logtail.error('[send-message] Error updating user', {
+      error: JSON.stringify(updateSenderRes.error, null, 2),
+      params: {
+        userId: currentToken.userId,
+        data: {
+          messageStatistics: newSenderStatistics,
+        },
+        awsLogs: {
+          logStream: context.logStreamName,
+          requestId: context.awsRequestId,
+        },
+      },
+    });
     throw updateSenderRes.error;
   }
-  console.log('updateSenderRes', JSON.stringify(updateSenderRes, null, 2));
 
   const newReceiverStatistics = { ...receiver.kuzers_by_pk.messageStatistics };
   newReceiverStatistics.receivedCount[message.messages_by_pk.id] =
@@ -113,9 +139,32 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     },
   });
   if (updateReceiverRes.error) {
+    logtail.error('[send-message] Error updating user', {
+      error: JSON.stringify(updateReceiverRes.error, null, 2),
+      params: {
+        userId: receiver.kuzers_by_pk.id,
+        data: {
+          messageStatistics: newReceiverStatistics,
+        },
+        awsLogs: {
+          logStream: context.logStreamName,
+          requestId: context.awsRequestId,
+        },
+      },
+    });
     throw updateReceiverRes.error;
   }
-  console.log('updateReceiverRes', JSON.stringify(updateReceiverRes, null, 2));
+
+  logtail.info('[send-message] Message sent', {
+    params: { from: currentToken.userId, ...body },
+    success: pushNotificationsResponse.successCount,
+    failure: pushNotificationsResponse.failureCount,
+    executionTime: `${Date.now() - startTime}ms`,
+    awsLogs: {
+      logStream: context.logStreamName,
+      requestId: context.awsRequestId,
+    },
+  });
 
   return {
     statusCode: 200,
@@ -136,9 +185,9 @@ async function sendPushNotifications(to: Kuzer, { message, distance }: { message
     const token = installation.pushToken;
 
     if (!token) {
-      // logtail.warn('[sendMessage] No token found', {
-      //   params: { user: to, installationId },
-      // });
+      logtail.warn('[send-message] No token found', {
+        params: { userId: to.id, installationId: installation.id },
+      });
       continue;
     }
 
@@ -162,10 +211,10 @@ async function sendPushNotifications(to: Kuzer, { message, distance }: { message
   }
 
   return messaging.sendAll(pushMessages).catch((error) => {
-    // logtail.error('[sendMessage] Error sending push notifications', {
-    //   error: { ...error },
-    //   params: { to, message: message.key },
-    // });
+    logtail.error('[send-message] Error sending push notifications', {
+      error: { ...error },
+      params: { to: to.id, messageId: message.id },
+    });
     throw error;
   });
 }

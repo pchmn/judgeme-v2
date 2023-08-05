@@ -1,7 +1,21 @@
-function log(message?: any, ...args: any[]) {
-  console.log(`${process.env.APP_ENV === 'local' ? '\n' : ''}\n${message}`, args);
+function formatMessage(message?: any) {
+  return `${process.env.APP_ENV === 'local' ? '\n' : ''}\n${message}`;
+}
+
+function info(message?: any, ...args: any[]) {
+  console.log(formatMessage(message), args);
+}
+
+function warn(message?: any, ...args: any[]) {
+  console.warn(formatMessage(message), args);
+}
+
+function error(message?: any, ...args: any[]) {
+  console.error(formatMessage(message), args);
 }
 
 export const logger = {
-  log,
+  info,
+  warn,
+  error,
 };

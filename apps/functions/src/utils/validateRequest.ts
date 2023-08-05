@@ -1,6 +1,9 @@
 import { FunctionName, FunctionParams, FunctionValidation } from '@kuzpot/core';
+import { Logtail } from '@logtail/node';
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import { JwtPayload, verify } from 'jsonwebtoken';
+
+const logtail = new Logtail(process.env.BETTERSTACK_TOKEN || 'unknown');
 
 interface DecodedToken {
   userId: string;
@@ -19,7 +22,16 @@ export function validateRequest<T extends FunctionName>(functionName: T, event: 
 
   try {
     currentToken = getDecodedToken(event);
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    logtail.error(`${functionName} Error decoding jwt token`, {
+      error,
+      params: { body: JSON.parse(event.body || '{}'), from: 'unknown' },
+      awsLogs: {
+        logStream: context.logStreamName,
+        requestId: context.awsRequestId,
+      },
+    });
     throw new Error('User must be authenticated');
   }
 
@@ -28,10 +40,14 @@ export function validateRequest<T extends FunctionName>(functionName: T, event: 
     FunctionValidation[functionName].parse(body);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    // logtail.error(`${functionName} Invalid data`, {
-    //   error: { ...error },
-    //   params: { ...data, from: auth?.token?.uid || 'unknown' },
-    // });
+    logtail.error(`${functionName} Invalid data`, {
+      error: { ...error },
+      params: { body: JSON.parse(event.body || '{}'), from: currentToken.userId },
+      awsLogs: {
+        logStream: context.logStreamName,
+        requestId: context.awsRequestId,
+      },
+    });
     throw new Error('Invalid body');
   }
 
