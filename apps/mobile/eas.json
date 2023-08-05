@@ -22,7 +22,7 @@
         "buildType": "apk"
       },
       "ios": {
-        "simulator": true
+        "enterpriseProvisioning": "adhoc"
       },
       "env": {
         "APP_ENV": "preview",
