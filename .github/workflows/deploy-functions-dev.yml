@@ -1,4 +1,4 @@
-name: Deploy Firebase Functions to Dev
+name: Deploy Lambda Functions to Dev
 
 on:
   pull_request:
@@ -9,30 +9,12 @@ on:
       - ready_for_review
     paths:
       - "apps/functions/**"
+      - "packages/core/**"
       - ".github/workflows/deploy-functions-dev.yml"
-      - "firebase.json"
 
 jobs:
-  changes:
-    name: 📂 Check for changes
-    runs-on: ubuntu-latest
-    outputs:
-      shouldRun: ${{ steps.filter.outputs.any_changed }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: tj-actions/changed-files@v37
-        id: filter
-        with:
-          since_last_remote_commit: true
-          files: |
-            apps/functions/**
-            .github/workflows/deploy-functions-dev.yml
-            firebase.json
-
   deploy:
     name: 🚀 Deploy Functions
-    needs: changes
-    if: needs.changes.outputs.shouldRun == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,31 +25,44 @@ jobs:
           install: true
           turbo-cache: true
 
-      - name: 🏗 Setup firebase CLI
-        uses: pchmn/firebase-cli-github-action@main
+      - uses: aws-actions/configure-aws-credentials@v2
         with:
-          packager: pnpm
-          serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
-          projectId: kuzpot-dev
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 🏗 Create service account key file for tests
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKeyTest.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS_TEST=$(echo ${{ runner.temp }}/serviceAccountKeyTest.json)" >> $GITHUB_ENV
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
 
-      - name: 🧪 Test functions
-        run: pnpm test:functions:coverage
-        env:
-          TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
+      - name: 🚀 Deploy Functions to kuzpot-dev
+        run: pnpm deploy:functions:dev
 
-      - name: ♻️ Create env file
-        working-directory:  apps/functions
-        run: |
-          touch .env
-          echo BETTERSTACK_TOKEN=${{ secrets.BETTERSTACK_TOKEN_DEV }} >> .env
-          cat .env
+      # - name: 🏗 Setup firebase CLI
+      #   uses: pchmn/firebase-cli-github-action@main
+      #   with:
+      #     packager: pnpm
+      #     serviceAccountKey: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+      #     projectId: kuzpot-dev
 
-      - name: 🚀 Deploy to kuzpot-dev
-        run: pnpm deploy:functions
+      # - name: 🏗 Create service account key file for tests
+      #   run: |
+      #     echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_PROJECT }}' > ${{ runner.temp }}/serviceAccountKeyTest.json
+      #     echo "GOOGLE_APPLICATION_CREDENTIALS_TEST=$(echo ${{ runner.temp }}/serviceAccountKeyTest.json)" >> $GITHUB_ENV
 
-      - run: rm apps/functions/.env
+      # - name: 🧪 Test functions
+      #   run: pnpm test:functions:coverage
+      #   env:
+      #     TEST_PROJECT_ID: ${{ secrets.TEST_PROJECT_ID }}
+
+      # - name: ♻️ Create env file
+      #   working-directory:  apps/functions
+      #   run: |
+      #     touch .env
+      #     echo BETTERSTACK_TOKEN=${{ secrets.BETTERSTACK_TOKEN_DEV }} >> .env
+      #     cat .env
+
+      # - name: 🚀 Deploy to kuzpot-dev
+      #   run: pnpm deploy:functions
+
+      # - run: rm apps/functions/.env

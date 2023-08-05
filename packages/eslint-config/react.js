@@ -27,6 +27,16 @@ module.exports = {
             importNames: ['useTheme'],
             message: 'Use `useAppTheme` from `@kuzpot/react-native` instead.',
           },
+          {
+            name: 'react-native-paper',
+            importNames: ['Text'],
+            message: 'Use `Text` from `@kuzpot/react-native` instead.',
+          },
+          {
+            name: '@apollo/client',
+            importNames: ['useSubscription'],
+            message: 'Use `useSubscription` from `@kuzpot/react-native` instead.',
+          },
         ],
       },
     ],

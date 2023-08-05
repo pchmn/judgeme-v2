@@ -1,13 +1,4 @@
-import { UserDocument } from '@kuzpot/core';
-import {
-  BottomSheet,
-  BottomSheetRefProps,
-  Flex,
-  GeoQueryOptions,
-  useAppTheme,
-  useFirebaseAuthUser,
-} from '@kuzpot/react-native';
-import { DataWithId } from '@kuzpot/react-native/src/core/firebase/types';
+import { BottomSheet, BottomSheetRefProps, Flex, useAppTheme } from '@kuzpot/react-native';
 import { useRoute } from '@react-navigation/native';
 import { distanceBetween } from 'geofire-common';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -19,11 +10,11 @@ import { useSharedValue } from 'react-native-reanimated';
 import { RouteParams } from '@/core/routes/types';
 import { useRegionOnMap } from '@/shared/hooks';
 
-import { UserDetails } from '../UserDetails/UserDetails';
+import { KuzerDetails } from '../UserDetails/KuzerDetails';
 import { themedMapStyle } from './mapStyle';
 import { MarkerImage } from './MarkerImage';
 import { useCurrentPosition } from './useCurrentPosition';
-import { useNearUsers } from './useNearUsers';
+import { GeoQueryOptions, useNearbyKuzers } from './useNearbyKuzers';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -37,17 +28,28 @@ export function MapView() {
   const mapRef = useRef<RNMapView>(null);
   const isRegionFocused = useRef(false);
 
-  const bottomSheetRef = useRef<BottomSheetRefProps>(null);
-  const [userSelected, setUserSelected] = useState<DataWithId<UserDocument>>();
-
   const currentPosition = useCurrentPosition();
   const [regionOnMap, setRegionOnMap] = useRegionOnMap();
-  const [geoQueryOptions, setGeoQueryOptions] = useState<GeoQueryOptions>();
 
   const [tracksViewChanges, setTracksViewChanges] = useState(false);
 
-  const { data: nearUsers } = useNearUsers(geoQueryOptions);
-  const { data: currentUser } = useFirebaseAuthUser();
+  const [mapBoundaries, setMapBoundaries] = useState<GeoQueryOptions>({
+    minLat: 0,
+    minLong: 0,
+    maxLat: 0,
+    maxLong: 0,
+  });
+  const { data: kuzers } = useNearbyKuzers(mapBoundaries);
+  const [kuzerSelectedId, setKuzerSelectedId] = useState<string>();
+
+  const bottomSheetRef = useRef<BottomSheetRefProps>(null);
+  const [userDetailsHeight, setUserDetailsHeight] = useState(0);
+
+  // To get the desired height of the bottom sheet, we use a little trick.
+  // At start we set a random user id, and then we wait for the onLayout event on KuzerDetails.
+  if (!!kuzers?.length && !kuzerSelectedId && !userDetailsHeight) {
+    setKuzerSelectedId(kuzers[0].id);
+  }
 
   useEffect(() => {
     setTracksViewChanges(true);
@@ -69,17 +71,6 @@ export function MapView() {
 
   const animateToLocation = useCallback(
     async (location?: { latitude: number; longitude: number }, duration?: number) => {
-      // firebase.app().functions('europe-west1').httpsCallable('sendMessage')({
-      //   to: currentUser?.uid,
-      // });
-      // if (Platform.OS === 'ios') {
-      //   signOut(undefined, {
-      //     onSuccess: () => {
-      //       console.log('signOut success');
-      //     },
-      //   });
-      // }
-
       if (location) {
         mapRef.current?.animateToRegion(
           {
@@ -109,47 +100,53 @@ export function MapView() {
 
   const handleGeoQueryOptions = async () => {
     if (mapRef.current) {
-      const { center } = await mapRef.current.getCamera();
-      const { northEast } = await mapRef.current.getMapBoundaries();
-      const distance = distanceBetween([northEast.latitude, northEast.longitude], [center.latitude, center.longitude]);
-      setGeoQueryOptions({
-        center: { latitude: center.latitude, longitude: center.longitude },
-        radius: distance * 1000,
+      const { northEast, southWest } = await mapRef.current.getMapBoundaries();
+      setMapBoundaries({
+        minLat: southWest.latitude,
+        minLong: southWest.longitude,
+        maxLat: northEast.latitude,
+        maxLong: northEast.longitude,
       });
     }
   };
 
-  const handleMarkerPressed = useCallback(
-    async (userId: string) => {
-      setUserSelected(nearUsers?.find(({ id }) => id === userId));
+  const handleMarkerPressed = useCallback(async (userId: string) => {
+    setKuzerSelectedId(userId);
 
-      setTimeout(() => {
-        bottomSheetRef.current?.open();
-      });
-    },
-    [nearUsers]
-  );
+    setTimeout(() => {
+      bottomSheetRef.current?.open();
+    });
+  }, []);
+
   const handleBottomSheetIndexChange = useCallback(
     async (index: number, positionY: number) => {
-      if (index === 1 && userSelected) {
-        const currentCenter = SCREEN_HEIGHT / 2;
-        const userPosition = await mapRef.current?.pointForCoordinate({
-          latitude: userSelected.geopoint.latitude,
-          longitude: userSelected.geopoint.longitude,
-        });
-        if (userPosition && userPosition.y >= positionY - 20) {
-          const distance = positionY / 2 - userPosition.y;
-
-          const coordinate = await mapRef.current?.coordinateForPoint({
-            x: userPosition.x,
-            y: currentCenter - distance,
+      if (index === 1 && kuzerSelectedId) {
+        const kuzerSelected = kuzers?.find(({ id }) => id === kuzerSelectedId);
+        if (kuzerSelected) {
+          const currentCenter = SCREEN_HEIGHT / 2;
+          const userPosition = await mapRef.current?.pointForCoordinate({
+            latitude: kuzerSelected.geopoint.coordinates[1],
+            longitude: kuzerSelected.geopoint.coordinates[0],
           });
-          animateToLocation(coordinate, 500);
+          if (userPosition && userPosition.y >= positionY - 20) {
+            const distance = positionY / 2 - userPosition.y;
+
+            const coordinate = await mapRef.current?.coordinateForPoint({
+              x: userPosition.x,
+              y: currentCenter - distance,
+            });
+            animateToLocation(coordinate, 500);
+          }
         }
       }
     },
-    [animateToLocation, userSelected]
+    [animateToLocation, kuzerSelectedId, kuzers]
   );
+
+  const handleCloseBottomSheet = () => {
+    bottomSheetRef.current?.close();
+    setKuzerSelectedId(undefined);
+  };
 
   useEffect(() => {
     if (currentPosition && !isRegionFocused.current && !initialRegion) {
@@ -177,24 +174,27 @@ export function MapView() {
         showsMyLocationButton={false}
         moveOnMarkerPress={false}
         showsCompass={false}
-        onPress={() => bottomSheetRef.current?.close()}
-        onPoiClick={() => bottomSheetRef.current?.close()}
+        onPress={handleCloseBottomSheet}
+        onPoiClick={handleCloseBottomSheet}
       >
-        {nearUsers
-          ?.filter(({ id }) => id !== currentUser?.uid)
-          .map(({ id, geopoint }) => (
+        {kuzers?.map(({ id, geopoint }) => {
+          return (
             <Marker
               key={id}
               coordinate={{
-                latitude: geopoint.latitude,
-                longitude: geopoint.longitude,
+                latitude: geopoint.coordinates[1],
+                longitude: geopoint.coordinates[0],
               }}
-              onPress={() => handleMarkerPressed(id)}
+              onPress={(event) => {
+                event.stopPropagation();
+                handleMarkerPressed(id);
+              }}
               tracksViewChanges={tracksViewChanges}
             >
               <MarkerImage />
             </Marker>
-          ))}
+          );
+        })}
       </RNMapView>
       <FAB
         icon={isCurrentPosition ? 'crosshairs-gps' : 'crosshairs'}
@@ -206,9 +206,25 @@ export function MapView() {
         ref={bottomSheetRef}
         onIndexChange={handleBottomSheetIndexChange}
         positionValue={positionValue}
-        snapPoint={100}
+        snapPoint={userDetailsHeight}
       >
-        {userSelected && <UserDetails key={userSelected.id} user={userSelected} positionValue={positionValue} />}
+        {kuzerSelectedId && (
+          <KuzerDetails
+            key={kuzerSelectedId}
+            id={kuzerSelectedId}
+            currentPosition={currentPosition}
+            positionValue={positionValue}
+            onLayout={({ nativeEvent: { layout } }) => {
+              // To get the desired height of the bottom sheet, we use a little trick.
+              // At start we set a random user id, and then we wait for the onLayout event.
+              // So when it is fired, we have the height of the bottom sheet and we can reset the user id.
+              if (userDetailsHeight === 0) {
+                setUserDetailsHeight(layout.height);
+                setKuzerSelectedId(undefined);
+              }
+            }}
+          />
+        )}
       </BottomSheet>
     </Flex>
   );

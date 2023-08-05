@@ -1,6 +1,6 @@
 import * as NavigationBar from 'expo-navigation-bar';
 import React, { useCallback, useImperativeHandle, useMemo } from 'react';
-import { BackHandler, Dimensions, View, ViewStyle } from 'react-native';
+import { BackHandler, Dimensions, Platform, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
@@ -12,7 +12,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useEffectOnce } from '../../core';
 import { useAppTheme } from '../UiProvider';
@@ -20,6 +20,7 @@ import { shadow } from '../utils';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const SHADOW_DISTANCE = 5;
+const INDICATOR_HEIGHT = 36;
 
 type BottomSheetProps = {
   children?: React.ReactNode;
@@ -42,14 +43,19 @@ export type BottomSheetRefProps = {
 export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
   ({ children, containerStyle, indicatorStyle, onIndexChange, positionValue, snapPoint }, ref) => {
     const insets = useSafeAreaInsets();
+    const frame = useSafeAreaFrame();
 
     const theme = useAppTheme();
 
     const animatedRef = useAnimatedRef<Animated.View>();
 
     const snapPoints = useMemo(
-      () => [insets.top + SHADOW_DISTANCE, snapPoint ? -snapPoint : -SCREEN_HEIGHT * 0.45, -SCREEN_HEIGHT],
-      [insets.top, snapPoint]
+      () => [
+        insets.top + SHADOW_DISTANCE,
+        snapPoint ? -snapPoint - INDICATOR_HEIGHT : -SCREEN_HEIGHT * 0.45,
+        -frame.height,
+      ],
+      [frame.height, insets.top, snapPoint]
     );
 
     const translateY = useSharedValue(insets.top + 5);
@@ -65,10 +71,12 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
       (destination: number) => {
         'worklet';
         active.value = destination < snapPoints[0];
-        if (destination < snapPoints[0]) {
-          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainerLow);
-        } else {
-          runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainer);
+        if (Platform.OS === 'android') {
+          if (destination < snapPoints[0]) {
+            runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainerLow);
+          } else {
+            runOnJS(NavigationBar.setBackgroundColorAsync)(theme.colors.surfaceContainer);
+          }
         }
         const newIndex = snapPoints.findIndex((snapPoint) => snapPoint === destination);
         if (newIndex !== -1) {
@@ -190,11 +198,11 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
             ref={animatedRef}
             style={[
               {
-                height: SCREEN_HEIGHT + insets.top,
+                height: frame.height,
                 width: SCREEN_WIDTH,
                 backgroundColor: theme.colors.surfaceContainerLow,
                 position: 'absolute',
-                top: SCREEN_HEIGHT,
+                top: frame.height,
                 ...containerStyle,
               },
               shadow(5),
@@ -203,11 +211,11 @@ export const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProp
           >
             <View
               style={{
-                width: 25,
+                width: 32,
                 height: 4,
-                backgroundColor: theme.colors.outline,
+                backgroundColor: theme.colors.onSurfaceVariant + '66',
                 alignSelf: 'center',
-                marginVertical: 15,
+                marginVertical: 16,
                 borderRadius: 2,
                 ...indicatorStyle,
               }}

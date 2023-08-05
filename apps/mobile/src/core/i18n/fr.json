@@ -32,5 +32,20 @@
         "description": "Si tu veux être alerté quand quelqu'un t'envoie un message, tu dois autoriser les notifications.\nTu peux les autoriser dans les paramètres de l'application."
       }
     }
+  },
+  "homeScreen": {
+    "userDetails": {
+      "distance": "À {{distance}}",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "receivedCount_zero": "0 reçu",
+      "receivedCount_one": "1 reçu (~{{averageDistance}})",
+      "receivedCount_other": "{{count}} reçus (~{{averageDistance}})",
+      "sentCount_zero": "0 envoyé",
+      "sentCount_one": "1 envoyé (~{{averageDistance}})",
+      "sentCount_other": "{{count}} envoyés (~{{averageDistance}})",
+      "messagesReceived": "Messages reçus",
+      "chooseMessage": "Choisir un message"
+    }
   }
 }

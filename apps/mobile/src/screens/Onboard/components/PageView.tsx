@@ -1,6 +1,6 @@
-import { Flex, useAppTheme } from '@kuzpot/react-native';
+import { Flex, Text, useAppTheme } from '@kuzpot/react-native';
 import { View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function PageView({

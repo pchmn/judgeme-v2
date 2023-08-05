@@ -1,0 +1,8 @@
+{
+  "extends": "@kuzpot/tsconfig/base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "baseUrl": ".",
+  },
+  "include": ["src"]
+}

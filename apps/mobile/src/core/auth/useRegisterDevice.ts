@@ -1,11 +1,11 @@
-import { DevicesDocument } from '@kuzpot/core';
-import { useEffectOnce, useFirebaseAuthUser, useFirestoreSetDoc, useSecureStorage } from '@kuzpot/react-native';
-import firestore from '@react-native-firebase/firestore';
+import { Installation, UPSERT_INSTALLATION } from '@kuzpot/core';
+import { useEffectOnce, useInsertMutation } from '@kuzpot/react-native';
+import { useUserData } from '@nhost/react';
 import messaging from '@react-native-firebase/messaging';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 
-import { getInstallationDevice, InstallationDevice } from './utils';
+import { getDeviceInstallation, InstallationDevice } from './utils';
 
 function areStoredDataOutdated(storedData: InstallationDevice | undefined, actualData: InstallationDevice) {
   if (!storedData) return true;
@@ -14,27 +14,20 @@ function areStoredDataOutdated(storedData: InstallationDevice | undefined, actua
 }
 
 export function useRegisterDevice() {
-  const [existingInstallationDevice, setInstallationDevice] =
-    useSecureStorage<InstallationDevice>('installationDevice');
-
-  const { data: currentUser } = useFirebaseAuthUser();
-
-  const { mutate } = useFirestoreSetDoc<DevicesDocument>();
+  const userData = useUserData();
+  const [upsert] = useInsertMutation<Installation>(UPSERT_INSTALLATION);
 
   const register = useCallback(
-    async (uid: string) => {
-      const installationDevice = await getInstallationDevice();
-      if (installationDevice && areStoredDataOutdated(existingInstallationDevice, installationDevice)) {
-        const ref = firestore().collection('users').doc(uid).collection('private').doc('devices');
-        mutate({ ref, data: installationDevice }, { onSuccess: () => setInstallationDevice(installationDevice) });
-      }
+    async (userId: string) => {
+      const installation = await getDeviceInstallation();
+      await upsert({ id: installation.id, kuzerId: userId, ...installation });
     },
-    [mutate, setInstallationDevice, existingInstallationDevice]
+    [upsert]
   );
 
   useEffectOnce(() => {
     const unsubscribe = messaging().onTokenRefresh(async () => {
-      if (currentUser) await register(currentUser.uid);
+      if (userData) await register(userData.id);
     });
 
     return () => unsubscribe();

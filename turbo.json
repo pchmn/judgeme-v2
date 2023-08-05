@@ -1,15 +1,18 @@
 {
   "pipeline": {
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
-    "@kuzpot/functions#test:coverage": {
+    "build": {
+      "outputs": ["dist/**", "build/**", ".expo/**", "node_modules/.cache/metro/**"],
+      "dependsOn": ["^build"]
     },
-    "@kuzpot/functions#build": {
-      "outputs": ["dist"]
+    "@kuzpot/functions#deploy:dev": {
+      "dependsOn": ["@kuzpot/functions#build"]
     },
-    "@kuzpot/functions#deploy": {
-      "dependsOn": ["^@kuzpot/functions#build"]
+    "@kuzpot/functions#deploy:prod": {
+      "dependsOn": ["@kuzpot/functions#build"]
     }
   }
 }

@@ -1,59 +1,61 @@
-import { UserDocument } from '@kuzpot/core';
-import { useEffectOnce, useFirestoreSetDoc, useSignInAnonymously } from '@kuzpot/react-native';
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { useState } from 'react';
-import { ToastAndroid } from 'react-native';
+import { INSERT_KUZER, Kuzer } from '@kuzpot/core';
+import { useInsertMutation } from '@kuzpot/react-native';
+import { useAuthenticationStatus, useSignInAnonymous, useUserData } from '@nhost/react';
+import { useCallback, useEffect, useState } from 'react';
+import * as Sentry from 'sentry-expo';
 
 import { useRegisterDevice } from './useRegisterDevice';
 
+let isInit = false;
+
 export function useAuth() {
-  const { mutate: signInAnonymously } = useSignInAnonymously();
-  const { mutate } = useFirestoreSetDoc<UserDocument>();
   const { register } = useRegisterDevice();
+
+  const { isAuthenticated, isLoading: authLoading } = useAuthenticationStatus();
+  const { signInAnonymous } = useSignInAnonymous();
+  const [mutateUser] = useInsertMutation<Kuzer>(INSERT_KUZER);
+  const userData = useUserData();
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const initUserData = (user: FirebaseAuthTypes.UserCredential) => {
-    if (user.additionalUserInfo?.isNewUser) {
-      mutate({
-        ref: firestore().collection<UserDocument>('users').doc(user.user.uid),
-        data: {
+  const initUser = useCallback(
+    async (userId: string) => {
+      Sentry.Native.setUser({ id: userId, role: 'anonymous' });
+      try {
+        await mutateUser({
+          id: userId,
           status: 'online',
-          messageStatistics: {
-            receivedCount: {},
-            receivedTotalCount: 0,
-            sentCount: {},
-            sentTotalCount: 0,
-            averageReceivedDistance: 0,
-            averageSentDistance: 0,
-          },
-        },
-        options: { isCreation: true },
-      });
-    }
-  };
-
-  useEffectOnce(() => {
-    signInAnonymously(undefined, {
-      onSuccess: async (user) => {
-        initUserData(user);
-        try {
-          await register(user.user.uid);
-          setIsLoading(false);
-        } catch (err) {
-          setIsLoading(false);
-          console.error('err', err);
-          ToastAndroid.show('An error occurred', ToastAndroid.LONG);
-        }
-        // ToastAndroid.show('Signed in as ' + user.user.uid, ToastAndroid.LONG);
-      },
-      onError: () => {
+        });
+        await register(userId);
         setIsLoading(false);
-        ToastAndroid.show('An error occurred', ToastAndroid.LONG);
-      },
-    });
-  });
+      } catch (err) {
+        Sentry.Native.captureException(err);
+        console.error('nhost err', err);
+        setIsLoading(false);
+      }
+    },
+    [mutateUser, register]
+  );
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated && !isInit) {
+      signInAnonymous()
+        .then((user) => {
+          if (user.user) {
+            initUser(user.user.id);
+          }
+        })
+        .catch((err) => {
+          Sentry.Native.captureException(err);
+          console.error('nhost err', err);
+          setIsLoading(false);
+        });
+      isInit = true;
+    } else if (!isInit && !authLoading && isAuthenticated && userData?.id) {
+      initUser(userData.id);
+      isInit = true;
+    }
+  }, [authLoading, initUser, isAuthenticated, signInAnonymous, userData?.id, register]);
 
   return { isLoading };
 }

@@ -1,0 +1,25 @@
+dev:
+  deploy:
+    parameters:
+      stack_name: kuzpot-dev
+      resolve_s3: true
+      s3_prefix: kuzpot-dev
+      region: eu-central-1
+      confirm_changeset: true
+      capabilities: CAPABILITY_IAM
+      image_repositories: []
+      parameter_overrides: ["Environment=dev","Stage=kuzpot-dev"]
+
+prod:
+  deploy:
+    parameters:
+      stack_name: kuzpot-prod
+      resolve_s3: true
+      s3_prefix: kuzpot-prod
+      region: eu-central-1
+      confirm_changeset: true
+      capabilities: CAPABILITY_IAM
+      image_repositories: []
+      parameter_overrides: ["Environment=prod","Stage=kuzpot"]
+
+version: 0.1

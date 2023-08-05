@@ -1,0 +1,69 @@
+table:
+  name: kuzers
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: id
+array_relationships:
+  - name: installations
+    using:
+      manual_configuration:
+        column_mapping:
+          id: kuzer_id
+        insertion_order: null
+        remote_table:
+          name: installations
+          schema: public
+  - name: messagesReceived
+    using:
+      foreign_key_constraint_on:
+        column: to_kuzer_id
+        table:
+          name: messages_history
+          schema: public
+  - name: messagesSent
+    using:
+      foreign_key_constraint_on:
+        column: from_kuzer_id
+        table:
+          name: messages_history
+          schema: public
+insert_permissions:
+  - role: anonymous
+    permission:
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - id
+        - geohash
+        - messageStatistics
+        - status
+        - geopoint
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - id
+        - geohash
+        - geopoint
+        - messageStatistics
+        - status
+        - createdAt
+        - updatedAt
+        - lastOnline
+        - name
+      filter: {}
+update_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - geohash
+        - messageStatistics
+        - status
+        - geopoint
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
