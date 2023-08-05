@@ -2,9 +2,27 @@ import 'dotenv/config';
 
 import { ExpoConfig } from '@expo/config';
 
+const name =
+  process.env.APP_ENV === 'production'
+    ? 'Kuzpot'
+    : process.env.APP_ENV === 'development'
+    ? 'KuzpotDev'
+    : process.env.APP_ENV === 'preview'
+    ? 'KuzpotPreview'
+    : 'KuzpotLocal';
+
+const appIdentifier =
+  process.env.APP_ENV === 'production'
+    ? 'com.kuzpot.app'
+    : process.env.APP_ENV === 'development'
+    ? 'com.kuzpot.dev'
+    : process.env.APP_ENV === 'preview'
+    ? 'com.kuzpot.preview'
+    : 'com.kuzpot.local';
+
 const config: ExpoConfig = {
   owner: 'pchmn',
-  name: process.env.APP_ENV === 'production' ? 'Kuzpot' : process.env.APP_ENV === 'local' ? 'KuzpotLocal' : 'KuzpotDev',
+  name,
   slug: 'kuzpot',
   scheme: 'kuzpot',
   version: '1.0.0',
@@ -24,12 +42,7 @@ const config: ExpoConfig = {
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    bundleIdentifier:
-      process.env.APP_ENV === 'production'
-        ? 'com.pchmn.kuzpot'
-        : process.env.APP_ENV === 'local'
-        ? 'com.pchmn.kuzpot.local'
-        : 'com.pchmn.kuzpot.dev',
+    bundleIdentifier: appIdentifier,
     buildNumber: '1.0.0',
     supportsTablet: true,
     config: {
@@ -38,18 +51,18 @@ const config: ExpoConfig = {
           ? process.env.GOOGLE_MAPS_API_KEY_IOS_PROD
           : process.env.GOOGLE_MAPS_API_KEY_IOS_DEV,
     },
-    googleServicesFile: process.env.GOOGLE_SERVICES_PLIST_DEV,
+    googleServicesFile:
+      process.env.APP_ENV === 'production'
+        ? process.env.GOOGLE_SERVICES_PLIST_PROD
+        : process.env.APP_ENV === 'preview'
+        ? process.env.GOOGLE_SERVICES_PLIST_PREVIEW
+        : process.env.GOOGLE_SERVICES_PLIST_DEV,
     infoPlist: {
       UIBackgroundModes: ['fetch', 'remote-notification'],
     },
   },
   android: {
-    package:
-      process.env.APP_ENV === 'production'
-        ? 'com.pchmn.kuzpot'
-        : process.env.APP_ENV === 'local'
-        ? 'com.pchmn.kuzpot.local'
-        : 'com.pchmn.kuzpot.dev',
+    package: appIdentifier,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
@@ -62,7 +75,12 @@ const config: ExpoConfig = {
             : process.env.GOOGLE_MAPS_API_KEY_ANDROID_DEV,
       },
     },
-    googleServicesFile: process.env.GOOGLE_SERVICES_JSON_DEV,
+    googleServicesFile:
+      process.env.APP_ENV === 'production'
+        ? process.env.GOOGLE_SERVICES_JSON_PROD
+        : process.env.APP_ENV === 'preview'
+        ? process.env.GOOGLE_SERVICES_JSON_PREVIEW
+        : process.env.GOOGLE_SERVICES_JSON_DEV,
   },
   plugins: [
     '@react-native-firebase/app',
