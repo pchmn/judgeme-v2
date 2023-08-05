@@ -30,15 +30,15 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          APP_ENV: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:APP_ENV}}
-          NHOST_JWT_SECRET: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_JWT_SECRET}}
-          NHOST_ADMIN_SECRET: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_ADMIN_SECRET}}
-          NHOST_AUTH_URL: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_AUTH_URL}}
-          NHOST_GRAPHQL_URL: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_GRAPHQL_URL}}
-          NHOST_STORAGE_URL: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_STORAGE_URL}}
-          NHOST_FUNCTIONS_URL: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_FUNCTIONS_URL}}
-          FIREBASE_SERVICE_ACCOUNT_KEY: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:FIREBASE_SERVICE_ACCOUNT_KEY}}
-          BETTERSTACK_TOKEN: {{resolve:secretsmanager:dev/lambda/send-message:SecretString:BETTERSTACK_TOKEN}}
+          APP_ENV: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:APP_ENV}}'
+          NHOST_JWT_SECRET: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_JWT_SECRET}}'
+          NHOST_ADMIN_SECRET: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_ADMIN_SECRET}}'
+          NHOST_AUTH_URL: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_AUTH_URL}}'
+          NHOST_GRAPHQL_URL: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_GRAPHQL_URL}}'
+          NHOST_STORAGE_URL: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_STORAGE_URL}}'
+          NHOST_FUNCTIONS_URL: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:NHOST_FUNCTIONS_URL}}'
+          FIREBASE_SERVICE_ACCOUNT_KEY: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:FIREBASE_SERVICE_ACCOUNT_KEY}}'
+          BETTERSTACK_TOKEN: '{{resolve:secretsmanager:dev/lambda/send-message:SecretString:BETTERSTACK_TOKEN}}'
       Events:
         SendMessage:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
