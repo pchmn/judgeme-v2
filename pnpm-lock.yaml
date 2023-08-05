@@ -131,15 +131,6 @@ importers:
       '@react-native-firebase/app':
         specifier: ^18.1.0
         version: 18.1.0(expo@49.0.1)(react-native@0.72.2)(react@18.2.0)
-      '@react-native-firebase/auth':
-        specifier: ^18.1.0
-        version: 18.1.0(@react-native-firebase/app@18.1.0)(expo@49.0.1)
-      '@react-native-firebase/firestore':
-        specifier: ^18.1.0
-        version: 18.1.0(@react-native-firebase/app@18.1.0)
-      '@react-native-firebase/functions':
-        specifier: ^18.1.0
-        version: 18.1.0(@react-native-firebase/app@18.1.0)
       '@react-native-firebase/installations':
         specifier: ^18.1.0
         version: 18.1.0(@react-native-firebase/app@18.1.0)
@@ -155,9 +146,6 @@ importers:
       '@sentry/react-native':
         specifier: 5.5.0
         version: 5.5.0(react-native@0.72.2)(react@18.2.0)
-      '@tanstack/react-query':
-        specifier: ^4.22.0
-        version: 4.22.0(react-dom@18.2.0)(react-native@0.72.2)(react@18.2.0)
       colord:
         specifier: ^2.9.3
         version: 2.9.3
@@ -273,6 +261,9 @@ importers:
       '@types/react-native':
         specifier: ~0.70.6
         version: 0.70.8
+      babel-plugin-transform-remove-console:
+        specifier: ^6.9.4
+        version: 6.9.4
       babel-preset-expo:
         specifier: ~9.5.0
         version: 9.5.0(@babel/core@7.20.7)
@@ -394,12 +385,6 @@ importers:
       '@react-navigation/native':
         specifier: ^6.1.1
         version: 6.1.1(react-native@0.72.2)(react@18.2.0)
-      '@tanstack/react-query':
-        specifier: ^4.22.0
-        version: 4.22.0(react-dom@18.2.0)(react-native@0.72.2)(react@18.2.0)
-      '@types/color':
-        specifier: ^3.0.3
-        version: 3.0.3
       '@types/react':
         specifier: ~18.2.14
         version: 18.2.14
@@ -4550,36 +4535,6 @@ packages:
       superstruct: 0.6.2
     dev: false
 
-  /@react-native-firebase/auth@18.1.0(@react-native-firebase/app@18.1.0)(expo@49.0.1):
-    resolution: {integrity: sha512-9YcwcIdHNBgpSVw7COji3yEQxQw2RbmUA3GZkpAXmiEPPpithpGAOgqHugsLStk5qBiXkRIbmZRKvlAKEtujMg==}
-    peerDependencies:
-      '@react-native-firebase/app': 18.1.0
-      expo: '>=47.0.0'
-    peerDependenciesMeta:
-      expo:
-        optional: true
-    dependencies:
-      '@react-native-firebase/app': 18.1.0(expo@49.0.1)(react-native@0.72.2)(react@18.2.0)
-      expo: 49.0.1(@babel/core@7.20.7)
-      plist: 3.0.6
-    dev: false
-
-  /@react-native-firebase/firestore@18.1.0(@react-native-firebase/app@18.1.0):
-    resolution: {integrity: sha512-Bgpuig7FBnd7wlQvElgZVhsai3wCwxiXE4IkNOehU1pNwShntZK+KEk8d3wAuxnwt10ZUWB9YpQYjkreB1GSCw==}
-    peerDependencies:
-      '@react-native-firebase/app': 18.1.0
-    dependencies:
-      '@react-native-firebase/app': 18.1.0(expo@49.0.1)(react-native@0.72.2)(react@18.2.0)
-    dev: false
-
-  /@react-native-firebase/functions@18.1.0(@react-native-firebase/app@18.1.0):
-    resolution: {integrity: sha512-DsZH/dWYOUxD7s6zVYrzIFVdhzaN9VeeForciraaghBNKTdy1eMI9A0quPkaihDb5ixAVYCdKvrwVSAxDTZstA==}
-    peerDependencies:
-      '@react-native-firebase/app': 18.1.0
-    dependencies:
-      '@react-native-firebase/app': 18.1.0(expo@49.0.1)(react-native@0.72.2)(react@18.2.0)
-    dev: false
-
   /@react-native-firebase/installations@18.1.0(@react-native-firebase/app@18.1.0):
     resolution: {integrity: sha512-A8tS7wZS8gjPZWLuTq9Ooo5WT0wEF/7+3z7OyWKY1hLKp5quKIl61q7KXa2D75fRCOh5tMfKDFIL8X5pNF6Exw==}
     peerDependencies:
@@ -4932,27 +4887,6 @@ packages:
     dependencies:
       '@sinonjs/commons': 2.0.0
 
-  /@tanstack/query-core@4.22.0:
-    resolution: {integrity: sha512-OeLyBKBQoT265f5G9biReijeP8mBxNFwY7ZUu1dKL+YzqpG5q5z7J/N1eT8aWyKuhyDTiUHuKm5l+oIVzbtrjw==}
-
-  /@tanstack/react-query@4.22.0(react-dom@18.2.0)(react-native@0.72.2)(react@18.2.0):
-    resolution: {integrity: sha512-P9o+HjG42uB/xHR6dMsJaPhtZydSe4v0xdG5G/cEj1oHZAXelMlm67/rYJNQGKgBamKElKogj+HYGF+NY2yHYg==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.22.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-native: 0.72.2(@babel/core@7.20.7)(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
-
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
@@ -4992,22 +4926,6 @@ packages:
 
   /@types/chai@4.3.5:
     resolution: {integrity: sha512-mEo1sAde+UCE6b2hxn332f1g1E8WfYRu6p5SvTKr2ZKC1f7gFJXk4h5PyGP9Dt6gCaG8y8XhwnXWC6Iy2cmBng==}
-    dev: true
-
-  /@types/color-convert@2.0.0:
-    resolution: {integrity: sha512-m7GG7IKKGuJUXvkZ1qqG3ChccdIM/qBBo913z+Xft0nKCX4hAU/IxKwZBU4cpRZ7GS5kV4vOblUkILtSShCPXQ==}
-    dependencies:
-      '@types/color-name': 1.1.1
-    dev: true
-
-  /@types/color-name@1.1.1:
-    resolution: {integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==}
-    dev: true
-
-  /@types/color@3.0.3:
-    resolution: {integrity: sha512-X//qzJ3d3Zj82J9sC/C18ZY5f43utPbAJ6PhYt/M7uG6etcF6MRpKdN880KBy43B0BMzSfeT96MzrsNjFI3GbA==}
-    dependencies:
-      '@types/color-convert': 2.0.0
     dev: true
 
   /@types/connect@3.4.35:
@@ -5887,6 +5805,10 @@ packages:
       '@babel/plugin-syntax-flow': 7.22.5(@babel/core@7.22.5)
     transitivePeerDependencies:
       - '@babel/core'
+
+  /babel-plugin-transform-remove-console@6.9.4:
+    resolution: {integrity: sha512-88blrUrMX3SPiGkT1GnvVY8E/7A+k6oj3MNvUtTIxJflFzXTw1bHkuJ/y039ouhFMp2prRn5cQGzokViYi1dsg==}
+    dev: true
 
   /babel-preset-expo@9.5.0(@babel/core@7.20.7):
     resolution: {integrity: sha512-c5YPPro5g0rVf6WtednbCdRPFkZ+VT43/DhQQNh8rRubDxvKHT1bq0EUG0cgm5M61hXjTwgLJn9YzxX1TeBm/g==}

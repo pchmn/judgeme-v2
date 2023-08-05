@@ -3,7 +3,6 @@ import '@/core/i18n';
 import { initSecureStorage, isSecureStorageInitialized, UiProvider } from '@kuzpot/react-native';
 import { NhostClient, NhostProvider } from '@nhost/react';
 import { NhostApolloProvider } from '@nhost/react-apollo';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AndroidImportance, setNotificationChannelAsync } from 'expo-notifications';
 import { preventAutoHideAsync } from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
@@ -29,8 +28,6 @@ Sentry.init({
 
 preventAutoHideAsync();
 
-const queryClient = new QueryClient();
-
 const nhostParams = {
   authUrl: process.env.EXPO_PUBLIC_NHOST_AUTH_URL,
   graphqlUrl: process.env.EXPO_PUBLIC_NHOST_GRAPHQL_URL,
@@ -38,8 +35,6 @@ const nhostParams = {
   functionsUrl: process.env.EXPO_PUBLIC_NHOST_FUNCTIONS_URL,
 };
 let nhost: NhostClient;
-
-Sentry.Native.captureMessage(`NHOST params: ${JSON.stringify(nhostParams, null, 2)}`);
 
 if (Platform.OS === 'android') {
   setNotificationChannelAsync('Messages', {
@@ -67,8 +62,6 @@ export default function Main() {
             clientStorageType: 'react-native',
           });
           setIsReady(true);
-
-          Sentry.Native.captureMessage('Secure storage initialized');
         })
         .catch((err) => Sentry.Native.captureException(err));
     }
@@ -79,16 +72,14 @@ export default function Main() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NhostProvider nhost={nhost}>
-        <NhostApolloProvider nhost={nhost}>
-          <UiProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <App />
-            </GestureHandlerRootView>
-          </UiProvider>
-        </NhostApolloProvider>
-      </NhostProvider>
-    </QueryClientProvider>
+    <NhostProvider nhost={nhost}>
+      <NhostApolloProvider nhost={nhost}>
+        <UiProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <App />
+          </GestureHandlerRootView>
+        </UiProvider>
+      </NhostApolloProvider>
+    </NhostProvider>
   );
 }

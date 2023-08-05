@@ -9,7 +9,6 @@ import { useRegisterDevice } from './useRegisterDevice';
 let isInit = false;
 
 export function useAuth() {
-  Sentry.Native.captureMessage('useAuth');
   const { register } = useRegisterDevice();
 
   const { isAuthenticated, isLoading: authLoading } = useAuthenticationStatus();
@@ -28,10 +27,9 @@ export function useAuth() {
           status: 'online',
         });
         await register(userId);
-        Sentry.Native.captureMessage(`User ${userId} registered`);
         setIsLoading(false);
       } catch (err) {
-        Sentry.Native.captureException(err, { extra: { userId } });
+        Sentry.Native.captureException(err);
         console.error('nhost err', err);
         setIsLoading(false);
       }
@@ -40,9 +38,6 @@ export function useAuth() {
   );
 
   useEffect(() => {
-    Sentry.Native.captureMessage(
-      `useAuth in useEffect: ${JSON.stringify({ authLoading, isAuthenticated, isInit }, null, 2)}}`
-    );
     if (!authLoading && !isAuthenticated && !isInit) {
       signInAnonymous()
         .then((user) => {
